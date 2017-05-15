@@ -1,0 +1,72 @@
+<script type="text/ng-template" id="pagination.custom.html">
+    <nav ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li><a ng-click="selectPage(1)">First</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+            </li>
+            <li>
+                <a>
+                    <page-select></page-select>of {{numPages}}</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+            </li>
+            <li><a ng-click="selectPage(numPages)">Last</a>
+            </li>
+        </ul>
+    </nav>
+</script>
+<div class="dashboard">
+    <div class="row">
+        <div class="col-md-6 form-group" uib-dropdown is-open="vm.isOpen" keyboard-nav>
+            <label>Metrics:</label>
+            <input placeholder="metrics name" ng-click="vm.toggled(true)" uib-dropdown-toggle
+            class="input-sm form-control" type="search" ng-model="query" ng-keydown="vm.onKeyDown($event)"
+            />
+            <div class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <table search-watch-model="query" st-table="vm.list" st-safe-src="vm.metrics" class="table">
+                    <tbody>
+                        <tr ng-class="{'select-row':index==vm.selectedIndex}" ng-repeat="(index,m) in vm.list"
+                        ng-click="vm.selectName(m)">
+                            <td>{{m}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot ng-click="$event.stopPropagation()">
+                        <tr>
+                            <td class="text-center">
+                                <div st-items-by-page="10" st-pagination="" st-template="pagination.custom.html"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="selected col-md-6 form-group">
+            <ul>
+                <li ng-repeat="m in vm.selectedNames" ng-click="vm.removeName(m)">
+                    <span>{{m}}</span>
+                    <button class="btn sm-btn red"><i class="fa fa-close"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row" ng-show="false">
+        <div class="col-md-6 form-group">
+            <label>Tags:</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <button class="monitor-btn btn btn-danger active" ng-click="vm.monitor()">Monitor</button>
+	    <label><input type="checkbox" ng-model="vm.enablePercentile"/> Enable percentile</label>
+        </div>
+    </div>
+    <div class="row">
+        <nvd3 options="vm.chartOptions" data="vm.chartData"></nvd3>
+    </div>
+    <div class="row">
+        <nvd3 options="vm.chartCostOptions" data="vm.chartCostData"></nvd3>
+    </div>
+</div>

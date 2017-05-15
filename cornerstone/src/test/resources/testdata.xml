@@ -1,0 +1,30 @@
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>jiang.j</cas:user>
+
+		   <cas:attributes>
+
+		     	<cas:mail>jiang.j@Ctrip.com</cas:mail>
+
+		     	<cas:sn>vjj江杰</cas:sn>
+
+		     	<cas:department>框架研发部</cas:department>
+
+		     	<cas:company>IT</cas:company>
+
+		     	<cas:name>jiang.j</cas:name>
+
+		     	<cas:displayName>vjj江杰</cas:displayName>
+
+		     	<cas:memberOf>[CN=R&amp;D 框架 ESB用户组,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=R&amp;D_框架_ESB_Admin,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=request_dbLS,OU=IT Groups,OU=Admins,DC=cn1,DC=global,DC=ctrip,DC=com, CN=R&amp;D 框架研发 SRA,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=T16,OU=Groups,OU=技术研发中心,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=R&amp;D 框架 PO,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=VPN-技术站点,OU=vpngroup,OU=UserGroup,DC=cn1,DC=global,DC=ctrip,DC=com, CN=R&amp;D 框架研发 Services,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=Framework R&amp;D SH,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=框架研发部SH,OU=Groups,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=R&amp;D 框架 session server,OU=Groups,OU=技术研发中心,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=Tech 5级员工,OU=Groups,OU=技术研发中心,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=WIFI-51WIFI-INTERNALTEST,OU=WIFI,OU=UserGroup,DC=cn1,DC=global,DC=ctrip,DC=com, CN=R&amp;D 酒店 发布负责人组,OU=Groups,OU=国内机票预订部,OU=大交通事业群(BG),OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=Wireless R&amp;D Architecture,OU=Groups,OU=无线产品部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com, CN=AllowMailOut,OU=MailControlGroup,OU=UserGroup,DC=cn1,DC=global,DC=ctrip,DC=com, CN=DBDeveloper,OU=IT Groups,OU=Admins,DC=cn1,DC=global,DC=ctrip,DC=com, CN=AllowMailIn,OU=MailControlGroup,OU=UserGroup,DC=cn1,DC=global,DC=ctrip,DC=com, CN=Stocks,OU=职级组,OU=人事组,OU=UserGroup,DC=cn1,DC=global,DC=ctrip,DC=com, CN=Ctrip Shanghai,OU=人事组,OU=UserGroup,DC=cn1,DC=global,DC=ctrip,DC=com, CN=技术研发中心SH,OU=Groups,OU=技术研发中心,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com]</cas:memberOf>
+
+		     	<cas:employee>S43480</cas:employee>
+
+		     	<cas:distinguishedName>CN=vjj江杰,OU=User,OU=框架研发部,OU=上海,DC=cn1,DC=global,DC=ctrip,DC=com</cas:distinguishedName>
+
+		     	<cas:city>上海</cas:city>
+
+		   </cas:attributes>
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>

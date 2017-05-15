@@ -1,0 +1,9 @@
+<style>
+    .header{
+    font-size:xx-large;
+    }
+</style>
+<div class="header">{{data.companyName}}</div>
+<ul>
+    <li ng-repeat="item in data.orders">NO:{{item.no}}<br/>Date:{{item.createDate}} <br/>Price:{{item.price}}<br/><br/></li>
+</ul>

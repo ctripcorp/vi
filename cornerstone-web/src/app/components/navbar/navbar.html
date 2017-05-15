@@ -1,0 +1,106 @@
+<script type="text/ng-template" id="viserversmodal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Set api server ({{vm.hostIp}} <span ng-show="vm.selectedRow"> -> {{vm.selectedRow.ip}}</span>)</h3>
+    </div>
+    <div class="modal-body">
+        <div ng-show="!vm.hasContent">
+            Loading server list<i class="fa fa-spinner fa-pulse fa-fw"></i>
+        </div>
+        <div ng-show="vm.hasContent">
+            <div class="widget-header">
+                <span class="title">Servers({{vm.servers.length}})</span>
+                <div class="input-group">
+                    <select class="form-control" ng-model="vm.selectedIdc" ng-options="v for v in vm.idcs"></select>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-search"></i>
+                    </div>
+                    <input ng-model="query" placeholder="key word" class="input-sm form-control" type="search"
+                    />
+                </div>
+
+            </div>
+            <table st-table="displayCollection" st-safe-src="vm.servers" class="fixed-header table table-striped"
+            search-watch-model="query">
+                <thead>
+                    <tr class="widget-header">
+                        <th class="sorting" st-sort="idc">Idc</th>
+                        <th class="sorting" st-sort="name">Name</th>
+                        <th class="sorting" st-sort="ip">IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="server in displayCollection | filter:vm.idcFilter" st-select-row="server"
+		    ng-dblclick="ok()"
+                    ng-click="vm.selectedRow = server">
+                        <td>{{server.idc}}</td>
+                        <td>{{server.name}}</td>
+                        <td>{{server.ip}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+</script>
+<nav class="navbar navbar-static-top navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">
+                <i class="fa fa-eye"></i>
+                <span class="app-name" ng-show="vm.appName && vm.appName!='N/A'">
+			{{vm.appChineseName}} ({{vm.appName}})
+		</span>
+		<span class="app-name" ng-show="!vm.appName || vm.appName=='N/A'">
+			{{vm.appid}} -- {{vm.hostName}}/{{vm.hostIp}}
+		</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <div class="navbar-button mail-button" uib-dropdown>
+                <a href="#" uib-dropdown-toggle>
+                    <i class="ace-icon fa fa-question"></i>
+                </a>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                    <li role="menuitem" ng-repeat="(n,l) in vm.links">
+                        <a target="blank" href="{{l}}">{{n}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-button user-button" uib-dropdown>
+                <span class="user-info">Welcome,{{vm.loginUser}}</span>
+                <a href="#" uib-dropdown-toggle>
+                    <span class="caret"></span>
+                </a>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                    <li role="menuitem">
+                        <a href="logout">
+                            <i class="fa fa-power-off"></i>
+                            log out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="breadcrumbs">
+
+        <div class="sysinfo">
+            Host: <span class="link" ng-click="vm.changeServer()">{{vm.hostName}}/{{vm.hostIp}}</span>&nbsp;/
+        </div>
+        <ul class="breadcrumb">
+            <li ng-class="{'link':k==0 && v.state!='empty'}" ui-sref="{{k==0 && v.state!='empty'?v.state:'.'}}"
+            ng-repeat="(k,v) in breadcrumbs">{{v.name}}</li>
+
+        </ul>
+        <div class="version">
+            vi version: 0.9.3
+        </div>
+        <!-- /.breadcrumb -->
+
+    </div>
+</nav>

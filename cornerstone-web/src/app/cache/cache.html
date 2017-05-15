@@ -1,0 +1,30 @@
+<table st-table="displayCollection" st-sticky-header st-safe-src="vm.cellCollection"
+class="table table-striped" st-sticky-header-top="65">
+    <thead class="sticky-header">
+        <tr>
+		<th colspan="{{vm.colCount}}" class="search-container">
+                <div class="widget-header">
+                    <span class="title">Cache Refresh</span>
+                    <select class="form-control" ng-change="vm.typeChange()" ng-model="vm.selectedType" ng-options="name.name for name in vm.types"></select>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input st-search placeholder="key word" class="input-sm form-control" type="search"
+                        />
+                    </div>
+                </div>
+            </th>
+        </tr>
+        <tr class="widget-header">
+            <th width="10%"></th>
+            <th class="sorting" ng-repeat="col in vm.cols" st-sort="{{col.name}}" width="{{col.width}}">{{col.name}}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr ng-repeat="item in displayCollection">
+	    <td><button ng-click="vm.refresh(item)" class="btn btn-primary">refresh</button></td>
+            <td ng-repeat="col in vm.cols">{{item[col.name]}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,64 @@
+.dashboard{
+	margin-left:20px;
+	margin-right:20px;
+	min-height:500px;
+	.hide-chart{
+
+		visibility:hidden;
+	}
+	.dropdown-menu{
+		margin-left:12px;
+		width:100%;
+		.select-row{
+
+			background-color:#888;
+			color:#fff;
+		}
+
+		table tbody tr:hover{
+			background-color:#666;
+			color:#fff;
+		}
+
+	}
+	tfoot nav{
+		height:25px;
+		margin-top:-25px;
+	}
+	ul.menu{
+
+		padding-left:5px;
+		padding-right:5px;
+		li{
+			padding-top:3px;
+			padding-bottom:3px;
+			line-height:20px;
+		}
+		li:hover{
+		}
+
+	}
+
+	.selected {
+		ul li{
+			& span{
+
+				padding-top:5px;
+			}
+			float:left;
+				display:block;
+				margin:3px;
+				border:1px solid #eee;
+			button{
+
+				margin-top:-2px;
+				padding-top:0px;
+			}
+		}
+	}
+
+	.monitor-btn{
+
+		margin-right:15px;
+	}
+}

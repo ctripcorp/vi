@@ -1,0 +1,63 @@
+<script type="text/ng-template" id="configModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Submit changes</h3>
+    </div>
+    <div class="modal-body">
+    <div ng-show="configs.length==0">No changes</div>
+    <div ng-show="configs.length>0">
+    <div ng-repeat="config in configs" class="row">
+     <div class="align-right col-xs-6">{{config.key}}:</div>
+     <div class="col-xs-6">{{config.old}}->{{config.value}}</div>
+    </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+<table st-table="displayCollection" st-sticky-header st-safe-src="vm.configCollection" class="table table-striped" st-sticky-header-top="65">
+    <thead class="sticky-header">
+        <tr>
+            <th colspan="4" class="search-container">
+                <div class="widget-header">
+                    <span class="title">Configuration</span>
+                    <select class="form-control" ng-model="vm.selectedConfig" ng-options="cf.value as cf.name for cf in vm.configGroups"></select>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input st-search placeholder="key word" class="input-sm form-control" type="search"/>
+                    </div>
+		    <button ng-click="vm.openModal()" type="button" class="right-btn btn btn-primary">Submit</button>
+                </div>
+            </th>
+        </tr>
+        <tr class="widget-header">
+            <th class="sorting" st-sort="key" width="25%">Key</th>
+            <th class="sorting" st-sort="value" width="45%">Value</th>
+            <th class="sorting" st-sort="description" width="30%">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="config in displayCollection | filter:vm.configFilter" ng-class="{'value-changed':config.value!=config.old}">
+            <td>{{config.key}}</td>
+            <td>
+                <button ng-show="!config.inEdit && !config.readOnly" class="btn sm-btn" ng-click="config.new=config.value;config.inEdit=true"><i class="fa fa-pencil"></i>
+                </button>
+		<span ng-show="!config.inEdit && config.value!=config.old">{{config.old}}-></span>
+                <span ng-show="!config.inEdit">{{config.value}}</span>
+                <input ng-show="config.inEdit" class="config-input" ng-model="config.new" />
+
+                <div ng-show="config.inEdit" class="btn-group">
+<button class="btn sm-btn undo" ng-click="config.new=config.old"><i class="fa fa-undo"></i>
+                    </button>
+                    <button class="btn sm-btn red" ng-click="config.inEdit=false"><i class="fa fa-close"></i>
+                    </button>
+                    <button class="btn sm-btn green" ng-click="config.value=config.new;config.inEdit=false"><i class="fa fa-check"></i>
+                    </button>
+                </div>
+            </td>
+            <td>{{config.description}}</td>
+        </tr>
+    </tbody>
+</table>

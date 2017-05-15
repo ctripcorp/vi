@@ -1,0 +1,34 @@
+<table class="table" st-table="vm.logs" st-safe-src="vm.rawLogs" st-sticky-header
+st-sticky-header-top="15">
+    <thead class="sticky-header">
+        <tr>
+            <th colspan="4">
+                <div class="widget-header">
+			<span class="title">Log({{vm.rawLogs.length}})</span>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input st-search placeholder="key word" class="input-sm form-control" type="search"/>
+                    </div>
+                </div>
+            </th>
+
+        </tr>
+	<tr class="widget-header">
+		<th class="sorting" st-sort="name" width="50%">File Name</th>
+		<th st-sort-default="reverse" st-sort="modifiedTime" class="sorting" st-sort="modifiedTime" width="15%">Last Modified Time</th>
+		<th class="sorting" st-sort="size" width="15%">Size</th>
+		<th width="20%">Download</th>
+	</tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="c in vm.logs">
+            <th><a href="#{{c.href}}">{{c.name}}</a>
+            </th>
+	    <td>{{c.modifiedTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+	    <td>{{c.size/1024|number:2}} KB</td>
+	    <td><button class="btn btn-default" ng-click="vm.download(c.name)">download</button></td>
+        </tr>
+
+    </tbody>
+</table>

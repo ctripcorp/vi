@@ -1,0 +1,27 @@
+<script type="text/ng-template" id="jvmmonitor532.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{vm.title}} （Max：{{vm.max}},Init：{{vm.init}}) 使用记录</h3>
+    </div>
+    <div class="modal-body">
+        <nvd3  options="vm.historyOption" data="vm.historyData"></nvd3>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+    </div>
+</script>
+<div class="widget-header">
+    <span class="title">JVM Memory Pool monitor {{vm.startDate}} ~ {{vm.nowDate}}</span>
+</div>
+<br/>
+<div style="width:98%;padding-left:20px">
+    <div class="row" ng-repeat="(ri,r) in vm.rows">
+        <div class="col-md-4" ng-repeat="(i,c) in r">
+            <div class="panel">
+                <div class="title" style="width:350px">{{c.poolName}}（Max：{{c.max}},Init：{{c.init}})  <a style="cursor:pointer" ng-click="vm.showAll(c,ri*3 + i)">全部</a></div>
+                <div class="content">
+                    <nvd3 api="c.Api" options="c.Options" data="c.Data"></nvd3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

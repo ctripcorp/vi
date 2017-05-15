@@ -1,0 +1,137 @@
+<style>
+    .main {
+    width: 100%;
+    margin-left:-10px;
+    text-align: center;
+    font-size: 13px;
+    padding-top: 0px;
+    }
+    .section {
+    border-top: 2px groove #AAAAAA;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    }
+    .row>.title {
+    text-align: right;
+    font-weight: bolder;
+    padding-left: 0px;
+    padding-right: 0px;
+    }
+    .row>.title>span {
+    width:100px;
+    }
+    .row>.content {
+    text-align: left;
+    padding-right: 0px;
+    word-break:break-all;
+    }
+
+    .observer-row td{
+        text-align:left;
+    }
+
+    table.metrics-detail{
+
+        width:80%;
+        margin-left:5%;
+    }
+    table.metrics-detail thead{
+        background:#eee;
+    }
+    table.metrics-detail td{
+        text-align:left;
+    }
+</style>
+<div class="main">
+    <div class="row">
+        <h3>VI metrics 状态信息</h3>
+    </div>
+    <div class="row ">
+        <div class="col-md-6 title">
+            <span>是否运行:</span>
+        </div>
+        <div class="col-md-6 content">
+            {{vm.data.isRunning}}
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-6 title">
+            <span>当前等待处理的消息数目:</span>
+        </div>
+        <div class="col-md-6 content">
+            {{vm.data.waitMsgCount}}
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-6 title">
+            <span>当前监听者数目:</span>
+        </div>
+        <div class="col-md-6 content">
+            {{vm.data.observersCount}}
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-6 title">
+            <span>当前Metrics总数:</span>
+        </div>
+        <div class="col-md-6 content">
+            {{vm.data.metricsCount}}
+        </div>
+    </div>
+
+    <table class="table" ng-show="vm.data.observersCount>0">
+        <colgroup>
+            <col style="width: 30%; ">
+            <col style="width: 15%;">
+            <col style="width: 20%; ">
+            <col style="width: 20%; ">
+        </colgroup>
+        <thead>
+        <tr class="widget-header">
+            <th>ObserverId</th>
+            <th>Last update time</th>
+            <th>Percentiles</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="(k,v) in vm.data.observersStatus">
+        <tr class="observer-row">
+            <th>{{k}} </th>
+            <td>{{v.lastUpdateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{v.percentiles}}</td>
+            <td>
+                <a href="" ng-click="v.isShow =(v.isShow?false:true)">
+                    <i ng-class="{false:'fa-angle-double-down',true:'fa-angle-double-up'}[v.isShow||false]"
+                       class="fa"></i>
+                </a>
+            </td>
+        </tr>
+        <tr ng-show="v.isShow">
+            <td colspan="4">
+                <table class="table metrics-detail">
+                    <colgroup>
+                        <col style="width: 30%; ">
+                        <col style="width: 15%;">
+                        <col style="width: 20%; ">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Buffer size</th>
+                        <th>Current count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="s in v.metricsStatus">
+                        <td>{{s.key}}</td>
+                        <td>{{s.bufferSize}}</td>
+                        <td>{{s.currentCount}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>

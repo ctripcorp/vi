@@ -1,0 +1,291 @@
+/**
+ *  If you want to override some bootstrap variables, you have to change values here.
+ *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
+ */
+
+$navbar-inverse-link-color:#5AADBB;
+ $icon-font-path:"../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+ $fa-font-path:"../../bower_components/font-awesome/fonts/";
+ $box_shadow:2px 1px 2px 0 rgba(0,
+0,
+0,
+.1);
+ $title-color:#669fc7;
+ $sele-background:#5bc0de !important;
+ $sele-color:#fff !important;
+ $nav-bg-color:#555;
+ $nav-color:#fff;
+ ul {
+    list-style: none;
+}
+.status-normal,
+.data-normal {
+    color: green;
+    font-weight: bolder;
+}
+.status-running {
+    color: lightgreen;
+    font-weight: bolder;
+}
+.status-warn {
+    color: orange;
+    font-weight: bolder;
+}
+.status-failed,
+.data-warn {
+    color: red;
+    font-weight: bolder;
+}
+.mylink {
+    text-decoration: underline;
+}
+/**
+ *  Do not remove the comments below. It's the markers used by wiredep to inject
+ *  sass dependencies when defined in the bower.json of your dependencies
+ */
+
+// bower:scss
+// endbower
+ .browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+.thumbnail {
+    height: 200px;
+    img.pull-right {
+        width: 50px;
+    }
+}
+.widget-header {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    background: #f7f7f7;
+    background-image: -webkit-linear-gradient(top, #fff 0, #eee 100%);
+    background-image: -o-linear-gradient(top, #fff 0, #eee 100%);
+    background-image: linear-gradient(to bottom, #fff 0, #eee 100%);
+    background-repeat: repeat-x;
+    color: $title-color;
+    border-bottom: 1px solid #DDD;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: $box_shadow;
+    box-shadow: $box_shadow;
+    line-height: 38px;
+    height: 38px;
+    span.title {
+        float: left;
+        font-size: 18px;
+    }
+    div.input-group {
+        padding-left: 20px;
+        padding-top: 5px;
+        .input-group-addon {
+            .fa {
+                color: $title-color;
+            }
+            background:transparent;
+        }
+        float:left;
+        width:250px;
+        input {
+            padding: 0px;
+            padding-left: 5px;
+        }
+    }
+}
+table.table {
+    td {
+        word-break: break-all;
+    }
+}
+.main-content {
+    padding-top: 80px;
+    font-size: 12px;
+    .page-view {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0px;
+        margin-top: -5px;
+        border: 0px;
+    }
+    overflow:auto;
+    margin-left:115px;
+    &.sidebar-collapse {
+        margin-left: 55px;
+    }
+}
+.switch {
+    outline: 0;
+}
+.right-btn {
+    float: right;
+    margin-right: 60px;
+}
+.align-right {
+    text-align: right;
+}
+.sticky-header {
+    background: #fff;
+    z-index: 100;
+}
+.value-changed {
+    background: #5bc0de !important;
+    color: #fff !important;
+}
+.sm-btn {
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    background: transparent;
+    outline: 0 !important;
+}
+.red {
+    color: #ff0000;
+}
+.green {
+    color: #00ff00;
+}
+.undo {
+    color: #337ab7;
+}
+.modal-llg {
+    width: 90%;
+}
+.sorting {
+    background: url('../assets/images/sort_both.png') no-repeat center right;
+    cursor: pointer;
+    &.st-sort-descent {
+        background: url('../assets/images/sort_desc.png') no-repeat center right;
+    }
+    &.st-sort-ascent {
+        background: url('../assets/images/sort_asc.png') no-repeat center right;
+    }
+}
+.float-right {
+    float: right;
+}
+.d3-tooltip {
+    position: fixed;
+    right: 0px;
+    width: 500px;
+    top: 80px;
+    margin-right: 10px;
+    background: rgba(9, 14, 15, 0.6)!important;
+    border-radius: 4px;
+    border: 1px solid #26b3f7;
+    filter: Alpha(opacity=60);
+    box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.1);
+    background: #fff;
+    color: #fff;
+    padding: 10px;
+    alpha: 0.7;
+}
+.d3-searcher {
+    margin-top: 10px;
+    width: 400px;
+}
+.panel {
+    border: 1px solid #bbb;
+    position: relative;
+    padding: 10px;
+    padding-bottom: 0px;
+    &>.title {
+        position: relative;
+        top: -18px;
+        left: 0px;
+        background: #fff;
+    }
+    &>.content {
+        position: relative;
+        top: -13px;
+    }
+}
+.pagination {
+    a {
+        cursor: pointer;
+    }
+}
+.link {
+    color: #26b3f7;
+    cursor: pointer;
+}
+table{
+		&.table>thead>tr:first-child>th{
+		padding:0px !important;
+		padding-bottom:8px !important;
+		}
+		&.fixed-header {
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		max-height: 300px;
+		/* this can vary */
+		* {
+				box-sizing: inherit;
+				-moz-box-sizing: inherit;
+		}
+		thead {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+		}
+		tbody {
+				overflow-y: scroll;
+				display: inline-block;
+		}
+		thead > tr,
+		tbody > tr,
+		tfoot > tr {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: nowrap;
+		}
+		thead,
+		tfoot {
+				flex-shrink: 0;
+		}
+		th,
+		tbody td {
+				width: 30%;
+				/* this can vary */
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				display: inline-block;
+		}
+		tbody td {
+				padding-left:20px;
+		}
+		tfoot {
+				display: inline-block;
+		}
+		tfoot td {
+				width: 100%;
+				display: inline-block;
+		}
+		}
+}
+.st-selected{
+
+	background:$sele-background;
+}
+aside.scrollbar-track.scrollbar-track-y{
+	opacity:1 !important;
+}
+.list-summary{
+
+	background:#ccc;
+}
+/**
+ *  Do not remove the comments below. It's the markers used by gulp-inject to inject
+ *  all your sass files automatically
+ */
+
+// injector
+// endinjector

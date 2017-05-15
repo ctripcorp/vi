@@ -1,0 +1,151 @@
+.node {
+    cursor: pointer;
+    &.start circle {
+        fill: #fff;
+        stroke: orange;
+        stroke-width: 1.5px;
+    }
+}
+.overlay {
+    background-color: #fff;
+    position: fixed;
+    top: 80px;
+    z-index: 0;
+}
+.deps-tooltip {
+    z-index: 10;
+}
+.node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.node[keyword] {
+    stroke: #ff0000 !important;
+}
+.nonsele-node {
+    fill-opacity: 0.2;
+    circle {
+        stroke: #aaa !important;
+        stroke-width: 1.5px;
+    }
+    text {
+        font-size: 10px;
+        font-family: sans-serif;
+    }
+}
+.node text {
+    font-size: 10px;
+    font-family: sans-serif;
+    fill: #555;
+}
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
+.nonsele-link {
+    fill-opacity: 0.1;
+}
+.templink {
+    fill: none;
+    stroke: red;
+    stroke-width: 3px;
+}
+.ghostCircle.show {
+    display: block;
+}
+.ghostCircle,
+.activeDrag .ghostCircle {
+    display: none;
+}
+.axis line {
+    fill: none;
+    stroke: #ddd;
+    shape-rendering: crispEdges;
+    vector-effect: non-scaling-stroke;
+}
+.pom-version {
+    color: #5bc0de;
+}
+.wrong-version {
+    color: yellow;
+    font-weight: bolder;
+}
+.op-area {
+    &.net-mode input {
+        display: none;
+    }
+    position:relative;
+    background:transparent;
+    width:1px;
+    z-index:10;
+    .cell {
+        width: 130px;
+        color: #666;
+        font-weight: bolder;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 30px;
+        padding-left: 5px;
+        line-height: 30px;
+        margin-top: 10px;
+        vertical-align: middle;
+        &.normal {
+            background-color: #ccff33;
+            color: #4400aa !important;
+        }
+        &.start {
+            background-color: rgb(255, 165, 0);
+            color: #fff !important;
+        }
+        &.low {
+            background-color: #d15b47;
+            color: #fff !important;
+        }
+        &.many {
+            background-color: #ffff00;
+            color: #4400aa !important;
+        }
+    }
+    &.type-switch {
+        width: 600px;
+        margin-top: 10px;
+    }
+    &.main-area {
+        margin-left: 140px;
+        top: -150px;
+            width: 800px !important;
+        table.deps-table {
+            tr.art-row {
+                cursor: pointer;
+		outline:none;
+		td>span{
+		outline:none;
+		}
+                &.normal {
+                    border-left:4px solid #ccff33;
+                }
+                &.start {
+                    border-left:4px solid rgb(255, 165, 0);
+                }
+                &.low {
+                    border-left:4px solid #d15b47;
+                }
+                &.many {
+                    border-left:4px solid #ffff00;
+                }
+            }
+            tr.dep-row {
+                background-color: #eee;
+                &.wrong-version {
+                    color: #000;
+                    border-left: 3px solid yellow;
+                }
+                &>td:first-child {
+                    padding-left: 50px;
+                }
+            }
+        }
+    }
+}

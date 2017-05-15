@@ -1,0 +1,62 @@
+<script type="text/ng-template" id="pagination.custom.html">
+    <nav ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li><a ng-click="selectPage(1)">First</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+            </li>
+            <li>
+                <a>
+                    <page-select></page-select>of {{numPages}}</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+            </li>
+            <li><a ng-click="selectPage(numPages)">Last</a>
+            </li>
+        </ul>
+    </nav>
+</script>
+<table st-table="vm.displayCollection" st-safe-src="vm.rowCollection" class="table table-striped">
+    <thead class="sticky-header">
+        <tr>
+            <th colspan="{{vm.colCount}}" class="search-container">
+                <div class="widget-header">
+                    <span class="title">Component / {{vm.componentName}}({{vm.rowCollection.length}})</span>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input st-search placeholder="key word" class="input-sm form-control" type="search"
+                        />
+                    </div>
+                </div>
+            </th>
+        </tr>
+        <tr class="widget-header">
+            <th class="sorting" st-sort="{{c.field}}" width="{{c.width}}" ng-repeat="c in vm.colCollection"><span uib-tooltip="{{c.description}}" tooltip-placement="top-center">{{c.name}}</span> 
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.displayCollection">
+            <td ng-repeat="c in vm.colCollection">{{c.formatFn(row[c.field])}}</td>
+        </tr>
+    </tbody>
+    <tfoot ng-if="vm.hasTotal">
+        <tr class="list-summary">
+            <td colspan="{{vm.colCollection.length}}">
+                Summary:
+            </td>
+        </tr>
+        <tr>
+            <th width="{{c.width}}" ng-repeat="c in vm.colCollection">
+                {{vm.getTotal(c.field,c.type)}}
+            </th>
+        </tr>
+    </tfoot>
+    <tfoot>
+        <tr>
+            <td colspan="{{vm.colCollection.length}}" class="text-center">
+                <div st-items-by-page="15" st-pagination="" st-template="pagination.custom.html"></div>
+            </td>
+        </tr>
+    </tfoot>

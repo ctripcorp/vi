@@ -1,0 +1,224 @@
+<style rel="stylesheet">
+    .col-right {
+        text-align: right;
+    }
+    .perf-list {
+        padding-top: 30px;
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    .perf-list .fixed-width {
+        width: 150px;
+    }
+    .panel {
+        border: 1px solid #bbb;
+        position: relative;
+        padding: 10px;
+	padding-bottom:0px;
+    }
+    .panel>.title {
+        position: relative;
+        top: -18px;
+        left: 0px;
+        background: #fff;
+    }
+    .panel>.content {
+        position: relative;
+        top: -13px;
+    }
+    .panel>.content.cprogress {
+        top: -15px;
+        display: block;
+        height: 200px;
+        width: 100px;
+        text-align: center;
+    }
+    .panel>.content.cprogress .bar-container {
+        display: block;
+        margin-left: 25px;
+        margin-top: 0px;
+        height: 150px;
+        width: 50px;
+        overflow: hidden;
+    }
+    .panel>.content.cprogress .bar-txt {
+        color: #2ca02c;
+        margin-top: -10px;
+    }
+    .panel>.content.cprogress .bar-process {
+        display: block;
+        position: relative;
+        height: 150px;
+        width: 70px;
+    }
+</style>
+<script type="text/ng-template" id="perfmonitor732.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{vm.title}} 使用记录</h3>
+    </div>
+    <div class="modal-body">
+        <nvd3  options="vm.historyOption" data="vm.historyData"></nvd3>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+    </div>
+</script>
+<div class="widget-header">
+    <span class="title">Performance monitor {{vm.startDate | date:"mediumTime"}} ~ {{vm.lastUpdateTime | date:"mediumTime"}}</span>
+    <a style="float:right;padding-right:15px" href="{{urls.hostHistory}}" target="_blank">查看上历史数据</a>
+</div>
+<div class="perf-list">
+    <div class="row">
+        <div class="col-md-3 fixed-width">
+            <div class="panel">
+                <div class="title" style="width:70px">CPU 利用率</div>
+                <div class="cprogress content">
+                    <br/>
+                    <div class="bar-container progress active">
+                        <div ng-style="{'top':(100-cpu.load)+'%'}" class="bar-process progress-bar active progress-bar-success"></div>
+                    </div>
+                    <div class="bar-txt">{{(cpu.load)}}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel">
+                <div class="title" style="width:120px">CPU 使用记录 <a style="cursor:pointer" ng-click="vm.showAll('cpu',cpuOptions,cpuData)">全部</a></div>
+                <div class="content">
+                    <nvd3 api="cpuApi" options="cpuOptions" data="cpuData"></nvd3>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel">
+                <div class="title" style="width:120px">swap使用情况 <a style="cursor:pointer" ng-click="vm.showAll('swap',swapOptions,swapData)">全部</a></div>
+                <div class="content">
+                    <nvd3 api="swapApi" options="swapOptions" data="swapData"></nvd3>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel">
+                <div class="title" style="width:80px">磁盘使用情况</div>
+                <div class="content">
+                    <nvd3 api="diskApi" options="diskOptions" data="diskData"></nvd3>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-3 fixed-width ">
+            <div class="panel">
+                <div class="title" style="width:60px">物理内存</div>
+                <div class="cprogress content">
+                    <br/>
+                    <div class="bar-container progress active">
+                        <div ng-style="{top:(100-mem.load)+'%'}" class="bar-process progress-bar active progress-bar-success"></div>
+                    </div>
+                    <div class="bar-txt">{{(mem.usedGB).toFixed(2)}}GB</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel">
+                <div class="title" style="width:130px">内存 使用记录 <a style="cursor:pointer" ng-click="vm.showAll('mem',memOptions,memData)">全部</a></div>
+                <div class="content">
+                    <nvd3 api="memApi" options="memOptions" data="memData"></nvd3>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel">
+                <div class="title" style="width:130px">堆内存 使用记录 <a style="cursor:pointer" ng-click="vm.showAll('heapMem',heapMemOptions,heapMemData)">全部</a></div>
+                <div class="content">
+                    <nvd3 api="heapMemApi" options="heapMemOptions" data="heapMemData" on-ready="heapMemOnReady"></nvd3>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel">
+                <div class="title" style="width:130px">非堆内存 使用记录 <a style="cursor:pointer" ng-click="vm.showAll('nonHeapMem',nonHeapMemOptions,nonHeapMemData)">全部</a></div>
+                <div class="content">
+                    <nvd3 api="nonHeapMemApi" options="nonHeapMemOptions" data="nonHeapMemData"></nvd3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-4">
+            <div class="panel">
+                <div class="title" style="width:50px">内存(MB)</div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-6">总数</div>
+			<div class="col-xs-6 col-right">{{mem.sizeMB}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">空闲</div>
+			<div class="col-xs-6 col-right">{{mem.freeMB}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">提交的虚拟内存</div>
+			<div class="col-xs-6 col-right">{{mem.committedVMMB}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="title" style="width:30px">线程</div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-6">活动线程</div>
+			<div class="col-xs-6 col-right">{{currentThreadCount}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">峰值</div>
+			<div class="col-xs-6 col-right">{{peakThreadCount}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">守护线程</div>
+			<div class="col-xs-6 col-right">{{daemonThreadCount}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">启动总数</div>
+			<div class="col-xs-6 col-right">{{beanCreatedThreadCount}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 ">
+            <div class="panel">
+                <div class="title" style="width:30px">系统</div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-4">操作系统</div>
+			<div class="col-xs-8 col-right">{{os}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">启动时间</div>
+			<div class="col-xs-8 col-right">{{appStartUpTime}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">运行时间</div>
+			<div class="col-xs-8 col-right">{{runtime}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">cpu 时间</div>
+			<div class="col-xs-8 col-right">{{(processCpuTime/1000000000).toFixed(2)}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">处理程序数</div>
+			<div class="col-xs-8 col-right">{{availableProcessors}}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

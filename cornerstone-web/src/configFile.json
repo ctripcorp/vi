@@ -1,0 +1,16 @@
+{
+    "dev": {
+        "API_ENDPOINT": {
+            "host": "http://localhost",
+            "port": 8080,
+            "path": "/vi-example-0/vi/api",
+            "needsAuth": false
+        }
+    },
+    "deploy": {
+        "API_ENDPOINT": {
+            "path": "api",
+            "needsAuth": false
+        }
+    }
+}

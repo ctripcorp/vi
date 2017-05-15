@@ -1,0 +1,195 @@
+<style rel="stylesheet">
+    .main {
+        width: 90%;
+        margin-left:5%;
+        text-align: center;
+        font-size: 13px;
+        padding-top: 30px;
+    }
+    .section {
+        border-top: 2px groove #AAAAAA;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    .row>.title {
+        text-align: right;
+        font-weight: bolder;
+        padding-left: 0px;
+        padding-right: 0px;
+        min-width: 120px;
+    }
+    .row>.content {
+        text-align: left;
+        padding-right: 0px;
+        word-break:break-all;
+    }
+</style>
+<div class="main">
+    <div class="row">
+        <h3>VM 概要</h3>
+    </div>
+    <div class="row section">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">
+                    虚拟机：
+                </div>
+                <div class="col-md-9 content">{{vmName}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">
+                    供应商：
+                </div>
+                <div class="col-md-9 content">{{vmVendor}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">
+                    JDK 版本：
+                </div>
+                <div class="col-md-9 content">{{jdkVersion}}</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">
+                    运行时间：
+                </div>
+                <div class="col-md-9 content">{{upTime}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">
+                    进程CPU时间：
+                </div>
+                <div class="col-md-9 content">{{processCpuTime}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row section">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">活动线程：</div>
+                <div class="col-md-9 content">{{currentThreadCount}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">峰值：</div>
+                <div class="col-md-9 content">{{peakThreadCount}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">启动的线程总数：</div>
+                <div class="col-md-9 content">{{totalStartedThreadCount}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">守护程序线程：</div>
+                <div class="col-md-9 content">{{daemonThreadCount}}</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">已加载当前类：</div>
+                <div class="col-md-9 content">{{loadedClassCount}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">已加载类总数：</div>
+                <div class="col-md-9 content">{{totalLoadedClassCount}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">已卸载类总数：</div>
+                <div class="col-md-9 content">{{unloadedClassCount}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row section">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">当前堆大小：</div>
+                <div class="col-md-9 content">{{heapUsedMemory}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">最大堆大小：</div>
+                <div class="col-md-9 content">{{heapMaxMemory}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">堆提交：</div>
+                <div class="col-md-9 content">{{heapCommitedMemory}}</div>
+            </div>
+
+            <div class="row" ng-repeat="g in gcInfos">
+                <div class="col-md-3 title">垃圾收集器：</div>
+                <div class="col-md-9 content">名称='{{g.name}}',收集={{g.gcCount}},总花费时间={{g.gcTime/1000}} 秒</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">当前非堆大小：</div>
+                <div class="col-md-9 content">{{nonHeapUsedMemory}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">最大非堆大小：</div>
+                <div class="col-md-9 content">{{nonHeapMaxMemory}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">非堆提交：</div>
+                <div class="col-md-9 content">{{nonHeapCommitedMemory}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row section">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">操作系统：</div>
+                <div class="col-md-9 content">{{os}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">体系结构：</div>
+                <div class="col-md-9 content">{{osArch}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">处理程序数：</div>
+                <div class="col-md-9 content">{{availableProcessors}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">提交的虚拟内存：</div>
+                <div class="col-md-9 content">{{commitedVirtualMemory}}</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 title">总物理内存：</div>
+                <div class="col-md-9 content">{{totalPhysicalMemorySize}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">空闲物理内存：</div>
+                <div class="col-md-9 content">{{freePhysicalMemorySize}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">总交换空间：</div>
+                <div class="col-md-9 content">{{totalSwapSpaceSize}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 title">空闲交换空间：</div>
+                <div class="col-md-9 content">{{freeSwapSpaceSize}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row section">
+        <div class="row">
+            <div class="col-md-1 title">
+                VM 参数：
+            </div>
+            <div class="col-md-9 content">{{vmOptions}}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 title">类路径：</div>
+            <div class="col-md-9 content">{{classPath}}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 title">库路径：</div>
+            <div class="col-md-9 content">{{libraryPath}}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 title">引导类路径：</div>
+            <div class="col-md-9 content">{{bootClassPath}}</div>
+        </div>
+    </div>
+</div>

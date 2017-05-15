@@ -1,0 +1,69 @@
+<style>
+    .main {
+    width: 100%;
+    margin-left:-10px;
+    text-align: center;
+    font-size: 13px;
+    padding-top: 0px;
+    }
+    .section {
+    border-top: 2px groove #AAAAAA;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    }
+    .row>.title {
+    text-align: right;
+    font-weight: bolder;
+    padding-left: 0px;
+    padding-right: 0px;
+    }
+    .row>.title>span {
+     width:100px;
+    }
+    .row>.content {
+    text-align: left;
+    padding-right: 0px;
+    word-break:break-all;
+    }
+</style>
+<div class="main">
+    <div class="row">
+        <h3>点火详情</h3>
+    </div>
+<svg style="width:100%;height:80px"/>
+<svg id="test-chart" style="width:100%;height:80px"/>
+    <div class="row ">
+        <div class="col-md-2 title">
+            <span uib-tooltip="开始时间" tooltip-placement="bottom-right"> Start Time: </span>
+        </div>
+        <div class="col-md-10 content">
+            {{vm.data["startTime"]}}
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-2 title">
+            <span uib-tooltip="状态" tooltip-placement="bottom-right"> Status: </span>
+        </div>
+        <div class="col-md-10 content {{vm.statusClass}}">
+            {{vm.data["status"]}}
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-2 title">
+            <span uib-tooltip="耗时(毫秒)" tooltip-placement="bottom-right"> Cost Time(ms): </span>
+        </div>
+        <div class="col-md-10 content">
+            {{vm.data["cost"]}}
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-2 title">
+            <span uib-tooltip="详情" tooltip-placement="bottom-right"> Detail: </span>
+        </div>
+        <div class="col-md-10 content">
+                <div ng-repeat="m in vm.data['message'] track by $index" class="{{vm.colorMsg(m)}}">
+                    <span ng-bind-html="vm.formatMsg(m)"></span>
+                </div>
+        </div>
+    </div>
+</div>

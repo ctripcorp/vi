@@ -1,0 +1,87 @@
+<div class="op-area type-switch row">
+    <div class="btn-group col-md-3">
+        <label class="btn btn-primary" ng-model="vm.type" uib-btn-radio="'net'">Net</label>
+        <label class="btn btn-primary" ng-model="vm.type" uib-btn-radio="'tree'">Tree</label>
+    </div>
+    <div class="input-group col-md-6">
+        <div class="input-group-addon"><i class="fa fa-search"></i>
+        </div>
+        <input placeholder="key word" ng-model="vm.keyword" ng-change="vm.keywordChange()"
+        class="input-sm form-control" type="search" />
+    </div>
+</div>
+
+<div class="op-area" ng-class="{'net-mode':vm.type==='net'}">
+
+    <div class="normal cell">
+        <input type="checkbox" ng-model="vm.seleNormal" />normal ({{vm.normalCount}})
+    </div>
+    <div class="start cell">
+        <input type="checkbox" ng-model="vm.seleStart" />start
+    </div>
+    <div class="low cell">
+        <input type="checkbox" ng-model="vm.seleLow" />low version ({{vm.lowCount}})
+    </div>
+    <div class="many cell">
+        <input type="checkbox" ng-model="vm.seleMany" />many version ({{vm.manyCount}})
+    </div>
+</div>
+<div class="main-area op-area" ng-show="vm.type==='tree'">
+
+    <table class="table deps-table">
+        <colgroup>
+            <col style="width: 85%; ">
+                <col style="width: 15%;">
+        </colgroup>
+        <thead>
+            <tr class="widget-header">
+                <th>Name</th>
+                <th>Version</th>
+            </tr>
+        </thead>
+	<tbody ng-repeat="r in vm.data | filter:{'fullName':vm.keyword}" ng-show="vm.showRow(r)">
+            <tr ng-dblclick="r.show=!r.show" class="art-row {{r.type}}">
+                <td><span ng-click="r.show=!r.show" class="btn"><i ng-class="{'fa-minus-circle':r.show,'fa-plus-circle':!r.show}" class="fa"></i></span>
+			{{r.fullName}}
+                </td>
+                <td>{{r.version}}</td>
+            </tr>
+            <tr ng-show="r.show">
+                <td colspan="2">Dependencies</td>
+            </tr>
+            <tr ng-show="r.show" class="dep-row {{d.type}}" ng-repeat="d in r.dependencies">
+		    <td>{{d.groupId}}:{{d.artifactId}}:{{d.version}}[{{d.scope||'compile'}}]</td>
+                <td>{{d.version}}</td>
+            </tr>
+            <tr ng-show="r.show">
+                <td colspan="2">Usages</td>
+            </tr>
+            <tr ng-show="r.show" class="dep-row {{d.type}}" ng-repeat="d in r.targets"  ng-class="{'wrong-version': r.version!=d.needVersion}">
+                <td>{{d.groupId}}:{{d.artifactId}}:{{d.version}}[{{d.scope||'compile'}}]</td>
+                <td>
+                    {{d.needVersion}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div ng-show="vm.type=='net'" class="d3-tooltip deps-tooltip">
+    <div class="title">{{vm.seleNode.groupId}}:{{vm.seleNode.artifactId}}:<span class="pom-version">{{vm.seleNode.version}}</span>
+    </div>
+    <div class="title">Location: {{vm.seleNode.location}}</div>
+    <div class="title">Size: {{vm.seleNode.size/1024|number:2}} KB</div>
+    <div>Dependencies:</div>
+    <ul>
+        <li ng-repeat="d in vm.seleNode.dependencies">
+            <div>{{d.groupId}}:{{d.artifactId}}:{{d.version}}[{{d.scope||'compile'}}]</div>
+        </li>
+    </ul>
+    <div>Usages:</div>
+    <ul>
+        <li ng-repeat="d in vm.seleNode.targets">
+            <div>{{d.groupId}}:{{d.artifactId}}:{{d.version}}[{{d.scope||'compile'}}] -> <span ng-class="{'wrong-version':vm.seleNode.version!=d.needVersion}"
+                class="pom-version">{{d.needVersion}}</span>
+            </div>
+        </li>
+    </ul>
+</div>

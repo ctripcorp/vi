@@ -1,0 +1,70 @@
+<style>
+    .main {
+        width: 100%;
+        margin-left: -10px;
+        text-align: center;
+        font-size: 13px;
+        padding-top: 0px;
+    }
+    .section {
+        border-top: 2px groove #AAAAAA;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    .row>.title {
+        text-align: right;
+        font-weight: bolder;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .row>.title>span {
+        width: 100px;
+    }
+    .row>.content {
+        text-align: left;
+        padding-right: 0px;
+        word-break: break-all;
+    }
+</style>
+<div class="main">
+    <div class="row">
+        <h3>点火详情:</h3>
+    </div>
+    <svg style="width:100%;height:80px" />
+        <div class="row ">
+            <div class="col-md-2 title">
+                <span>开始时间:</span>
+            </div>
+            <div class="col-md-10 content">
+                {{vm.data["startTime"]}}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-2 title">
+                <span>状态:</span>
+            </div>
+            <div class="col-md-10 content {{vm.statusClass}}">
+                {{vm.data["status"]}}<i ng-show="vm.data.status=='Running'" class="fa fa-spinner fa-pulse fa-fw"></i>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-2 title">
+                <span>耗时(毫秒):</span>
+            </div>
+            <div class="col-md-10 content">
+                {{vm.data["cost"]}}
+            </div>
+        </div>
+    <scrollbar ng-style="{maxHeight:vm.maxHeight}">
+        <div class="row ">
+            <div class="col-md-2 title">
+                <span>详情:</span>
+            </div>
+            <div class="col-md-10 content">
+                <div ng-repeat="m in vm.data['messages'] track by $index" class="{{vm.colorMsg(m)}}">
+                    <span ng-bind-html="vm.formatMsg(m)"></span>
+                </div>
+            </div>
+        </div>
+    </scrollbar>
+</div>

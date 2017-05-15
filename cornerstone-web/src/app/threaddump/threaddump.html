@@ -1,0 +1,155 @@
+<script type="text/ng-template" id="threadModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+
+        <table st-table="displayCollection" st-safe-src="rawCollection" class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="4" class="search-container">
+                        <div class="widget-header">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-search"></i>
+                                </div>
+                                <input st-search placeholder="key word" class="input-sm form-control" type="search"
+                                />
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                <tr class="widget-header">
+                    <th class="sorting" st-sort="threadId" width="10%">Id</th>
+                    <th class="sorting" st-sort="threadName" width="15%">Name</th>
+                    <th class="sorting" st-sort="threadState" width="10%">State</th>
+                    <th class="sorting" st-sort="waitedCount" width="10%">Waited Count</th>
+                    <th class="sorting" st-sort="blockedCount" width="10%">Blocked Count</th>
+                    <th width="45%">Stack Trace</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="info in displayCollection">
+                    <td>{{info.threadId}}</td>
+                    <td>{{info.threadName}}</td>
+                    <td>{{getStateTip(info)}}</td>
+                    <td>{{info.waitedCount}}</td>
+                    <td>{{info.blockedCount}}</td>
+                    <td>
+                        <ul>
+                            <li ng-repeat="trace in info.stackTrace">
+                                {{formatTrace(trace)}}
+
+                            </li>
+                        </ul>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+    </div>
+</script>
+<div class="perf-list">
+    <div class="row">
+        <div class="panel">
+            <div class="title" style="width:50px">线程
+                <a href="" ng-click="vm.collapse()">
+                    <i ng-class="{false:'fa-angle-double-down',true:'fa-angle-double-up'}[vm.showDiagram]"
+                    class="fa"></i>
+                </a>
+            </div>
+            <div class="thread-summary">
+                <span class="summary-info"> 活动线程：{{vm.currentThreadStats.currentThreadCount}}</span>
+                <span class="summary-info">守护线程：{{vm.currentThreadStats.daemonThreadCount}}</span>
+                <span class="summary-info">启动总数：{{vm.currentThreadStats.totalStartedThreadCount}}</span>
+                <span class="summary-info">峰值：{{vm.currentThreadStats.peakThreadCount}}</span>
+            </div>
+            <div class="content" ng-show="vm.showDiagram">
+                <nvd3 api="vm.threadApi" options="vm.threadOptions" data="vm.threadData"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <uib-tabset active="activeForm">
+            <uib-tab index="0" heading="线程">
+                <div class="dump-container panel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
+                                <div class="input-group">
+                                    <div class="input-group-addon btn btn-primary active" ng-click="vm.refreshThreads()"><i class="fa fa-refresh"></i>
+                                    </div>
+                                    <input ng-model="vm.searchName" placeholder="thread name" class="input-sm form-control"
+                                    type="search" />
+                                </div>
+                            </div>
+                            <div class="p-left ng-style:vm.fixedContainer">
+
+				    <table st-table="displayCollection" class="table" st-safe-src="vm.threads">
+                                    <thead>
+                                        <tr>
+                                            <th class="sorting" st-sort="cpuTime" width="25%">
+                                                cpu time
+                                            </th>
+                                            <th class="sorting" st-sort="state" width="15%">state</th>
+                                            <th class="sorting" st-sort="name" width="60%">
+                                                thread name
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-class="{'selected':t.selected}" ng-click="vm.select(t)" ng-repeat="t in displayCollection | filter:vm.searchName">
+                                            <td>
+                                                <uib-progressbar type="success" value="barVal=(t.cpuTime*100/vm.totalCpu).toFixed(2)">
+                                                    <b class="progress-val">{{t.cpuTime/1000000|number}}ms-{{barVal}}%</b>
+                                                </uib-progressbar>
+                                            </td>
+					    <td class="{{t.state}}">{{t.state}}</td>
+                                            <td>
+                                                {{t.name}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="p-right col-md-6 ng-style:vm.fixedContainer" ng-show="vm.selectedItem">
+                            <div>
+                                名称：{{vm.threadInfo.threadName}}
+                            </div>
+                            <div>
+                                CPU时间：{{vm.selectedItem.cpuTime|number}} ns
+                            </div>
+                            <div>状态：{{(vm.threadInfo.lockName?vm.threadInfo.lockName+"上的":"")
+                                + vm.threadInfo.threadState}}</div>
+                            <div>总阻止数：{{vm.threadInfo.blockedCount}} ,总等待数：{{vm.threadInfo.waitedCount}}</div>
+                            <div>堆栈跟踪：</div>
+                            <ul>
+				    <li ng-class="{'high-light':vm.needHighlight(trace.declaringClass+trace.methodName+trace.methodDetail)}" ng-repeat="trace in vm.threadInfo.stackTrace">
+                                    {{vm.formatTrace(trace)}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+            <button class="btn btn-primary float-right" ng-click="vm.threadDump(true)">检测死锁</button>
+            <button class="btn btn-primary float-right dump-btn" ng-click="vm.threadDump()">Thread Dump</button>
+            <div uib-tooltip="设置thread dump获取调用堆栈的最大深度" class="setter float-right input-group">
+                <span class="input-group-addon">max depth</span>
+                <input ng-model="vm.maxDepth" type="text" class="form-control">
+            </div>
+            <div uib-tooltip="设置堆栈中需加亮行包含的词语(空格分隔)" class="setter float-right input-group">
+                <span class="input-group-addon">Highlight words</span>
+                <input ng-model="vm.highlightWords" type="text" class="highlight-words form-control">
+            </div>
+            <div class="float-right cpu-time">
+                <label>Total Cpu Time: {{vm.totalCpu/1000000|number}}ms</label>
+
+            </div>
+            <!-- /input-group -->
+        </uib-tabset>
+    </div>
+</div>

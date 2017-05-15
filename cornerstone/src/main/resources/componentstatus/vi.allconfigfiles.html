@@ -1,0 +1,32 @@
+<table class="table" st-table="vm.files" st-safe-src="vm.data.allFiles" st-sticky-header
+       st-sticky-header-top="65">
+    <thead class="sticky-header">
+    <tr>
+        <th colspan="4">
+            <div class="widget-header">
+                <span class="title">Files ({{vm.data.allFiles.length}})</span>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-search"></i>
+                    </div>
+                    <input st-search placeholder="key word" class="input-sm form-control" type="search"/>
+                </div>
+            </div>
+        </th>
+
+    </tr>
+    <tr class="widget-header">
+        <th class="sorting" st-sort="path" width="70%">File Name</th>
+        <th class="sorting" st-sort="lastModified" width="15%">Last Modified Time</th>
+        <th class="sorting" st-sort="size" width="15%">Size</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="c in vm.files">
+        <th><a href="{{c.href}}" target="_blank">{{c.name}}</a>
+        </th>
+        <td>{{c.lastModified | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td>{{c.size/1024|number:2}} KB</td>
+    </tr>
+
+    </tbody>
+</table>

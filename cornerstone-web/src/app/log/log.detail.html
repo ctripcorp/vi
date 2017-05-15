@@ -1,0 +1,84 @@
+<script type="text/ng-template" id="log-detail-stat">
+    <div class="modal-header">
+        <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body row">
+        <div class="col-md-6">
+            <nvd3 options="chartOptions" data="chartData"></nvd3>
+        </div>
+        <div class="col-md-6 stat-result">
+            <div class="row" ng-repeat="v in values">
+                <div class="col-sm-6 label-col">{{v.label}}</div>
+                <div class="col-sm-6">{{v.value|number}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+    </div>
+</script>
+<div class="log-detail">
+    <div class="toolbar">
+        <div class="btn-group">
+            <button uib-tooltip="使用标签过滤日志" tooltip-placement="bottom-left" class="btn btn-sm btn-info"
+            ng-click="vm.showFilter=!vm.showFilter;">
+                <i ng-show="!vm.showFilter" class="fa fa-filter"></i>
+                <i ng-show="vm.showFilter" class="fa fa-angle-double-up"></i>
+            </button>
+            <button uib-tooltip="清除过滤条件" tooltip-placement="bottom-left" class="btn btn-sm btn-info"
+            ng-click="vm.clearFilter()">
+                <i class="fa fa-eraser"></i>
+            </button>
+
+            <button uib-tooltip="{{vm.onBottom?'滚动到顶部':'滚动到底部'}}" tooltip-placement="bottom-left"
+            class="btn btn-sm btn-info" ng-click="vm.upDown()">
+                <i class="fa" ng-class="{'fa-chevron-down':!vm.onBottom,'fa-chevron-up':vm.onBottom}"></i>
+            </button>
+            <button uib-tooltip="点击切换搜索模式.文本搜索Txt,正则搜索Regex(正则模式使用回车执行查询)" tooltip-placement="bottom-left"
+            class="btn btn-sm btn-info" ng-click="vm.inRegexMode=!vm.inRegexMode">
+                {{vm.inRegexMode?'Regex':'Txt'}}
+            </button>
+
+            <div class="input-group">
+
+                <input ng-show="vm.showFilter" placeholder="tag name" class="input-sm form-control"
+                ng-model="vm.tagname" type="search" ng-change="vm.searchTag()"
+                />
+                <input ng-show="!vm.showFilter" placeholder="key word" class="input-sm form-control"
+                ng-model="vm.keyword" type="search" ng-keyup="vm.asyncSearch()"
+                ng-keypress="(vm.inRegexMode && $event.which===13)?vm.search(false):0"
+                />
+
+                <span ng-show="!vm.showFilter" class="input-group-addon btn btn-info" ng-click="vm.reset()">
+			
+                <i class="fa fa-close"></i>
+		</span>
+                <span ng-show="!vm.showFilter && vm.currentMatches" class="input-group-addon btn btn-sm btn-info"
+                ng-click="vm.showSearchStat()">
+
+                <i class="fa fa-bar-chart"></i>
+		</span>
+                <span ng-show="!vm.showFilter && vm.currentMatches" class="input-group-addon">found:{{vm.foundCount}}</span>
+            </div>
+            <div ng-show="vm.showFilter" class="btn-group">
+                <label class="btn btn-primary" ng-repeat="t in vm.tags |orderBy:'-count'|filter:vm.tagname"
+                ng-click="vm.filterTag(t.key)" ng-model="vm.seleTags[t.key]" uib-btn-checkbox>{{t.key}}({{t.count}})</label>
+            </div>
+	    <div ng-show="!vm.showFilter && vm.getFilterTags().length>0" class="sele-tags">
+                <span class="log-tag btn btn-primary" ng-repeat="t in vm.getFilterTags()" ng-click="vm.seleTags[t.key]=false;vm.filterTag(t.key)">
+			{{t.key}}({{t.count}})
+			<i class="fa fa-close"></i>
+		</span>
+            </div>
+        </div>
+
+    </div>
+    <a id="vi-log-top"></a>
+
+    <div ng-show="!vm.loadingComplete" class="spinner-panel">
+        <i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i>
+    </div>
+    <div class="log-list" ng-style="{'paddingTop':vm.getFilterTags().length>0?'70px':'30px'}" ng-show="vm.loadingComplete" ng-class="{'filter':vm.isInFilter}"></div>
+    <div class="partion-selector"></div>
+    <a id="vi-log-bottom"></a>
+</div>

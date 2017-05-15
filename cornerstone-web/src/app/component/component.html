@@ -1,0 +1,70 @@
+<div class="home-page">
+    <button class="circle-btn btn sm-btn" ng-click="vm.changeCircle()"><i class="fa  {{vm.circleClass}} green"></i>
+    </button>
+    <ul class="summary-box">
+        <li>
+            <h2>HostInfo</h2>
+            <table class="modtable">
+                <tbody>
+                    <tr ng-repeat="info in vm.sysInfo">
+                        <th style="width:210px">
+                            <span uib-tooltip="{{info.description}}" tooltip-placement="bottom-right">{{info.name}}:</span>
+                        </th>
+
+                        <td class="{{info.cssClass}}">
+                            <span class="info-value" compile="info.html"></span>
+                            {{info.value}} <a ng-show="info.link" href="{{info.link}}"
+                            target="_blank">&nbsp;{{info.linkTxt}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </li>
+        <li>
+            <h2>AppInfo</h2>
+            <table class="modtable">
+                <tbody>
+                    <tr ng-repeat="info in vm.buildInfo">
+                        <th style="width:150px">
+                            <span uib-tooltip="{{info.description}}" tooltip-placement="bottom-right">{{info.name}}:</span>
+                        </th>
+                        <td>
+                            <span class="info-value" compile="vm.getValHtml(info)"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </li>
+    </ul>
+
+    <table class="table" st-table="vm.components" st-safe-src="vm.rawComponents">
+        <colgroup>
+            <col style="width: 20%; ">
+
+        </colgroup>
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <div class="widget-header">
+                        <span class="title">Component</span>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-search"></i>
+                            </div>
+                            <input st-search placeholder="关键字" class="input-sm form-control" type="search"
+                            />
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="c in vm.components">
+                <th><a href="#{{c.href}}">{{c.name}}</a>
+                </th>
+                <td>{{c.description}}</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

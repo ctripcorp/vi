@@ -1,0 +1,121 @@
+.col-right {
+    text-align: right;
+}
+.perf-list {
+    padding-top: 30px;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.perf-list .fixed-width {
+    width: 150px;
+}
+.panel {
+    border: 1px solid #bbb;
+    position: relative;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+.panel>.title {
+    position: relative;
+    top: -18px;
+    left: 0px;
+    background: #fff;
+}
+.panel>.content {
+    position: relative;
+    top: -13px;
+}
+.panel>.content.cprogress {
+    top: -15px;
+    display: block;
+    height: 200px;
+    width: 100px;
+    text-align: center;
+}
+.panel>.content.cprogress .bar-container {
+    display: block;
+    margin-left: 25px;
+    margin-top: 0px;
+    height: 150px;
+    width: 50px;
+    overflow: hidden;
+}
+.panel>.content.cprogress .bar-txt {
+    color: #2ca02c;
+    margin-top: -10px;
+}
+.panel>.content.cprogress .bar-process {
+    display: block;
+    position: relative;
+    height: 150px;
+    width: 70px;
+}
+.dump-container {
+    min-height: 300px;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0px;
+    .p-left {
+        overflow: auto;
+        overflow-x: hidden;
+        height: 100%;
+        tr>td {
+            height: 30px;
+        }
+        td.RUNNABLE {
+            background: #5cb85c;
+            color: #fff;
+        }
+        .progress {
+            background: lightSlateGray;
+            position: relative;
+            left: 0px;
+            top: 0px;
+            height: 20px;
+            margin: 0px;
+        }
+        .progress-val {
+            position: absolute;
+            left: 5px;
+        }
+    }
+    .p-right {
+        right: 0px;
+        overflow: auto;
+        overflow-x: hidden;
+        height: 100%;
+        border-left: 1px solid #aaa;
+        .high-light {
+            background: $sele-background;
+            color: $sele-color;
+        }
+    }
+    .selected {
+        background: $sele-background;
+        color: $sele-color;
+        outline: 0;
+    }
+}
+.setter.input-group {
+    margin-right: 20px;
+    width: 100px;
+    input {
+        width: 50px;
+        &.highlight-words {
+            width: 120px;
+            color: red;
+        }
+    }
+}
+.dump-btn {
+    margin-right: 20px;
+}
+span.summary-info {
+    margin-right: 20px;
+}
+.cpu-time {
+    height: 100%;
+    vertical-align: middle;
+    padding: 7px;
+}

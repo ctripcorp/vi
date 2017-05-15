@@ -1,0 +1,38 @@
+<div class="widget-header">
+    <span class="title">Tomcat monitor {{vm.startDate}} ~ {{vm.nowDate}}</span>
+</div>
+<br/>
+<div style="width:98%">
+    <div class="panel">
+        <div class="title" style="width:350px">当前请求数（最大请求数/sec：{{vm.maxRequestCount}},最大耗时：{{vm.maxTime}})</div>
+        <div class="content">
+            <nvd3 api="vm.requestApi" on-ready="vm.requestOnready" options="vm.requestOptions"
+                  data="vm.requestData"></nvd3>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <div class="panel">
+                    <div class="title" style="width:180px">tomcat 线程(最大线程数:{{vm.maxThreads}})</div>
+                    <div class="content">
+                        <nvd3 api="vm.threadApi" options="vm.threadOptions" data="vm.threadData"></nvd3>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <div class="panel">
+                    <div class="title" style="width:420px">当前请求流量（最大发送/sec：{{vm.formatBytes(vm.maxBytesSent)}} ,最大接收/sec：{{vm.formatBytes(vm.maxBytesReceived)}})</div>
+                    <div class="content">
+                        <nvd3 api="vm.requestBytesApi" options="vm.requestBytesOptions" data="vm.requestBytesData"></nvd3>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

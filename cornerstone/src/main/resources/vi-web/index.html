@@ -1,0 +1,10 @@
+<!doctype html><html ng-app="viModule"><head><meta charset="utf-8"><title>VI(Validate internal)</title><meta name="description" content=""><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="styles/vendor-c3bc41a176.css"><link rel="stylesheet" href="styles/app-0833b5562b.css"><script>
+//$SMENU
+
+        if (typeof $CIP == 'undefined') {
+            $CIP = '127.0.0.1';
+            $CHOSTNAME = 'local';
+        }
+	    </script></head><body><!--[if lt IE 10]>
+ <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+ <![endif]--><div ng-controller="IndexController as vm"><div><acme-navbar></acme-navbar></div><div><acme-sidebar on-change="vm.collapse(isCollapse);"></acme-sidebar></div><div ng-class="{'sidebar-collapse':vm.sidebarCollapse}" class="main-content"><div class="page-view" ui-view=""></div></div><script src="scripts/vendor-a5442eef28.js"></script><script src="scripts/app-21f4a8581d.js"></script></div></body></html>

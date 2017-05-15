@@ -1,0 +1,29 @@
+<table  st-table="vm.displayCollection" st-safe-src="vm.rowCollection" class="table table-striped" st-sticky-header st-sticky-header-top="65">
+    <thead class="sticky-header">
+        <tr>
+            <th colspan="3" class="search-container">
+                <div class="widget-header">
+			<span class="title">Component / {{vm.componentName}}({{vm.rowCollection.length}})</span>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input st-search placeholder="key word" class="input-sm form-control" type="search"
+                        />
+                    </div>
+                </div>
+            </th>
+        </tr>
+        <tr class="widget-header">
+            <th class="sorting" st-sort="name" width="15%">Name</th>
+	    <th class="sorting" st-sort="value" width="{{vm.hasMeta?45:85}}%">Value</th>
+            <th class="sorting" ng-show="vm.hasMeta" st-sort="description" width="40%">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.displayCollection">
+            <td>{{row.name}}</td>
+            <td ng-bind-html="row.value"></td>
+            <td ng-show="vm.hasMeta">{{row.description}} <a ng-show="row.link" href="{{row.link}}" target="_blank">&nbsp;{{row.linkTxt}}</a></td>
+        </tr>
+    </tbody>
+</table>

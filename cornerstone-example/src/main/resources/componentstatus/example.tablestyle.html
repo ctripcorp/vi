@@ -1,0 +1,34 @@
+<table st-table="displayCollection" st-sticky-header st-safe-src="data.hotels" class="table table-striped" st-sticky-header-top="65">
+    <thead class="sticky-header">
+    <tr>
+        <th colspan="5" class="search-container">
+            <div class="widget-header">
+                <span class="title">Hotels</span>
+                <select class="form-control" ng-model="seleType" ng-options="name for name in data.types"></select>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-search"></i>
+                    </div>
+                    <input st-search placeholder="key word" class="input-sm form-control" type="search"/>
+                </div>
+            </div>
+        </th>
+    </tr>
+    <tr class="widget-header">
+        <th class="sorting" st-sort="name" width="30%" >
+            <span uib-tooltip="酒店名称，*****" tooltip-placement="bottom-left">名称</span></th>
+        <th class="sorting" st-sort="score" width="10%">评分</th>
+        <th class="sorting" st-sort="type" width="15%">类型</th>
+        <th class="sorting" st-sort="price" width="20%">价格</th>
+        <th class="sorting" st-sort="city" width="15%">城市</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in displayCollection | filter:collFilter">
+        <td>{{item.name}}</td>
+        <td>{{item.score}}</td>
+        <td>{{item.type}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.city}}</td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,40 @@
+
+.search-container{
+
+	.input-group{
+		float:right;
+		width:200px;
+		&>.input-group-addon{
+
+			background:#fff;
+			border-right:0px;
+		}
+		input{
+
+			border-left:0px;
+		}
+
+	}
+
+		select{
+			float:left;
+			margin-left:10px;
+			margin-top:3px;
+			width:250px;
+		}
+	
+
+
+}
+
+.config-input{
+	background:transparent;
+	border:none;
+	outline:0;
+	width:100%;
+	border-bottom:1px dashed #666;
+}
+
+.config-changed{
+}
+
