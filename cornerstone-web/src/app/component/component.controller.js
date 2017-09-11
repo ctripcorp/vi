@@ -24,6 +24,52 @@
             bindAppSummary();
         }
 
+        vm.sourceEnabledChange = function(m) {
+            var isOk = false;
+            if (m.old == m.value) {
+                return;
+            }
+	    var newval = m.value;
+	    m.value = !m.value;
+            var cfm = $confirm({
+                text: 'Are you sure to ' + (newval? 'enable [statusSources' : 'disable [statusSources') + ']?'
+            }).then(function() {
+                isOk = true;
+                if (newval) {
+                    appService.enableStatusSource(function(result) {
+                        if (result instanceof VIException) {
+
+                            toastr.error(result.Message, 'submit failed!');
+                            m.value = false;
+                            return false;
+                        } else {
+
+                            m.old = true;
+			    m.value = true;
+                        }
+
+                    });
+                } else {
+                    appService.disableStatusSource(function(result) {
+                        if (result instanceof VIException) {
+
+                            toastr.error(result.Message, 'submit failed!');
+                            m.value = true;
+                            return false;
+                        } else {
+
+                            m.old = false;
+			    m.value = false;
+                        }
+
+                    });
+
+                }
+            });
+
+
+        };
+
         vm.changeCircle = function() {
 
             vm.isPause = !vm.isPause;
@@ -158,9 +204,13 @@
                     info.value = VIUtil.formatBytes(info.value);
                     break;
                 case 'systemCpuLoad':
+                case 'processCpuLoad':
                     info.cssClass = info.value > 0.5 ? 'data-warn' : 'data-normal';
                     info.value = (info.value * 100).toFixed(2) + '%';
                     break;
+		case 'processCpuTime':
+		    info.value = VIUtil.calculateRunTime(info.value/1000000);
+		    break;
                 case 'openFileDescriptorCount':
                     if (info.value > 0) {
                         var val = info.value;
@@ -216,12 +266,16 @@
                 case 'webInfo':
                     rtn = '<a href="' + ApiService.getAbsoluteUrl('/download/config/root_web.xml') + '" target="_blank">查看</a>';
                     break;
-		case 'statusSourceNames':
-		    if(info.value instanceof Array){
-			    info.value = info.value.join(' , ');
-		    }
-		    rtn = '{{info.value.length>60 && !info.showAll?info.value.substr(0,59)+"...":info.value}}<span ng-click="info.showAll = !info.showAll" class="link" ng-show="info.value.length>60">{{info.showAll?"less":"more"}}</span>';
-		    break;
+                case 'statusSourceEnabled':
+                    info.old = info.value;
+                    rtn = '<switch disabled="' + (!isOwner) + '" ng-model="info.value" class="green" ng-change="vm.sourceEnabledChange(info)"/>';
+                    break;
+                case 'statusSourceNames':
+                    if (info.value instanceof Array) {
+                        info.value = info.value.join(' , ');
+                    }
+                    rtn = '{{info.value.length>60 && !info.showAll?info.value.substr(0,59)+"...":info.value}}<span ng-click="info.showAll = !info.showAll" class="link" ng-show="info.value.length>60">{{info.showAll?"less":"more"}}</span>';
+                    break;
                 default:
                     rtn = info.value;
                     break;
@@ -262,7 +316,7 @@
                     }
 
                     var nowUser = $cookies.get('vi-user');
-                    isOwner = (nowUser.length > 2 && nowUser == data['appOwner']);
+                    isOwner = (nowUser && nowUser.length > 2 && nowUser == data['appOwner']);
                     $rootScope.$broadcast('appinfo.ready', data);
 
                     if (data['appStatus'] == 'Uninitiated' || data['appStatus'] == 'Initiating') {
@@ -303,7 +357,7 @@
                         upTimeDS.value = VIUtil.calculateRunTime(upTime);
                     }
                     return true;
-                }, 'systemCpuLoad,availableMem,PhysicalMemoryAvaliable,DiskAvaliable,openFileDescriptorCount,cpuLoadAverages');
+                }, 'systemCpuLoad,availableMem,PhysicalMemoryAvaliable,DiskAvaliable,openFileDescriptorCount,cpuLoadAverages,processCpuTime,processCpuLoad');
             });
         }
     }

@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.util.IOUtils;
-import com.ctrip.framework.cornerstone.util.TextUtils;
+import com.ctrip.framework.vi.util.IOUtils;
+import com.ctrip.framework.vi.util.TextUtils;
 import org.junit.Test;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;

@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents;
+package com.ctrip.framework.vi.component.defaultComponents;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.util.LinuxInfoUtil;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.util.LinuxInfoUtil;
 import com.sun.management.OperatingSystemMXBean;
 
 import java.io.File;
@@ -15,32 +15,32 @@ import java.util.*;
  */
 @ComponentStatus(id="vi.performancemonitor",name="performance monitor",description = "性能监视",custom = true)
 public class PerformanceStatus {
-    private final long committedVirtualMemorySize;
+    public final long committedVirtualMemorySize;
 
-    private final long freePhysicalMemorySize;
+    public final long freePhysicalMemorySize;
 
-    private final long totalPhysicalMemorySize;
-    private final long totalSwapSpaceSize;
-    private final long freeSwapSpaceSize;
-    private final long processCpuTime;
-    private final int availableProcessors;
-    private final double processCpuLoad;
-    private final double systemCpuLoad;
-    private final double systemLoadAverage;
-    private final String appStartUpTime;
-    private final int currentThreadCount;
-    private final int daemonThreadCount;
-    private final long beanCreatedThreadCount;
-    private final int peakThreadCount;
-    private final int loadedClassCount;
-    private final long totalLoadedClassCount;
-    private final long unloadedClassCount;
-    private final long runtime;
-    private long availableMemory=-1;
-    private final String os;
-    private final MemoryUsage heapMemoryUsage;
-    private final MemoryUsage nonHeapMemoryUsage;
-    private final List<RootFile> rootFiles = new LinkedList<>();
+    public final long totalPhysicalMemorySize;
+    public final long totalSwapSpaceSize;
+    public final long freeSwapSpaceSize;
+    public final long processCpuTime;
+    public final int availableProcessors;
+    public final double processCpuLoad;
+    public final double systemCpuLoad;
+    public final double systemLoadAverage;
+    public final String appStartUpTime;
+    public final int currentThreadCount;
+    public final int daemonThreadCount;
+    public final long beanCreatedThreadCount;
+    public final int peakThreadCount;
+    public final int loadedClassCount;
+    public final long totalLoadedClassCount;
+    public final long unloadedClassCount;
+    public final long runtime;
+    public long availableMemory=-1;
+    public final String os;
+    public final MemoryUsage heapMemoryUsage;
+    public final MemoryUsage nonHeapMemoryUsage;
+    public final List<RootFile> rootFiles = new LinkedList<>();
     private int minorGcCount;
     //private long minorGcTime;
     private int fullGcCount;
@@ -95,7 +95,7 @@ public class PerformanceStatus {
         if(HostInfo.isLinux()){
             try {
                 availableMemory = (LinuxInfoUtil.getAvailableMemKB()*1024l);
-            } catch (Throwable e) {
+            } catch (Throwable ignored) {
             }
         }
 

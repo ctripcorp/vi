@@ -1,0 +1,168 @@
+<div class="widget-header">
+    <span class="title">Visual GC {{vm.startDate | date:"mediumTime"}} ~ {{vm.lastUpdateTime | date:"mediumTime"}}</span>
+</div>
+<div class="gc-list">
+    <div class="row">
+        <div class="col-sm-3">
+
+            <div class="row gc-gen">
+
+                <div class="col-sm-4">
+                    <div class="bar-panel perm">
+			    <span class="title">{{vm.permTitle}}</span>
+                        <div class="bar-container progress active">
+                            <div ng-style="{'top':vm.permLeftPercent + '%'}" class="bar-process progress-bar active progress-bar-warn"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="bar-panel old">
+                        <span class="title">Old</span>
+                        <div class="bar-container progress active">
+                            <div ng-style="{'top':vm.oldLeftPercent + '%'}" class="bar-process progress-bar active progress-bar-success"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="bar-panel eden">
+                        <div class="title" style="width:30px">Eden</div>
+                        <div class="bar-container progress active">
+                            <div ng-style="{'top':vm.edenLeftPercent + '%'}" class="bar-process progress-bar active progress-bar-success"></div>
+                        </div>
+                    </div>
+                    <div class="bar-panel s0">
+                        <div class="title" style="width:30px">S0</div>
+                        <div class="bar-container progress active">
+                            <div ng-style="{'top':vm.s0LeftPercent + '%'}" class="bar-process progress-bar active progress-bar-success"></div>
+                        </div>
+                    </div>
+                    <div class="bar-panel s1">
+                        <div class="title" style="width:30px">S1</div>
+                        <div class="bar-container progress active">
+                            <div ng-style="{'top': vm.s1LeftPercent + '%'}" class="bar-process progress-bar active progress-bar-success"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 graph">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">Compile time: {{vm.totalCompile}} compiles - {{vm.compileTime}}s 
+                        </span>
+                        <div class="content">
+                            <nvd3 api="vm.compileApi" options="vm.compileOptions" data="vm.compileData"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">Class loader time: {{vm.classesLoaded}} loaded, {{vm.classesUnloaded}} unloaded - {{vm.classLoadTime}}s
+                        </span>
+                        <div class="content">
+                            <nvd3 options="vm.cloaderOptions" data="vm.cloaderData"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">GC Time: {{vm.gcEvents}} collections, {{vm.gcTimes}} Last Causes: {{vm.lastGCCause}}</span>
+                        <div class="content">
+                            <nvd3 options="vm.gcOptions" data="vm.gcData"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">Eden Space ({{vm.edenSize}},{{vm.edenCapacity}}): {{vm.edenUsed}}, {{vm.edenGCEvents}} collections, {{vm.edenGCTime}}
+                        </span>
+                        <div class="content">
+                            <nvd3 options="vm.edenOptions" data="vm.edenData"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">Survivor 0 ({{vm.survivor0Size}},{{vm.survivor0Capacity}}): {{vm.survivor0Used}}</span>
+                        <div class="content">
+                            <nvd3 options="vm.s0Options" data="vm.s0Data"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">Survivor 1 ({{vm.survivor1Size}},{{vm.survivor1Capacity}}): {{vm.survivor1Used}}</span>
+                        <div class="content">
+                            <nvd3 options="vm.s1Options" data="vm.s1Data"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel">
+                        <span class="title">Old Gen  ({{vm.tenuredSize}},{{vm.tenuredCapacity}}): {{vm.tenuredUsed}}, {{vm.tenuredGCEvents}} collections, {{vm.tenuredGCTime}}</span>
+                        <div class="content">
+                            <nvd3 options="vm.oldOptions" data="vm.oldData"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="panel">
+			    <span class="title">{{vm.permTitle}} ({{vm.permSize}},{{vm.permCapacity}}): {{vm.permUsed}}</span>
+                        <div class="content">
+                            <nvd3 options="vm.permOptions" data="vm.permData"></nvd3>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="vm.histogram">
+    <div class="row gc-parameters">
+        <div class="col-sm-12">
+            <div class="panel">
+                <span class="title">Parameters</span>
+                <div class="row content">
+			<div class="col-sm-3">Tenuring Threshold:<span class="gc-parameter-value">{{vm.tenuringThreshold}}</span></div>
+			<div class="col-sm-3">Max Tenuring Threshold:<span class="gc-parameter-value">{{vm.maxTenuringThreshold}}</span></div>
+			<div class="col-sm-3">Desired Survivor Size:<span class="gc-parameter-value">{{vm.desiredSurvivorSize}}</span></div>
+			<div class="col-sm-3">Current Survivor Size:<span class="gc-parameter-value">{{vm.currentSurvivorSize}}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <span class="title">Histogram</span>
+                <div class="row content histogram">
+			<div class="bar-panel" ng-style="{'width':vm.histogramWidth}" ng-repeat="v in vm.histogram track by $index">
+			    <span class="title">{{$index}}</span>
+                        <div class="bar-container progress active">
+                            <div ng-style="{'top':v + '%'}" class="bar-process progress-bar active progress-bar-warn"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

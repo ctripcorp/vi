@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.configuration;
+package com.ctrip.framework.vi.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class PropertiesConfiguration implements Configuration {
 
     }
 
-    public void loadProperties(Properties properties){
+    public final void loadProperties(Properties properties){
 
         for(Map.Entry<Object,Object> entry:properties.entrySet()){
             properties.put(String.valueOf(entry.getKey()),entry.getValue());

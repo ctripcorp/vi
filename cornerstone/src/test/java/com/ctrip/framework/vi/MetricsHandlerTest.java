@@ -1,8 +1,9 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.metrics.MetricsCollector;
-import com.ctrip.framework.cornerstone.metrics.MetricsSnapshot;
-import com.ctrip.framework.cornerstone.metrics.MetricsStatsBuffer;
+import com.ctrip.framework.vi.metrics.Metrics;
+import com.ctrip.framework.vi.metrics.MetricsCollector;
+import com.ctrip.framework.vi.metrics.MetricsSnapshot;
+import com.ctrip.framework.vi.metrics.MetricsStatsBuffer;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -30,7 +31,7 @@ public class MetricsHandlerTest {
     public void testMetricsRegister() throws Exception {
         VIApiHandler apiHandler = new VIApiHandler();
         String metricsPath = "/metrics/";
-        String rawJson = "{'names':['vi.api']}";
+        String rawJson = "{'names':['"+Metrics.VIAPI+"']}";
 
 
         String observerId = (String) apiHandler.executeService(metricsPath+"register","me",loadParasFromJsonString(rawJson,false)).getData();
@@ -49,8 +50,8 @@ public class MetricsHandlerTest {
             System.out.println(raw);
         }
         currentStat = (Map<String, MetricsSnapshot>) raw;
-        assertTrue(currentStat.containsKey("vi.api"));
-        assertEquals(2, currentStat.get("vi.api").count);
+        assertTrue(currentStat.containsKey(Metrics.VIAPI));
+        assertEquals(2, currentStat.get(Metrics.VIAPI).count);
 
         MetricsCollector.getCollector().stopAndClear();
         Thread.sleep(500);
@@ -60,7 +61,7 @@ public class MetricsHandlerTest {
     public void testHavePercentilesMetricsRegister() throws Exception {
         VIApiHandler apiHandler = new VIApiHandler();
         String metricsPath = "/metrics/";
-        String rawJson = "{'names':['vi.api'],'percentiles':[99.0,95.0]}";
+        String rawJson = "{'names':['"+ Metrics.VIAPI+"'],'percentiles':[99.0,95.0]}";
 
 
         String observerId = (String) apiHandler.executeService(metricsPath+"register","me",loadParasFromJsonString(rawJson,false)).getData();
@@ -75,19 +76,20 @@ public class MetricsHandlerTest {
         Map<String,MetricsSnapshot> currentStat;
         Object raw = apiHandler.executeService(metricsPath+"current","me",loadParasFromJsonString(rawJson,true)).getData();
 
+        Thread.sleep(200);
         if(raw instanceof  String){
             System.out.println(raw);
         }
         currentStat = (Map<String, MetricsSnapshot>) raw;
-        assertTrue(currentStat.containsKey("vi.api"));
-        assertEquals(2, currentStat.get("vi.api").count);
+        assertTrue(currentStat.containsKey(Metrics.VIAPI));
+        assertEquals(2, currentStat.get(Metrics.VIAPI).count);
         Thread.sleep(100);
 
         raw = apiHandler.executeService(metricsPath+"current","me",loadParasFromJsonString(rawJson,true)).getData();
 
         currentStat = (Map<String, MetricsSnapshot>) raw;
-        assertTrue(currentStat.containsKey("vi.api"));
-        assertEquals(1, currentStat.get("vi.api").count);
+        assertTrue(currentStat.containsKey(Metrics.VIAPI));
+        assertEquals(1, currentStat.get(Metrics.VIAPI).count);
         MetricsCollector.getCollector().stopAndClear();
         Thread.sleep(500);
 

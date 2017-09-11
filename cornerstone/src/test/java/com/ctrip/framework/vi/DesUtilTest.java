@@ -1,8 +1,9 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.util.DesUtil;
-import junit.framework.Assert;
+import com.ctrip.framework.vi.util.DesUtil;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by jiang.j on 2016/5/3.
@@ -13,7 +14,7 @@ public class DesUtilTest {
         String key="somekey09!@%%$";
         String data = "hello world";
         try {
-            Assert.assertEquals(data,DesUtil.decrypt(DesUtil.encrypt(data,key),key));
+            assertEquals(data, DesUtil.decrypt(DesUtil.encrypt(data, key), key));
         } catch (Exception e) {
             e.printStackTrace();
         }

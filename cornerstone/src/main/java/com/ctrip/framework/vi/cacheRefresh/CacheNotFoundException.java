@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.cacheRefresh;
+package com.ctrip.framework.vi.cacheRefresh;
 
 /**
  * Created by jiang.j on 2016/5/12.

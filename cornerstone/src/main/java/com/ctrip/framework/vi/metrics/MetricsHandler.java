@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.metrics;
+package com.ctrip.framework.vi.metrics;
 
-import com.ctrip.framework.cornerstone.Permission;
-import com.ctrip.framework.cornerstone.ViFunctionHandler;
+import com.ctrip.framework.vi.Permission;
+import com.ctrip.framework.vi.ViFunctionHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.component.defaultComponents.ProcessInfo;
+import com.ctrip.framework.vi.component.defaultComponents.ProcessInfo;
 import org.junit.Test;
 
 /**

@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.configuration;
+package com.ctrip.framework.vi.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

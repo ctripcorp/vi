@@ -23,7 +23,7 @@ st-sticky-header-top="15">
     </thead>
     <tbody>
         <tr ng-repeat="c in vm.logs">
-            <th><a href="#{{c.href}}">{{c.name}}</a>
+            <th><a href="#{{c.href}}">{{vm.formatName(c.name)}}</a>
             </th>
 	    <td>{{c.modifiedTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 	    <td>{{c.size/1024|number:2}} KB</td>

@@ -14,8 +14,14 @@
             getAll: function(func) {
                 return ApiService.doGet(apiUrl + 'all').then(func);
             },
-            get: function(key,func) {
-                return ApiService.doGet(apiUrl + 'get',{'key':key}).then(func);
+            get: function(key, func) {
+                var rtn = ApiService.doGet(apiUrl + 'get', {
+                    'key': key
+                });
+                if (func) {
+                    rtn = rtn.then(func);
+                }
+                return rtn;
             },
             getRemarks: function(func) {
                 return ApiService.doGet(apiUrl + 'remarks').then(func);

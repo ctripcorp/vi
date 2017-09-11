@@ -1,8 +1,8 @@
-package com.ctrip.framework.cornerstone.jmx;
+package com.ctrip.framework.vi.jmx;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.FieldInfo;
+import com.ctrip.framework.vi.component.ComponentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,6 @@ public class VIDynamicMBean implements DynamicMBean {
                 }
                 if (field.getType().isEnum()) {
                     rtn = String.valueOf(rtn);
-                }else if(!field.getType().isPrimitive()){
                 }
             }
         } catch (Throwable e) {
@@ -140,7 +139,7 @@ public class VIDynamicMBean implements DynamicMBean {
                         listFieldMap.put(name,tabularType);
                         attributeInfos.add(new OpenMBeanAttributeInfoSupport(name,description,tabularType, true, false, false));
                     } catch (OpenDataException e) {
-                        e.printStackTrace();
+                        logger.warn("get Mbean info failed!",e);
                     }
                 }
                 else {

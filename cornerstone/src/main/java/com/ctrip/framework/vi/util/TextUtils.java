@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 
 import javax.xml.xpath.XPathExpressionException;
@@ -175,4 +175,5 @@ public final class TextUtils {
 	public static boolean hasText(String str) {
 		return hasText((CharSequence) str);
 	}
+
 }

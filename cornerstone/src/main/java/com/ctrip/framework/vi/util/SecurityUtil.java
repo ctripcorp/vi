@@ -1,10 +1,9 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -13,8 +12,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.enterprise.MyX509TrustManager;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.enterprise.MyX509TrustManager;
 
 /**
  * Created by jiang.j on 2016/5/3.
@@ -116,5 +115,12 @@ public final class SecurityUtil {
             VISSLFACTORY = sslContext.getSocketFactory();
         }
         return VISSLFACTORY;
+    }
+
+    public static String md5(String data) throws NoSuchAlgorithmException {
+
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        md5.update(StandardCharsets.UTF_8.encode(data));
+        return String.format("%032x", new BigInteger(1, md5.digest()));
     }
 }

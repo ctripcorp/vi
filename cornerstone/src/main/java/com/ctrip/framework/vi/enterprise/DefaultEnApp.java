@@ -1,5 +1,7 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
+import com.ctrip.framework.vi.code.Debugger;
+import com.ctrip.framework.vi.code.DebuggerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,9 @@ public class DefaultEnApp implements EnApp {
 
         try(InputStream is =Thread.currentThread().getContextClassLoader().getResourceAsStream("META-INF/app.properties")) {
             if(is!=null) {
-                properties.load(new InputStreamReader(is, Charset.defaultCharset()));
+                try(InputStreamReader reader =new InputStreamReader(is, Charset.defaultCharset())) {
+                    properties.load(reader);
+                }
             }
         } catch (Throwable e) {
             logger.warn("read app info error!", e);
@@ -78,6 +82,30 @@ public class DefaultEnApp implements EnApp {
     @Override
     public void register() {
 
+    }
+
+    @Override
+    public boolean trace(String traceId) {
+
+        Debugger debugger = DebuggerManager.getCurrent();
+        if(debugger != null) {
+            try {
+                return debugger.triggerBreakpoint(traceId);
+            } catch (Throwable e) {
+                logger.warn("trigger breakpoint failed", e);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String getGitCommitId() {
+        return null;
+    }
+
+    @Override
+    public String getGitPrjPath() {
+        return null;
     }
 
     @Override

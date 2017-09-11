@@ -1,12 +1,12 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.component.Refreshable;
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
-import com.ctrip.framework.cornerstone.component.defaultComponents.HostInfo;
-import com.ctrip.framework.cornerstone.enterprise.EnApp;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.component.Refreshable;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.FieldInfo;
+import com.ctrip.framework.vi.component.defaultComponents.HostInfo;
+import com.ctrip.framework.vi.enterprise.EnApp;
+import com.ctrip.framework.vi.enterprise.EnFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static com.ctrip.framework.cornerstone.util.TextUtils.nullToNA;
+import static com.ctrip.framework.vi.util.TextUtils.nullToNA;
 
 /**
  * Created by jiang.j on 2016/4/5.
@@ -32,7 +32,7 @@ public class AppInfo implements Refreshable{
     public interface StatusChangeListener{
         void statusChanged(AppStatus oldStatus,AppStatus newStatus);
     }
-    public static final int UNINITIATED=528,INITIATING=526,INITIATED=200,INITIATEDFAILED=527,MARKDOWN=529;
+    public static final int UNINITIATED=528,INITIATING=526,INITIATED=200,INITIATEDFAILED=527,MARKDOWN=530;
 
     @FieldInfo(name = "Application ID", description = "应用ID")
     private  String appid="";
@@ -72,6 +72,9 @@ public class AppInfo implements Refreshable{
     private transient ConcurrentMap<String,StatusSource> statusSources = new ConcurrentHashMap<>();
     @FieldInfo(name="Status Sources",description = "应用状态源")
     private Set<String> statusSourceNames = statusSources.keySet();
+    @FieldInfo(name="Status Sources Enabled",description = "应用状态源是否有效")
+    private boolean statusSourceEnabled = true;
+
 
     public void setNote(String remark){
         appNotes = remark;
@@ -82,6 +85,10 @@ public class AppInfo implements Refreshable{
             return false;
         }
         return this.statusSources.putIfAbsent(statusSource.getClass().getName(),statusSource) == null;
+    }
+
+    protected  void cleanStatusSource(){
+        this.statusSources.clear();
     }
 
     public static AppInfo getInstance(){
@@ -97,10 +104,6 @@ public class AppInfo implements Refreshable{
     }
 
     protected void setAppStatus(AppStatus status){
-        if(appStatus == AppStatus.MarkDown){
-            oldStatus = status;
-            return;
-        }
 
         oldStatus = appStatus;
         appStatus = status;
@@ -111,30 +114,55 @@ public class AppInfo implements Refreshable{
         return getStatus() == AppStatus.Initiated;
     }
 
-    public AppStatus getStatus(){
+    protected void disableStatusSource(){
+        this.statusSourceEnabled = false;
+    }
+
+    protected void enableStatusSource(){
+        this.statusSourceEnabled = true;
+    }
+
+    public boolean isStatusSourceEnabled(){
+        return this.statusSourceEnabled;
+    }
+
+      public AppStatus getStatus(){
 
         boolean hasAbnormal = false;
+        switch (appStatus){
+            case Uninitiated:
+            case Initiating:
+            case InitiatedFailed:
+                return appStatus;
+        }
+
+        if(!this.statusSourceEnabled){
+            return AppStatus.Initiated;
+        }
         for (StatusSource statusSource : this.statusSources.values()) {
             boolean isNormal;
-            try{
+            try {
                 isNormal = statusSource.normal();
-            }catch (Throwable e){
-               logger.error("Status source execute failed!",e);
+            } catch (Throwable e) {
+                logger.error("Status source execute failed!", e);
                 isNormal = false;
             }
 
             if (!isNormal) {
                 hasAbnormal = true;
-                String statusClassName =statusSource.getClass().getName();
-                if(appStatus != AppStatus.MarkDown) {
-                    markDownReason = statusClassName;
-                    latestNews = markDownReason + " mark down the app at " + new Date();
-                    oldStatus = appStatus;
-                    appStatus = AppStatus.MarkDown;
-                    notifyStatusListener(oldStatus, appStatus);
-                }else if(!statusClassName.equals(markDownReason)){
-                    markDownReason = statusClassName;
-                    latestNews = markDownReason + " mark down the app at " + new Date();
+                String statusClassName = statusSource.getClass().getName();
+                if (appStatus != AppStatus.MarkDown || (markDownReason != null && !markDownReason.startsWith("class:"+statusClassName))) {
+                    markDownReason = "class:"+statusClassName;
+                    if(statusSource instanceof  Reason){
+                        markDownReason += ", reason:"+((Reason)statusSource).reason();
+                    }
+                    latestNews = statusClassName + " mark down the app at " + new Date();
+                    logger.warn(latestNews);
+                    logger.warn(markDownReason);
+                    if(appStatus != AppStatus.MarkDown) {
+                        appStatus = AppStatus.MarkDown;
+                        notifyStatusListener(AppStatus.Initiated, appStatus);
+                    }
                 }
                 break;
             }
@@ -142,10 +170,10 @@ public class AppInfo implements Refreshable{
 
         if(appStatus == AppStatus.MarkDown && !hasAbnormal){
             markDownReason = null;
-            appStatus = oldStatus;
-            oldStatus = AppStatus.MarkDown;
+            appStatus = AppStatus.Initiated;
             latestNews = "restore the app status from markdown  at " + new Date();
-            notifyStatusListener(oldStatus,appStatus);
+            logger.warn(latestNews);
+            notifyStatusListener(AppStatus.MarkDown,appStatus);
         }
 
         return appStatus;
@@ -172,6 +200,9 @@ public class AppInfo implements Refreshable{
 
     @Override
     public void refresh() {
+        if(HostInfo.isTomcat()){
+            webInfo = "view";
+        }
         RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
         upTime = runtimeBean.getUptime();
         EnApp enApp = EnFactory.getEnApp();
@@ -197,9 +228,6 @@ public class AppInfo implements Refreshable{
         AppStartUpTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(runtimeBean.getStartTime()));
         upTime = runtimeBean.getUptime();
 
-        if(HostInfo.isTomcat()){
-            webInfo = "view";
-        }
 
     }
 
@@ -215,6 +243,9 @@ public class AppInfo implements Refreshable{
         return appid;
     }
 
+    public String getLatestNews(){
+        return this.latestNews;
+    }
     public boolean addStatusChangeListener(StatusChangeListener listener){
         return statusListeners.putIfAbsent(listener.getClass().getName(), listener)==null;
     }

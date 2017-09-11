@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.cacheRefresh;
+package com.ctrip.framework.vi.cacheRefresh;
 
 import java.util.Map;
 
@@ -9,4 +9,8 @@ public interface CacheCell {
     String id();
     boolean refresh();
     Map<String,Object> getStatus();
+    Object getByKey(String key);
+    Iterable<String> keys();
+    int size();
+
 }

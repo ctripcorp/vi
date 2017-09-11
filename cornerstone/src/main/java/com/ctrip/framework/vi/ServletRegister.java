@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
 import org.slf4j.Logger;
 
@@ -14,17 +14,17 @@ protected static final void regiesterVIServlet(ServletContext context,Logger log
 
         try {
             ServletRegistration.Dynamic asr = context.addServlet("VIApiServlet", VIApiServlet.class);
-            asr.setLoadOnStartup(Integer.MAX_VALUE);
 
             if (asr != null) {
-                asr.addMapping("/@in/api/*");
+                asr.setLoadOnStartup(Integer.MAX_VALUE);
+                asr.addMapping("/vi/api/*");
             } else {
                 logger.warn("Servlet VIApiServlet already exists");
             }
 
             ServletRegistration ssr = context.addServlet("VIHttpServlet", StaticContentServlet.class);
             if (ssr != null) {
-                ssr.addMapping("/@in/*");
+                ssr.addMapping("/vi/*");
             } else {
                 logger.warn("Servlet VIHttpServlet already exists");
             }

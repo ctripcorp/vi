@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents.linux;
+package com.ctrip.framework.vi.component.defaultComponents.linux;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.FieldInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * Created by jiang.j on 2017/1/5.
  */
 
-@ComponentStatus(id="vi.linux.openfiles",name="open files info",description = "应用打开文件列表",list = true)
+@ComponentStatus(id="vi.linux.openfiles",name="open files info",description = "应用打开文件列表",list = true,auto = false)
 public class ProcOpenFile {
 
     @FieldInfo(name = "file name",description = "文件名")
@@ -40,6 +40,9 @@ public class ProcOpenFile {
         File folder = new File("/proc/" + pid + "/fd");
         if(folder.isDirectory()){
             File[] files = folder.listFiles();
+            if(files == null){
+                return rtn;
+            }
             for(File fd:files){
                 Path path = fd.toPath();
                 if(Files.isSymbolicLink(path)){

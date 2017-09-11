@@ -1,12 +1,13 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.annotation.EventSource;
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.configuration.InitConfigurationException;
-import com.ctrip.framework.cornerstone.ignite.Status;
-import com.ctrip.framework.cornerstone.watcher.EventLogger;
-import com.ctrip.framework.cornerstone.watcher.EventLoggerFactory;
+import com.ctrip.framework.vi.code.debug.Condition;
+import com.ctrip.framework.vi.component.defaultComponents.VMSummary;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.ignite.Status;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -15,10 +16,24 @@ import static org.junit.Assert.assertTrue;
  */
 public class IgniteTest {
 
-    @Test
-    public void testIgnite() throws InterruptedException, InitConfigurationException {
+    public class Mytest{
+        String someVal;
+        Mytest mytest;
+        boolean isTrue;
+        int[] someInts;
+    }
+    public void some(){
 
-        ConfigurationManager.getConfigKeys("ignite").remove("com.ctrip.framework.cornerstone.plugins.TestIginite5");
+        Mytest mytest = new Mytest();
+        if(mytest.isTrue && mytest.someInts != null && mytest.someInts[0] ==0 && mytest.mytest !=null && mytest.mytest.someVal!=null && mytest.mytest.someVal.length()>0){
+
+        }
+
+    }
+    @Test
+    public void testIgnite() throws InterruptedException, InitConfigurationException, IOException {
+
+        ConfigurationManager.getConfigKeys("ignite").remove("com.ctrip.framework.vi.plugins.TestIginite5");
         IgniteManager.ignite();
         IgniteStatus status = IgniteManager.getStatus();
 

@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.cornerstone.component.Refreshable;
+import com.ctrip.framework.vi.component.Refreshable;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +21,7 @@ public interface EnApp extends Refreshable{
     Map<String,String> getHelpLinks();
     Properties getProperties();
     void register();
+    boolean trace(String traceId);
+    String getGitCommitId();
+    String getGitPrjPath();
 }

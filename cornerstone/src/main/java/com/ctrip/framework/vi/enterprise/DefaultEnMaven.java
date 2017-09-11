@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.cornerstone.analyzer.PomInfo;
-import com.ctrip.framework.cornerstone.util.SecurityUtil;
+import com.ctrip.framework.vi.analyzer.PomInfo;
+import com.ctrip.framework.vi.util.SecurityUtil;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,5 +74,10 @@ public class DefaultEnMaven implements EnMaven {
         return rtn;
 
 
+    }
+
+    @Override
+    public InputStream getSourceJarByFileName(String fileName) {
+        return null;
     }
 }

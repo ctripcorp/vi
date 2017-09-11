@@ -1,9 +1,9 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.cornerstone.Permission;
-import com.ctrip.framework.cornerstone.ViFunctionHandler;
-import com.ctrip.framework.cornerstone.ui.CustomPage;
-import com.ctrip.framework.cornerstone.util.Tools;
+import com.ctrip.framework.vi.Permission;
+import com.ctrip.framework.vi.ViFunctionHandler;
+import com.ctrip.framework.vi.ui.CustomPage;
+import com.ctrip.framework.vi.util.Tools;
 import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;

@@ -1,0 +1,86 @@
+.main-search {
+    padding-top: 20px;
+    text-align: left;
+    overflow:visible;
+    overflow-x:hidden;
+    min-height:300px;
+    .detail {
+        margin-top: 30px;
+        .title {
+            text-align: right;
+            font-weight: bolder;
+        }
+        .content {
+            &.failed {
+                color: red;
+            }
+            &.success {
+                color: green;
+            }
+        }
+        .log {
+            margin-left: 10%;
+            margin-right: 10%;
+            width: 80%;
+        }
+    }
+    .dropdown-menu {
+        margin-left: 1px;
+        width: 100%;
+        .select-row {
+            background-color: #888;
+            color: #fff;
+        }
+        table tbody tr:hover {
+            background-color: #666;
+            color: #fff;
+        }
+    }
+    .search-bar {
+        width: 60%;
+        margin-left: 20%;
+    }
+    .search-btn {
+        margin-top: 20px;
+    }
+    .vi-logo {
+        font-family: monospace;
+        font-weight: bolder;
+        font-size: 70px;
+    }
+
+    .cost-time{
+    margin-left: 10px;
+    padding-left:5px;
+    padding-right:5px;
+    background: #26b3f7;
+    color: #fff;
+
+    }
+
+    div.block{
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    }
+    div.block>span{
+    outline:none;
+    }
+    div.inner{
+      margin-left:10px;
+
+    }
+    span.meta-inf{
+    margin-left: 10px;
+    background: #26b3f7;
+    color: #fff;
+    padding-left: 5px;
+    padding-right: 5px;
+    }
+}
+.self-check-result {
+    margin-left: 8%;
+    margin-right: 8%;
+}

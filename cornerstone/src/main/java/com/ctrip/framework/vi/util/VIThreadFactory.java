@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,12 +1,13 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
+import com.ctrip.framework.vi.code.debug.DebugTool;
+import com.ctrip.framework.vi.enterprise.EnFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import javax.servlet.*;
 import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by jiang.j on 2016/3/25.
@@ -15,16 +16,28 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class VIServletContextListener implements ServletContextListener {
 
-    public static String ServerInfo;
     Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
         logger.info("Begin Init VI");
-        ServletContext context = sce.getServletContext();
-        ServerInfo = context.getServerInfo();
+        final ServletContext context = sce.getServletContext();
+        System.setProperty(SysKeys.ServerInfo,context.getServerInfo());
 
-        System.setProperty("vi.context.path",context.getContextPath());
+        context.addListener(new ServletRequestListener() {
+            @Override
+            public void requestDestroyed(ServletRequestEvent sre) {
+
+            }
+
+            @Override
+            public void requestInitialized(ServletRequestEvent sre) {
+                HttpServletRequest httpServletRequest = (HttpServletRequest) sre.getServletRequest();
+                EnFactory.getEnApp().trace(httpServletRequest.getHeader(DebugTool.getTraceIdKey()));
+            }
+        });
+        System.setProperty(SysKeys.TOMCATCONTEXTPATH,context.getContextPath());
 
         try {
             Class.forName("javax.servlet.ServletRegistration");

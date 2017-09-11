@@ -1,21 +1,3 @@
-<script type="text/ng-template" id="pagination.custom.html">
-    <nav ng-if="pages.length >= 2">
-        <ul class="pagination">
-            <li><a ng-click="selectPage(1)">First</a>
-            </li>
-            <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
-            </li>
-            <li>
-                <a>
-                    <page-select></page-select>of {{numPages}}</a>
-            </li>
-            <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
-            </li>
-            <li><a ng-click="selectPage(numPages)">Last</a>
-            </li>
-        </ul>
-    </nav>
-</script>
 <table st-table="vm.list" st-safe-src="vm.rawList" class="table table-striped">
     <thead>
         <tr>
@@ -68,7 +50,7 @@
     <tfoot>
         <tr>
             <td colspan="5" class="text-center">
-                <div st-items-by-page="15" st-pagination="" st-template="pagination.custom.html"></div>
+                <div st-items-by-page="15" st-pagination=""></div>
             </td>
         </tr>
     </tfoot>

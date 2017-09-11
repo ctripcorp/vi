@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.component.ComponentHandler;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
+import com.ctrip.framework.vi.component.ComponentHandler;
+import com.ctrip.framework.vi.component.ComponentManager;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.slf4j.Logger;

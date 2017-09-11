@@ -31,6 +31,11 @@ $navbar-inverse-link-color:#5AADBB;
     color: orange;
     font-weight: bolder;
 }
+.warning{
+	color:orange;
+	padding-left:5px;
+
+}
 .status-failed,
 .data-warn {
     color: red;
@@ -103,18 +108,24 @@ table.table {
         word-break: break-all;
     }
 }
+body{
+	overflow:hidden;
+}
+.root-container{
+g.step{
+cursor:pointer;
+}
 .main-content {
-    padding-top: 80px;
     font-size: 12px;
+    position:relative;
     .page-view {
         padding-left: 10px;
         padding-right: 10px;
         margin: 0px;
-        margin-top: -5px;
         border: 0px;
     }
-    overflow:auto;
-    margin-left:115px;
+    margin-left:105px;
+    overflow-y:auto;
     &.sidebar-collapse {
         margin-left: 55px;
     }
@@ -281,6 +292,26 @@ aside.scrollbar-track.scrollbar-track-y{
 .list-summary{
 
 	background:#ccc;
+}
+}
+.dropdown-menu{
+	.select-row{
+
+		background-color:#888;
+		color:#fff;
+	}
+	table tbody tr:hover{
+		background-color:#666;
+		color:#fff;
+	}
+}
+tfoot{
+
+	outline:none;
+}
+.error{
+
+	color:red;
 }
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject

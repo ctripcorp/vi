@@ -1,7 +1,8 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 
 import javax.servlet.http.Cookie;
@@ -112,22 +113,32 @@ public final class HttpUtil {
         try {
             Gson gson = new Gson();
             Type paraMap = new TypeToken<Map<String, JsonElement>>(){}.getType();
-            String rawJson = IOUtils.readAll(req.getInputStream());
-            if(rawJson == null || rawJson.length() == 0){
+            StringBuilder rawJson = new StringBuilder( IOUtils.readAll(req.getInputStream()));
+            if(rawJson.length() == 0){
 
                 for(Map.Entry<String, String[]> entry:req.getParameterMap().entrySet()){
-                    rawJson += entry.getKey();
+                    rawJson.append(entry.getKey());
 
                     if(entry.getValue()[0].length()>0) {
-                        rawJson +="=" + entry.getValue()[0];
+                        rawJson.append("=" ).append(entry.getValue()[0]);
                     }
                 }
             }
-            params = gson.fromJson(rawJson,paraMap);
+            params = gson.fromJson(rawJson.toString(),paraMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return params;
+    }
+
+    public static String getJsonParamVal(Object value){
+
+        if(value instanceof JsonPrimitive){
+            return ((JsonPrimitive)value).getAsString();
+        }else{
+            return (String)value;
+        }
+
     }
 
      public static void addCookie(HttpServletResponse response,

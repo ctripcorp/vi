@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents.linux;
+package com.ctrip.framework.vi.component.defaultComponents.linux;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.FieldInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +12,12 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ctrip.framework.cornerstone.util.LinuxInfoUtil.parseIp;
+import static com.ctrip.framework.vi.util.LinuxInfoUtil.parseIp;
 
 /**
  * Created by jiang.j on 2016/7/28.
  */
-@ComponentStatus(id="vi.linux.socketinfo",name="netstats",description = "应用网络链接信息",list = true)
+@ComponentStatus(id="vi.linux.socketinfo",name="netstats",description = "应用网络链接信息",list = true,auto = false)
 public class LinuxSocketInfo {
 
     static transient Logger _logger = LoggerFactory.getLogger(LinuxSocketInfo.class);
@@ -38,21 +38,29 @@ public class LinuxSocketInfo {
      * unix_CONNECTED = 03,
      */
     @FieldInfo(name = "local ip",description = "本地地址")
-    String local_address;
+    public final String local_address;
     @FieldInfo(name = "local port",description = "本地端口")
-    String local_port;
+    public final String local_port;
     @FieldInfo(name = "remote ip",description = "远端地址")
-    String rem_address;
+    public final String rem_address;
     @FieldInfo(name = "remote port",description = "远端端口")
-    String rem_port;
+    public final String rem_port;
     @FieldInfo(name = "state",description = "状态")
-    String state = null;
+    public final String state;
     @FieldInfo(name = "protocol",description = "协议")
-    String protocol;
+    public final String protocol;
     @FieldInfo(name = "user id",description = "用户id")
-    String uid;
-    public LinuxSocketInfo() {           //create a blank socket..just for the hell of it ie debugging
+    public final String uid;
+    public LinuxSocketInfo(String local_address,String local_port,String rem_address,String rem_port,
+                           String state,String protocol,String uid) {           //create a blank socket..just for the hell of it ie debugging
 
+        this.local_address = local_address;
+        this.local_port = local_port;
+        this.rem_address = rem_address;
+        this.rem_port = rem_port;
+        this.state = state;
+        this.protocol = protocol;
+        this.uid = uid;
     }
 
     public static List<LinuxSocketInfo> getSockets(String type) throws FileNotFoundException {
@@ -60,17 +68,12 @@ public class LinuxSocketInfo {
         final int index = jvmName.indexOf('@');
         String pid = (jvmName.substring(0, index));
         ArrayList<LinuxSocketInfo> sockets = new ArrayList<>();
-        FileReader tcp = null;
-        LineNumberReader lnr = null;
-        String line = null;
+        String line;
 
-        tcp = new FileReader("/proc/" + pid + "/net/"+type);
-        lnr = new LineNumberReader(tcp);
-        try {
+        try(FileReader tcp = new FileReader("/proc/" + pid + "/net/"+type);LineNumberReader lnr = new LineNumberReader(tcp)) {
             lnr.readLine();
             while ((line=lnr.readLine())!=null) {
-                LinuxSocketInfo socketInfo =parseSocket(line.trim());
-                socketInfo.protocol = type;
+                LinuxSocketInfo socketInfo =parseSocket(line.trim(),type);
                 sockets.add(socketInfo);
             }
         } catch (Throwable e) {
@@ -88,62 +91,62 @@ public class LinuxSocketInfo {
         return rtn;
     }
 
-    public static LinuxSocketInfo parseSocket(String line) {          //parse socket entries
+    public static LinuxSocketInfo parseSocket(String line,String type) {          //parse socket entries
 
-        LinuxSocketInfo socketInfo = new LinuxSocketInfo();
         String[] parts = line.split("\\s+");
         Object[] localIp = parseIp(parts[1]);
-        socketInfo.local_address = (String) localIp[0];
+        String local_address = (String) localIp[0];
 
-        socketInfo.local_port =  localIp[1].toString();
+        String local_port =  localIp[1].toString();
 
         Object[] remoteIp = parseIp(parts[2]);
-        socketInfo.rem_address = (String) remoteIp[0];
+        String rem_address = (String) remoteIp[0];
 
-        socketInfo.rem_port =  remoteIp[1].toString();
+        String rem_port =  remoteIp[1].toString();
+        String state = null;
 
-        int st = Integer.valueOf(parts[3],16).intValue();          //get the state number and convert to int from hex
+        int st = Integer.valueOf(parts[3], 16);          //get the state number and convert to int from hex
 
         switch (st) {
             case 0:
-                socketInfo.state = null;
+                state = null;
                 break;
             case 1:
-                socketInfo.state = "ESTABLISHED";
+                state = "ESTABLISHED";
                 break;
             case 2:
-                socketInfo.state = "SYN_SENT";
+                state = "SYN_SENT";
                 break;
             case 3:
-                socketInfo.state = "SYN_RECV";
+                state = "SYN_RECV";
                 break;
             case 4:
-                socketInfo.state = "FIN_WAIT1";
+                state = "FIN_WAIT1";
                 break;
             case 5:
-                socketInfo.state = "FIN_WAIT2";
+                state = "FIN_WAIT2";
                 break;
             case 6:
-                socketInfo.state = "TIME_WAIT";
+                state = "TIME_WAIT";
                 break;
             case 7:
-                socketInfo.state = "CLOSE";
+                state = "CLOSE";
                 break;
             case 8:
-                socketInfo.state = "CLOSE_WAIT";
+                state = "CLOSE_WAIT";
                 break;
             case 9:
-                socketInfo.state = "LAST_ACK";
+                state = "LAST_ACK";
                 break;
             case 10:
-                socketInfo.state = "LISTEN";
+                state = "LISTEN";
                 break;
             case 11:
-                socketInfo.state = "CLOSING";
+                state = "CLOSING";
                 break;
 
         }
-        socketInfo.uid = (parts[7]);
-        return socketInfo;
+        String uid = (parts[7]);
+        return new LinuxSocketInfo(local_address,local_port,rem_address,rem_port,state,type,uid);
     }
 }

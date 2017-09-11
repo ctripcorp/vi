@@ -1,14 +1,13 @@
-package com.ctrip.framework.cornerstone.localLog;
+package com.ctrip.framework.vi.localLog;
 
 
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.util.IOUtils;
-import com.ctrip.framework.cornerstone.util.Tools;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.util.IOUtils;
+import com.ctrip.framework.vi.util.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URLDecoder;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -27,13 +26,14 @@ public final class LocalLogManager {
         public String name;
         public long modifiedTime;
         public long size;
+        public byte type;//0 system 1 application
     }
 
     private static final String[] LOGEXTS = new String[]{".log",".txt",".out",".gz"};
     private static final Logger logger = LoggerFactory.getLogger(LocalLogManager.class);
-    private static int MB = 1024*1024;
+    private static final int MB = 1024*1024;
 
-    private static String getLogPath() {
+    public static String getLogPath() {
 
         String logPath = System.getProperty("catalina.home") + "/logs/";
         try {
@@ -42,30 +42,71 @@ public final class LocalLogManager {
                 logPath = path;
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.warn("get locallog path failed!",e);
         }
         return logPath;
+    }
+
+    public static List<String> getGCLogList(){
+
+        List<String> rtn = new ArrayList<>();
+        File dir = new File(LocalLogManager.getLogPath());
+        if(dir.isDirectory()){
+            String[] names = dir.list();
+            if(names != null) {
+                for (String name : names) {
+                    String n = name.toLowerCase();
+                    if (n.startsWith("gc-")
+                            && (n.endsWith(".log") || n.endsWith(".gz"))) {
+                        rtn.add(name);
+                    }
+                }
+            }
+        }
+
+        return rtn;
     }
     public static List<FileLogInfo> getLogList(){
 
         final File file = new File(getLogPath());
         File[] allFiles = file.listFiles();
+        if(allFiles == null){
+            return new ArrayList<>(1);
+        }
         List<FileLogInfo> logs = new ArrayList<>(allFiles.length);
 
 
+        transToLogFileInfo(allFiles,logs,"");
         for(final File f:allFiles){
             String fileName = f.getName().toLowerCase();
+
+            if(f.isDirectory()){
+                File[] files = f.listFiles();
+                if(files!=null) {
+                    transToLogFileInfo(files, logs, fileName + "@@");
+                }
+            }
+        }
+
+
+        return logs;
+    }
+
+    private static void transToLogFileInfo(File[] allFiles,List<FileLogInfo> logs,String folderName){
+        for(final File f:allFiles){
+            String fileName = f.getName().toLowerCase();
+
             boolean canView =false;
             for(String ext:LOGEXTS){
                 if(fileName.endsWith(ext)){
-                   canView = true;
+                    canView = true;
                     break;
                 }
             }
 
             if(canView) {
-
                 FileLogInfo info = new FileLogInfo();
+                info.type = 1;
                 if(fileName.endsWith(".gz")) {
                     try(RandomAccessFile raf = new RandomAccessFile(f, "r")) {
                         raf.seek(raf.length() - 4);
@@ -74,13 +115,13 @@ public final class LocalLogManager {
                         int b2 = raf.read();
                         int b1 = raf.read();
                         int val = (b1 << 24) | (b2 << 16) + (b3 << 8) + b4;
-                        info.name = fileName +"|size:"+ Tools.byteToKB(f.length());
+                        info.name = folderName+fileName +"|size:"+ Tools.byteToKB(f.length());
                         info.size = val;
                     }catch (Throwable e){
                         logger.warn("read gz log failed!",e);
                     }
                 }else {
-                    info.name = fileName;
+                    info.name = folderName+fileName;
                     info.size = f.length();
                 }
                 info.modifiedTime = f.lastModified();
@@ -88,21 +129,25 @@ public final class LocalLogManager {
                     logs.add(info);
             }
         }
-        return logs;
+
+    }
+
+    public static Path getFullPathByName(String name){
+        return Paths.get(getLogPath(), name);
     }
 
     public static String getLogConent(String name,int partitionIndex,String encoding) throws IOException {
 
 
         int sIndex = name.indexOf("|");
+        name = name.replace("@@","/");
         boolean isGZ = false;
         if(sIndex>0){
             name = name.substring(0,sIndex);
             isGZ = true;
         }
 
-        String logDir = getLogPath();
-        Path path = Paths.get(logDir, name);
+        Path path = getFullPathByName(name);
         String defaultCharset = System.getProperty("sun.jnu.encoding");
         Charset fileCharset  = defaultCharset!=null?Charset.forName(defaultCharset):Charset.defaultCharset();
 
@@ -130,7 +175,7 @@ public final class LocalLogManager {
             }
         }else {
             File f = path.toFile();
-            int fLen=0;
+            int fLen;
             int readCount = 0;
             int skipCount = 0;
             try(RandomAccessFile raf = new RandomAccessFile(f, "r")) {

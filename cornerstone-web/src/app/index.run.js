@@ -26,6 +26,10 @@
                 }
             };
         }
+	hljs.registerLanguage('java',document['hljs.javahl']);
+	hljs.registerLanguage('xml',document['hljs.xmlhl']);
+	hljs.registerLanguage('css',document['hljs.csshl']);
+	hljs.registerLanguage('scss',document['hljs.scsshl']);
         $log.debug('runBlock end');
     }
 

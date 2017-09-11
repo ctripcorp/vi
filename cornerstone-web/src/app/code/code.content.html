@@ -1,0 +1,220 @@
+<script type="text/ng-template" id="codeContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Conditions</h3>
+        <h4 class="modal-title">Line {{metaInfo.lineNum}} in {{metaInfo.fullName}}</h4>
+
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Trace ID:</label>{{metaInfo.traceId}}
+            </div>
+        </form>
+    </div>
+    <div class="modal-body condition-editor">
+    <div uib-dropdown is-open="winIsOpen">
+    <div class="warning">You can use [this] to access current class fields.</div>
+    <input class="form-control" uib-dropdown-toggle ng-model="vm.conditionFormula" ng-show="!vm.isDefaultUI" ng-keyup="onKeyDown($event)">
+<div class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown" ng-show="(vm.isDot || vm.currentWord.length>0) && vm.list.length>0 && !vm.enter">
+                            <table search-watch-model="vm.currentWord" st-safe-src="vm.currentFields"  st-table="vm.list" class="table">
+                                <tbody>
+					<tr ng-class="{'select-row':i==selectedIndex}" ng-repeat="(i,n) in vm.list"
+                                    ng-click="seleField(n)">
+                                        <td>{{n.name}}</td>
+                                        <td>{{vm.formatDesc(n.desc)}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-click="$event.stopPropagation()">
+                                    <tr>
+                                        <td class="text-center">
+                                            <div st-items-by-page="10" st-pagination=""></div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+    </div>
+        <div ng-show="vm.isDefaultUI">
+            <div ng-repeat="c in conditions" class="row condition">
+                <div class="align-right col-xs-3">
+                    <span uib-dropdown>
+		<span class="link" uib-dropdown-toggle>
+		{{c.name||'[select var]'}}
+		</span>
+                    <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+		    	<li class="del-btn btn btn-danger" ng-click="deleteCondition(c)" ng-show="!c.template">[delete current]</li>
+                        <li role="menuitem" ng-repeat="n in names" ng-click="nameChange(c,n)">
+                            <span>{{n}}</span>
+                        </li>
+                    </ul>
+                    </span>
+                    <span uib-dropdown ng-show="c.fields.length>0">
+			<i class="fa fa-arrow-right"></i>
+		    </span>
+                    <span uib-dropdown ng-show="c.fields.length==0">
+		<span class="link" uib-dropdown-toggle ng-show="hasDescFields(c.desc)">
+		<i class="fa fa-caret-right"></i>
+		</span>
+                    <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                        <li role="menuitem" ng-repeat="f in getFieldByDesc(c.desc)" ng-click="pushField(c,f)">
+                            <span>{{f.name}}</span>
+                        </li>
+                    </ul>
+                    </span>
+                    <span ng-repeat="(i,f) in c.fields">
+		    <span uib-dropdown>
+			<span class="link" uib-dropdown-toggle>
+			 {{f.name}}
+			 </span>
+                    <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+		    <li class="del-btn btn btn-danger" ng-click="updateField(c,null,i)">[delete current]</li>
+                        <li role="menuitem" ng-repeat="ff in getCurrentField(i,c)" ng-click="updateField(c,ff,i)">
+                            <span>{{ff.name}}</span>
+                        </li>
+                    </ul>
+                    </span>
+
+                    <span ng-show="i!=(c.fields.length-1)">
+			<i class="fa fa-arrow-right"></i>
+		    </span>
+                    <span uib-dropdown ng-show="i==(c.fields.length-1)">
+			<span class="link" uib-dropdown-toggle ng-show="hasDescFields(f.desc)">
+			<i class="fa fa-caret-right"></i>
+			</span>
+
+                    <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                        <li role="menuitem" ng-repeat="f in getFieldByDesc(f.desc)" ng-click="pushField(c,f)">
+                            <span>{{f.name}}</span>
+                        </li>
+                    </ul>
+                    </span>
+                    </span>
+                </div>
+                <div class="col-xs-2">
+                    <select class="form-control" ng-model="c.op" ng-options="o as o for o in ops[c.type]"></select>
+		    <div ng-show="c.error&&!c.op" class="error">{{c.error}}</div>
+                </div>
+                <div class="col-xs-7" ng-show="isNeedValue(c)">
+                    <input class="form-control" ng-model="c.value" />
+		    <div ng-show="c.error" class="error">{{c.error}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+<div class="widget-header">
+	<span class="title"><a ng-show="!vm.isTab" href="{{vm.rootPath}}">{{vm.prjFullPath}}</a><span ng-show="vm.isTab" >{{vm.prjFullPath}}</span>
+	   <span ng-repeat="l in vm.pathParts track by $index"> <a ng-show="!vm.isTab" href="#code/folder/{{vm.getUrl($index)}}">{{l}}/</a><span ng-show="vm.isTab" >{{l}}/</span></span>
+    </span>
+</div>
+<div>
+    <div class="file-content-header" style="float:right" ng-class="{'opr-warning':vm.isJava&&!vm.canDebug}">
+        <span class="warning">If you wana debug this java file. You must enable allowDebug in <span class="link" ng-click="vm.gotoSettings()">Settings page.</span></span>
+        <span ng-show="vm.canDebug"><label><input ng-model="vm.enableCondition" type="checkbox"/>enable condition</label></span>
+        <span class="traceid-form" ng-show="vm.canDebug&&!vm.enableCondition">Trace ID: <input id="traceId" class="form-control" ng-model="vm.traceId"></span>
+        <span class="goto-form" ng-show="vm.isJava">Line: <input ng-keydown="$event.stopPropagation();vm.onGOTOKeyDown($event)" class="form-control" ng-model="vm.jumpLine"></span>
+    </div>
+    <uib-tabset active="active">
+        <uib-tab index="0">
+            <uib-tab-heading>
+                <i class="fa fa-bug" ng-show="vm.isJava"></i><i class="fa fa-file-text-o fa-fw"></i>
+                <span class="file-name">{{vm.name}}</span>
+                <span class="file-size">{{vm.size}}</span>
+            </uib-tab-heading>
+
+	    <div class="scrollbar" ng-style="{maxHeight:vm.maxHeight}" ng-class="{'has-result':vm.hasResult}" name="code-content-scrollbar">
+                <pre><code></code></pre>
+            </div>
+        </uib-tab>
+        <uib-tab index="1" ng-show="vm.showDebugPanel">
+            <uib-tab-heading>
+                <i class="fa fa-sun-o" ng-show="vm.hasResult"></i>
+                debugger
+            </uib-tab-heading>
+
+            <scrollbar class="debugger-panel" ng-style="{maxHeight:vm.maxHeight}">
+                <table class="table">
+                    <colgroup>
+                        <col width="30%" />
+                        <col width="70%" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="widget-header">
+                                <span class="title">静态变量</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(k,v) in vm.debugInfo.staticFields">
+                            <td>{{k}}</td>
+                            <td>
+
+                                <json-formatter ng-style="{width:vm.jcontentWidth}" ng-show="v != null" class="json-content"
+                                open="1" json="v"></json-formatter>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <colgroup>
+                        <col width="30%" />
+                        <col width="70%" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="widget-header">
+                                <span class="title">成员变量</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(k,v) in vm.debugInfo.fields">
+                            <td>{{k}}</td>
+                            <td>
+
+                                <json-formatter ng-style="{width:vm.jcontentWidth}" ng-show="v != null" class="json-content"
+                                open="1" json="v"></json-formatter>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="widget-header">
+                                <span class="title">局部变量</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(k,v) in vm.debugInfo.locals">
+                            <td style="width:30%">{{k}}</td>
+                            <td style="width:70%">
+                                <json-formatter ng-style="{width:vm.jcontentWidth}" ng-show="v != null" class="json-content"
+                                open="1" json="v"></json-formatter>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="widget-header">
+                                <span class="title">调用堆栈</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="t in vm.debugInfo.stackTrace">
+                            <td> <span compile="vm.formatTrace(t)"></span> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </scrollbar>
+        </uib-tab>
+    </uib-tabset>
+</div>

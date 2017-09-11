@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.fc.FCManager;
+import com.ctrip.framework.vi.fc.FCManager;
 import org.junit.Test;
 
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,8 +1,8 @@
- package com.ctrip.framework.cornerstone.component.defaultComponents;
+ package com.ctrip.framework.vi.component.defaultComponents;
 
- import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
- import com.ctrip.framework.cornerstone.annotation.FieldInfo;
- import com.ctrip.framework.cornerstone.util.TextUtils;
+ import com.ctrip.framework.vi.annotation.ComponentStatus;
+ import com.ctrip.framework.vi.annotation.FieldInfo;
+ import com.ctrip.framework.vi.util.TextUtils;
  import com.sun.management.OperatingSystemMXBean;
 
  import java.lang.management.*;
@@ -19,17 +19,17 @@
          long gcTime;
      }
      @FieldInfo(name = "Heap Commited Memory",description = "堆提交内存")
-     private final long heapCommitedMemory;
+     public final long heapCommitedMemory;
      @FieldInfo(name = "Heap Used Memory",description = "当前堆内存")
-     private final long heapUsedMemory;
+     public final long heapUsedMemory;
      @FieldInfo(name = "Heap Max Memory",description = "最大堆大小")
-     private final long heapMaxMemory;
+     public final long heapMaxMemory;
      @FieldInfo(name = "Nonheap Commited Memory",description = "非堆提交内存")
-     private final long nonHeapCommitedMemory;
+     public final long nonHeapCommitedMemory;
      @FieldInfo(name = "Nonheap Used Memory",description = "当前非堆内存")
-     private final long nonHeapUsedMemory;
+     public final long nonHeapUsedMemory;
      @FieldInfo(name = "Nonheap Max Memory",description = "最大非堆大小")
-     private final long nonHeapMaxMemory;
+     public final long nonHeapMaxMemory;
 
      @FieldInfo(name = "Loaded Class Count",description = "已加载当前类")
      public final long loadedClassCount;
@@ -45,23 +45,23 @@
      public final int peakThreadCount;
      @FieldInfo(name = "Total Started Thread Count",description = "启动线程总数")
      public final long totalStartedThreadCount;
-     private final String libraryPath;
-     private final String vmOptions;
-     private final String bootClassPath;
-     private final long upTime;
-     private final String vmName;
-     private final String vmVendor;
-     private final String jdkVersion;
-     private final long processCpuTime;
-     private final String jitCompiler;
-     private final String os;
-     private final String osArch;
-     private final int availableProcessors;
-     private final long commitedVirtualMemory;
-     private final long freePhysicalMemorySize;
-     private final long totalPhysicalMemorySize;
-     private final long freeSwapSpaceSize;
-     private final long totalSwapSpaceSize;
+     public final String libraryPath;
+     public final String vmOptions;
+     public final String bootClassPath;
+     public final long upTime;
+     public final String vmName;
+     public final String vmVendor;
+     public final String jdkVersion;
+     public final long processCpuTime;
+     public final String jitCompiler;
+     public final String os;
+     public final String osArch;
+     public final int availableProcessors;
+     public final long commitedVirtualMemory;
+     public final long freePhysicalMemorySize;
+     public final long totalPhysicalMemorySize;
+     public final long freeSwapSpaceSize;
+     public final long totalSwapSpaceSize;
      int minorGcCount = 0;
      int fullGcCount = 0;
      int otherGcCount = 0;
@@ -129,7 +129,6 @@
          List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
          gcInfos = new ArrayList<>(beans.size());
          for (GarbageCollectorMXBean b : beans) {
-             String name = b.getName();
              GCBean gcBean = new GCBean();
              gcBean.name =b.getName();
              gcBean.gcCount = b.getCollectionCount();

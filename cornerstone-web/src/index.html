@@ -19,33 +19,55 @@
     <!-- css files will be automatically insert here -->
     <!-- endinject -->
     <!-- endbuild -->
-	    <script>
-//$SMENU
+    <script>
+        //$SMENU
 
-        if (typeof $CIP == 'undefined') {
+        if (typeof $CIP == 'undefined')
+        {
             $CIP = '127.0.0.1';
             $CHOSTNAME = 'local';
         }
-	    </script>
+    </script>
 </head>
 
 <body>
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div ng-controller="IndexController as vm">
+    <div ng-controller="IndexController as vm" class="root-container">
         <div>
             <acme-navbar/>
         </div>
         <div>
-            <acme-sidebar on-change="vm.collapse(isCollapse);" />
+            <acme-sidebar  on-change="vm.collapse(isCollapse);" />
         </div>
-        <div ng-class="{'sidebar-collapse':vm.sidebarCollapse}" class="main-content">
-            <div class="page-view" ui-view/>
+	<div ng-style="{'width':vm.winWidth,'height':vm.winHeight}" ng-show="vm.showMain" ng-class="{'sidebar-collapse':vm.sidebarCollapse}" class="main-content">
+		<div class="page-view" ui-view></div>
         </div>
+	<div ng-style="{'width':vm.winWidth,'height':vm.winHeight}" ng-show="!vm.showMain" ng-class="{'sidebar-collapse':vm.sidebarCollapse}" class="main-content">
+		<vi-view ng-show="v.show" ng-repeat="(k,v) in vm.views" params="{{v.params}}" controller="{{v.controller}}" url="{{v.url}}"/>
+	</div>
 
 
     </div>
+<script type="text/ng-template" id="template/pagination.custom.html">
+    <nav ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li><a ng-click="selectPage(1)">First</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+            </li>
+            <li>
+                <a>
+                    <page-select></page-select>of {{numPages}}</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+            </li>
+            <li><a ng-click="selectPage(numPages)">Last</a>
+            </li>
+        </ul>
+    </nav>
+</script>
     <!-- build:js(src) scripts/vendor.js -->
     <!-- bower:js -->
     <!-- run `gulp inject` to automatically populate bower script dependencies -->

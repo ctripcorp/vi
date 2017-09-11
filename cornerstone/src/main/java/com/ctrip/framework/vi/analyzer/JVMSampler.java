@@ -1,15 +1,11 @@
-package com.ctrip.framework.cornerstone.analyzer;
+package com.ctrip.framework.vi.analyzer;
 
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.util.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,28 +23,17 @@ public class JVMSampler implements Closeable{
     private Method detachMethod;
     private static Class<?> vmProviderClass=null;
     private static final Logger logger = LoggerFactory.getLogger(JVMSampler.class);
-    private final String JDKPATHKEY="vi.jdk.path";
 
     private boolean init() {
         try {
-            String javaPath =System.getenv("JAVA_HOME");
-            if(javaPath == null || javaPath.length()<5){
-                javaPath = ConfigurationManager.getConfigInstance().getString(JDKPATHKEY);
-            }
-            String path = javaPath +"/lib/tools.jar";
-            URL jarURl = new File(path).toURI().toURL();
-            logger.info("jdk tools path:"+path);
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURl});
 
-            final String jvmName = ManagementFactory.getRuntimeMXBean().getName();
-            final int index = jvmName.indexOf('@');
-            String pid = (jvmName.substring(0, index));
-            Class<?> vmClass = classLoader.loadClass(virtualMachineClassName);
-            Class<?> hotspotVMClass = classLoader.loadClass(hotspotVMName);
+            Class<?> vmClass = Tools.loadJDKToolClass(virtualMachineClassName);
+            Class<?> hotspotVMClass = Tools.loadJDKToolClass(hotspotVMName);
+            String pid = Tools.currentPID();
             if(vmProviderClass!=null){
 
                 Object vmProvider = vmProviderClass.newInstance();
-                VM=vmProviderClass.getMethod("attachVirtualMachine",String.class).invoke(vmProvider,pid);
+                VM=vmProviderClass.getMethod("attachVirtualMachine",String.class).invoke(vmProvider, pid);
                 heapHistoMethod = VM.getClass().getMethod("heapHisto", Object[].class);
                 detachMethod = VM.getClass().getMethod("detach");
             }else {
@@ -59,7 +44,6 @@ public class JVMSampler implements Closeable{
                 detachMethod = vmClass.getMethod("detach");
             }
         }catch (Throwable e){
-            e.printStackTrace();
             logger.warn("attach failed!",e);
             return false;
         }
@@ -71,37 +55,37 @@ public class JVMSampler implements Closeable{
         if(VM!=null && heapHistoMethod!=null) {
             try (InputStream in = (InputStream) heapHistoMethod.invoke(VM, new Object[]{new Object[]{"-all"}})){
                 if(in!=null) {
-                    final InputStreamReader reader = new InputStreamReader(in, Charset.forName("UTF-8"));
+                    try(final InputStreamReader reader = new InputStreamReader(in, Charset.forName("UTF-8"))) {
 
-                    int readChar;
-                    boolean isItem = false;
+                        int readChar;
+                        boolean isItem = false;
 
-                    StringBuilder sb = new StringBuilder();
-                    while ((readChar = reader.read()) >= 0) {
+                        StringBuilder sb = new StringBuilder();
+                        while ((readChar = reader.read()) >= 0) {
 
-                        if ((char) readChar == '\n') {
-                            if (isItem) {
-                                String[] raw = sb.toString().trim().split("\\s+");
-                                Object[] classInfo = new Object[3];
-                                classInfo[0]= raw[3].replace('[', '#');
-                                classInfo[1]= Long.parseLong(raw[1]);//count
-                                classInfo[2] = Long.parseLong(raw[2]);//bytes
-                                rtn.add(classInfo);
+                            if ((char) readChar == '\n') {
+                                if (isItem) {
+                                    String[] raw = sb.toString().trim().split("\\s+");
+                                    Object[] classInfo = new Object[3];
+                                    classInfo[0] = raw[3].replace('[', '#');
+                                    classInfo[1] = Long.parseLong(raw[1]);//count
+                                    classInfo[2] = Long.parseLong(raw[2]);//bytes
+                                    rtn.add(classInfo);
+                                }
+                                sb.delete(0, sb.length());
+                                isItem = false;
+
+                            } else {
+                                if ((char) readChar == ':') {
+                                    isItem = true;
+                                }
+                                sb.append((char) readChar);
                             }
-                            sb.delete(0, sb.length());
-                            isItem = false;
 
-                        } else {
-                            if ((char) readChar == ':') {
-                                isItem = true;
-                            }
-                            sb.append((char) readChar);
                         }
-
                     }
                 }
             } catch (Throwable e) {
-                e.printStackTrace();
                 logger.warn("get heaphisto failed!", e);
             }
         }
@@ -116,7 +100,6 @@ public class JVMSampler implements Closeable{
                 detachMethod.invoke(VM);
                 VM=null;
             } catch (Throwable e) {
-                e.printStackTrace();
                 logger.warn("detach failed!",e);
             }
         }
@@ -161,7 +144,7 @@ public class JVMSampler implements Closeable{
                         try {
                             sampler.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            logger.warn("close jvm sampler failed!",e);
                         }
                         isRunning=false;
                         currentInstanceInfo=null;

@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.servlet;
+package com.ctrip.framework.vi.servlet;
 
-import com.ctrip.framework.cornerstone.util.HttpUtil;
-import com.ctrip.framework.cornerstone.util.SecurityUtil;
+import com.ctrip.framework.vi.util.HttpUtil;
+import com.ctrip.framework.vi.util.SecurityUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

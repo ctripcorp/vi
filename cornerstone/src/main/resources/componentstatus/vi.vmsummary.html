@@ -116,7 +116,7 @@
 
             <div class="row" ng-repeat="g in gcInfos">
                 <div class="col-md-3 title">垃圾收集器：</div>
-                <div class="col-md-9 content">名称='{{g.name}}',收集={{g.gcCount}},总花费时间={{g.gcTime/1000}} 秒</div>
+                <div class="col-md-9 content">名称='{{g.name}}',收集={{g.gcCount}},总花费时间={{g.gcTime/1000}} s,平均时间={{getAvgTime(g)}} ms</div>
             </div>
         </div>
         <div class="col-md-6">

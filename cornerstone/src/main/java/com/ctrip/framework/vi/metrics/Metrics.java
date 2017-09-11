@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.metrics;
+package com.ctrip.framework.vi.metrics;
 
 /**
  * Created by jiang.j on 2016/12/30.
@@ -28,5 +28,5 @@ public final class Metrics {
 
 
     }
-    public static final String VIAPI="vi.api";
+    public static final String VIAPI="vi.api##"+MetricsValueType.MicroSec.getValue();
 }

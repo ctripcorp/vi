@@ -1,4 +1,4 @@
-﻿<div class="sidebar" ng-class="{true:'barcollapse'}[isCollapse]">
+﻿<div class="sidebar" ng-class="{true:'barcollapse'}[isCollapse]" ng-mouseleave="vm.onview=true" ng-mouseenter="vm.onview=false">
     <div class="nav-wrap-up pos-rel">
         <div class="nav-wrap">
             <div style="position: relative; top: 0px; transition-property: top; transition-duration: 0.15s;">
@@ -6,52 +6,56 @@
                     <div class="sidebar-shortcuts">
                         <button class="btn btn-info">
                         </button>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" ng-click="vm.openSettings()">
                         </button>
                     </div>
                     <div class="sidebar-shortcuts-large">
                         <button class="btn btn-info">
                             <i class="fa fa-pencil"></i>
                         </button>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" ng-click="vm.openSettings()">
                             <i class="fa fa-cogs"></i>
                         </button>
                     </div>
                 </div>
-		<scrollbar ng-style="{maxHeight:vm.menuMaxHeight}">
-                <ul class="nav nav-list" >
-                    <li ng-mouseenter="vm.hoverMenu(m,$index)" ng-repeat="m in menus">
-                        <div ui-sref="{{m.state}}" ng-class="{'sele-menu': m.selected,'hover':hover}">
-                            <a href="">
-                                <i class="menu-icon fa {{m.icon}}"></i>
-                                <span class="menu-text">{{m.name}}</span>
-                            </a>
-                        </div>
-		</srollbar>
+                <scrollbar ng-style="{maxHeight:vm.menuMaxHeight}">
+                    <ul class="nav nav-list">
+                        <li ng-mouseenter="vm.hoverMenu(m,$index)" ng-repeat="m in menus">
+                            <div ui-sref="{{m.state}}" ng-class="{'sele-menu': m.selected,'hover':hover}">
+                                <a href="">
+                                    <i class="menu-icon fa {{m.icon}}"></i>
+                                    <span class="menu-text">{{m.name}}</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    </srollbar>
             </div>
         </div>
     </div>
     <!-- /.nav-list -->
     <div class="sidebar-toggle sidebar-collapse">
         <a href="" ng-click="collapse()">
-            <i ng-class="{false:'fa-angle-double-left',true:'fa-angle-double-right'}[isCollapse]" class="fa"></i>
+            <i ng-class="{false:'fa-angle-double-left',true:'fa-angle-double-right'}[isCollapse]"
+            class="fa"></i>
         </a>
     </div>
-			<ul ng-style="{top:vm.subMenuTop,left:vm.subMenuLeft,maxHeight:vm.subMenuHeight}" scrollbar ng-if="vm.currentHover.submenu" class="submenu" ng-mouseleave="vm.currentHover=null">
-                            <div class="submenu_title" ui-sref="{{vm.currentHover.state}}">
-                                <a href="">
-                                    <span>{{vm.currentHover.name}}</span>
-                                </a>
-                            </div>
-                            <li ng-repeat="sm in vm.currentHover.submenu" ui-sref="{{sm.state}}" ng-click="selemenu(vm.currentHover)">
-                                <a href="">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    <span>{{sm.name}}</span>
-                                    <span>{{sm.description}}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+    <ul ng-show="!vm.onview" ng-style="{top:vm.subMenuTop,left:vm.subMenuLeft,maxHeight:vm.subMenuHeight}"
+    scrollbar ng-if="vm.currentHover.submenu" class="submenu" ng-mouseleave="vm.currentHover=null">
+        <div class="submenu_title" ui-sref="{{vm.currentHover.state}}">
+            <a href="">
+                <span>{{vm.currentHover.name}}</span>
+            </a>
+        </div>
+        <li ng-repeat="sm in vm.currentHover.submenu" ui-sref="{{sm.state}}" ng-click="selemenu(vm.currentHover)">
+            <a href="">
+                <i class="menu-icon fa fa-caret-right"></i>
+                <span>{{sm.name}}</span>
+                <span>{{sm.description}}</span>
+            </a>
+        </li>
+    </ul>
+    </li>
 
-                </ul>
+    </ul>
 </div>

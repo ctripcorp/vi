@@ -6,9 +6,9 @@
         .config(config);
 
     /** @ngInject */
-    function config($logProvider, toastrConfig, $httpProvider) {
+    function config($logProvider, toastrConfig, $httpProvider,stConfig) {
         // Enable log
-        $logProvider.debugEnabled(true);
+        $logProvider.debugEnabled(false);
 
         // Set options third-party lib
         toastrConfig.allowHtml = true;
@@ -17,6 +17,7 @@
         toastrConfig.preventOpenDuplicates = true;
         toastrConfig.progressBar = false;
         $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
+	stConfig.pagination.template = 'template/pagination.custom.html';
 
     }
 

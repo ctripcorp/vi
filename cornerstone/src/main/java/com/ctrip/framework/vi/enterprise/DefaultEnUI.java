@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.cornerstone.ui.*;
+import com.ctrip.framework.vi.ui.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,12 @@ public class DefaultEnUI implements EnUI {
         addMenu(new BuildInComponent());
         addMenu(new BuildInMetrics());
         Menu analyzerMenu = addMenu("Analyzer","fa-coffee");
+        addSubMenu(analyzerMenu, new BuildInSelfCheck());
         addSubMenu(analyzerMenu, new BuildInJarDep());
         addSubMenu(analyzerMenu, new BuildInJvmSampler());
+        addSubMenu(analyzerMenu, new BuildInVisualGC());
+        addSubMenu(analyzerMenu, new BuildInGCLogAnalyzer());
+        addMenu(new BuildInDebug());
         addMenu(new BuildInConfiguration());
         addMenu(new BuildInFC());
         addMenu(new BuildInCache());

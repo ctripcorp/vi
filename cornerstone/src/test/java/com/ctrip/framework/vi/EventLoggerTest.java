@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.watcher.EventLogger;
-import com.ctrip.framework.cornerstone.watcher.EventLoggerFactory;
+import com.ctrip.framework.vi.watcher.EventLogger;
+import com.ctrip.framework.vi.watcher.EventLoggerFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

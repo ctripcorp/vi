@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.ignite;
+package com.ctrip.framework.vi.ignite;
 
 /**
  * Created by jiang.j on 2017/1/3.

@@ -20,20 +20,27 @@
 
         return directive;
 
+
         /** @ngInject */
-        function SidebarController($scope,$window, $location, $rootScope,serviceInfo,$filter) {
+        function SidebarController($scope, $window, $rootScope, serviceInfo, $filter,$location) {
 
             var vm = this;
             $scope.isCollapse = false;
-            vm.isLoadComponents = false;
-	    vm.subMenuHeight = ($window.innerHeight-130)+'px';
-	    vm.menuMaxHeight = ($window.innerHeight-170)+'px';
 
+            vm.isLoadComponents = false;
+            vm.subMenuHeight = ($window.innerHeight - 130) + 'px';
+            vm.menuMaxHeight = ($window.innerHeight - 170) + 'px';
+
+	    vm.openSettings = function(){
+
+		    $location.url('/settings/');
+
+	    };
 
             var resizeFun = function() {
                 $scope.$apply(function() {
-		    vm.subMenuHeight = ($window.innerHeight-130)+'px';
-		    vm.menuMaxHeight = ($window.innerHeight-170)+'px';
+                    vm.subMenuHeight = ($window.innerHeight - 130) + 'px';
+                    vm.menuMaxHeight = ($window.innerHeight - 170) + 'px';
                 });
             };
             angular.element($window).on('resize', resizeFun);
@@ -49,47 +56,47 @@
                 });
             };
 
-	    vm.hoverMenu = function(m,index){
+            vm.hoverMenu = function(m, index) {
 
-		    vm.currentHover = m;
-		    var t = 45;
-		    var bheight = 56;
-		    if($scope.isCollapse){
-			    vm.subMenuLeft = '48px';
-			    t = 32;
-			    bheight = 32;
-		    }else{
+                vm.currentHover = m;
+                var t = 45;
+                var bheight = 56;
+                if ($scope.isCollapse) {
+                    vm.subMenuLeft = '48px';
+                    t = 32;
+                    bheight = 32;
+                } else {
 
-			    vm.subMenuLeft = '102px';
-		    }
-
-		    if(index>0){
-			    t += bheight*(index);
-		    }
-
-		    vm.subMenuTop = t + 'px';
-	    };
-
-        serviceInfo.getComponentMeta().then(function(data) {
-		data = $filter('orderBy')(data,'name');
-		bindComponentMenus(data);
-		$rootScope.components = data.map(function(item) {
-
-                var href = '/component/' + (item.custom == 'true' ? 'custom' : 'detail') + '/' + item.id + '/' + item.name;
-                if (item.list == 'true' && item.custom != 'true') {
-
-                    href = '/component/detail.list/' + item.id + '/' + item.name;
+                    vm.subMenuLeft = '102px';
                 }
 
-                return {
-                    name: item.name,
-                    description: item.description,
-                    href: href
-                };
+                if (index > 0) {
+                    t += bheight * (index);
+                }
+
+                vm.subMenuTop = t + 'px';
+            };
+
+            serviceInfo.getComponentMeta().then(function(data) {
+                data = $filter('orderBy')(data, 'name');
+                bindComponentMenus(data);
+                $rootScope.components = data.map(function(item) {
+
+                    var href = '/component/' + (item.custom == 'true' ? 'custom' : 'detail') + '/' + item.id + '/' + item.name;
+                    if (item.list == 'true' && item.custom != 'true') {
+
+                        href = '/component/detail.list/' + item.id + '/' + item.name;
+                    }
+
+                    return {
+                        name: item.name,
+                        description: item.description,
+                        href: href
+                    };
 
 
+                });
             });
-        });
 
             var bindComponentMenus = function(data) {
 
@@ -109,7 +116,7 @@
                             params.name = x.name;
 
                             return {
-                                description: '('+x.description+')',
+                                description: '(' + x.description + ')',
                                 name: x.name,
                                 state: (x.custom == 'true' ? 'Component-Custom(' : (x.list == 'true' ? 'Component-DetailList(' : 'Component-Detail(')) +
                                     JSON.stringify(params) + ')'
@@ -200,20 +207,33 @@
                     submenu: [{
                         name: 'Jar dependency',
                         state: 'Analyzer-Jardependency'
+                    },{
+                        name: 'Self Check',
+                        state: 'Analyzer-SelfCheck'
                     }, {
                         name: 'JVM Sampler',
                         state: 'Analyzer-JVMSampler'
+                    }, {
+                        name: 'VisualGC',
+                        state: 'Analyzer-VisualGC'
+                    }, {
+                        name: 'GCLogAnalyzer',
+                        state: 'Analyzer-GCLogAnalyzer'
                     }]
                 }, {
                     name: 'Configuration',
                     icon: 'fa-cogs',
                     state: 'Configuration'
                 }, {
+                    name: 'Code',
+                    icon: 'fa-git',
+                    state: 'Code'
+                }, {
                     name: 'FC',
                     icon: 'fa-toggle-on',
                     state: 'FC'
                 }, {
-                    name: 'Cache Refresh',
+                    name: 'Cache Manager',
                     icon: 'fa-database',
                     state: 'Cache'
                 }, {

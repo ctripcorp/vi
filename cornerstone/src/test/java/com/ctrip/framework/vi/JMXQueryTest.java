@@ -1,7 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.util.JMXQuery;
-import junit.framework.Assert;
+import com.ctrip.framework.vi.util.JMXQuery;
 import org.junit.Test;
 
 import java.util.List;

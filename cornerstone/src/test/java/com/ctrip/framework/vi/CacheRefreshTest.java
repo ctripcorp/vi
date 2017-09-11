@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheManager;
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheNotFoundException;
+import com.ctrip.framework.vi.cacheRefresh.CacheManager;
+import com.ctrip.framework.vi.cacheRefresh.CacheNotFoundException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

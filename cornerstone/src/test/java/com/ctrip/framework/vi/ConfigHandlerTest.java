@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.configuration.ConfigHandler;
+import com.ctrip.framework.vi.configuration.ConfigHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;

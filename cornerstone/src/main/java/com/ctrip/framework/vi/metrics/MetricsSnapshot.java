@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.metrics;
+package com.ctrip.framework.vi.metrics;
 
 /**
  * Created by jiang.j on 2016/8/19.

@@ -1,8 +1,8 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents;
+package com.ctrip.framework.vi.component.defaultComponents;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.Config;
-import com.ctrip.framework.cornerstone.enterprise.ConfigUrlContainer;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.Config;
+import com.ctrip.framework.vi.enterprise.ConfigUrlContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,9 +98,10 @@ public class AllConfigFiles {
                         boolean canAdd = false;
                         String zeNameLowerCase = ze.getName().toLowerCase();
 
+                        /*
                         if(zeNameLowerCase.endsWith("pom.xml") || zeNameLowerCase.endsWith("pom.properties")){
                             continue;
-                        }
+                        }*/
 
                         for (String suf : suffixes) {
                            if(zeNameLowerCase.endsWith("." + suf)) {

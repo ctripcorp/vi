@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.metrics.*;
+import com.ctrip.framework.vi.metrics.*;
 import org.junit.Test;
 
 import java.util.HashSet;

@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.fc;
+package com.ctrip.framework.vi.fc;
 
-import com.ctrip.framework.cornerstone.enterprise.EnFC;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
+import com.ctrip.framework.vi.enterprise.EnFC;
+import com.ctrip.framework.vi.enterprise.EnFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

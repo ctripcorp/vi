@@ -1,0 +1,122 @@
+.code {
+    i.code-icon {
+        margin: 10px;
+    }
+    .selector{
+	    padding-right:10px;
+    }
+    ul.source-menu{
+	    padding-left:10px !important;
+	    width:250px;
+    }
+    .class-search{
+	    padding-left:0px !important;
+	    width:500px !important;
+	    margin-left:20px;
+
+    }
+}
+.file-name {
+    margin-left: 10px;
+    color: #888;
+}
+.file-size {
+    margin-left: 5px;
+    font-weight: bolder;
+    color: #000;
+}
+.file-content-header {
+    position: relative;
+    background-color: #fafafa;
+    border-bottom: 1px solid #e5e5e5;
+    margin: 0;
+    text-align: left;
+    padding-top:3px;
+    word-wrap: break-word;
+    border-radius: 3px 3px 0 0;
+}
+// Blocks of code
+ pre {
+    display: block;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0px;
+    border-radius: $border-radius-base;
+    // Account for some code outputs that place code tags in pre tags
+    code {
+        padding: 0;
+        font-size: inherit;
+        color: inherit;
+        white-space: pre-wrap;
+        background-color: transparent;
+        border-radius: 0;
+	.line.focus{
+
+		border:1px dashed #888;
+
+	}
+    }
+}
+.file-content-header {
+    .warning {
+        display: none;
+        padding-left: 20px;
+        color: red;
+    }
+    position:relative;
+    .traceid-form {
+        width: 320px;
+        padding-left: 10px;
+        height: 100%;
+        input {
+            margin: 0px;
+            width: 250px;
+            display: inline-block;
+        }
+    }
+    .goto-form {
+        width: 150px;
+        padding-left: 10px;
+        height: 100%;
+        input {
+            margin: 0px;
+            width: 100px;
+            display: inline-block;
+        }
+    }
+    &.opr-warning {
+        background: #f8eec7;
+        & .warning {
+            display: inline-block !important;
+        }
+    }
+}
+    .debugger-panel {
+        margin-top: 20px;
+        padding-left: 10px;
+	.json-content{
+		min-height:10px;
+
+	}
+        table {
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            tr {
+                td {
+                    padding-left: 10px;
+                }
+                .title {
+                    padding-left: 10px;
+                }
+                pre {
+                    background: #eee !important;
+		    white-space:normal;
+		    height:100%;
+                }
+                background:#fff;
+                color:#000;
+            }
+        }
+    }

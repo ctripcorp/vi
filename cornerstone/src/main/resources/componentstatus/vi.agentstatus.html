@@ -1,0 +1,69 @@
+<style>
+    .classess-list {
+        border: 1px solid #888;
+        padding: 5px;
+    }
+    div.class-info {
+        padding: 5px;
+    }
+    div.class-info.selected,
+    div.class-info:hover {
+        background: #555;
+        color: #fff;
+    }
+</style>
+<div style="padding:10px">
+    <div class="row">
+        <div class="col-md-3">
+
+            <button class="btn btn-sm btn-primary active" ng-click="vm.refresh()"><i class="fa fa-refresh"></i>
+            </button>
+            <label>modified classes</label>
+
+            <scrollbar ng-style="{height:vm.maxHeight}" class="classess-list">
+                <div ng-class="{'selected':k==vm.currentClass}" ng-click="vm.seleClass(k)" class="class-info"
+                ng-repeat="(k,v) in vm.data.modifiedClassInfos">
+                    <div><i class="fa {{vm.getIcon(v)}}"></i> {{k}}</div>
+                </div>
+            </scrollbar>
+
+        </div>
+        <div class="col-md-9" ng-show="vm.currentClass!=''">
+            <uib-tabset active="active">
+                <uib-tab index="0" heading="Current Code">
+                    <scrollbar ng-style="{maxHeight:vm.maxHeight}">
+                        <pre><code class="current-code"></code></pre>
+                    </scrollbar>
+
+                </uib-tab>
+                <uib-tab index="1">
+                    <uib-tab-heading>
+                        Origin Code
+                    </uib-tab-heading>
+                    <scrollbar ng-style="{maxHeight:vm.maxHeight}">
+                        <pre><code class="origin-code"></code></pre>
+                    </scrollbar>
+                </uib-tab>
+                <uib-tab index="2" select="vm.viewInfo()">
+                    <uib-tab-heading>
+                        Info
+                    </uib-tab-heading>
+
+		    <br/>
+		    <div>
+		    <button ng-click="vm.recoverClass()" class="btn btn-sm btn-primary">Recover Class</button>
+		    </div>
+		    <br/>
+		    <label>Related Information:</label>
+                    <scrollbar ng-style="{maxHeight:vm.maxHeight}">
+                        <json-formatter class="json-content" open="1" json="vm.detailInfo"></json-formatter>
+
+                    </scrollbar>
+                </uib-tab>
+            </uib-tabset>
+
+
+        </div>
+
+    </div>
+</div>

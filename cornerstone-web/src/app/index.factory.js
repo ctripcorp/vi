@@ -8,7 +8,7 @@ function VIException(msg, type) {
 
         angular
             .module('viModule')
-            .factory('ApiService', function($window, $log, $http, API_ENDPOINT) {
+            .factory('ApiService', function($window, $log, $http, API_ENDPOINT, $confirm) {
 
                 var _api = API_ENDPOINT;
 
@@ -29,15 +29,40 @@ function VIException(msg, type) {
                                 'params': params
                             })
                             .then(function(response) {
-                                return response.data;
+
+                                var result = response.data;
+                                if (typeof result == "string" && result.substr(0, 6) == '$@###@') {
+
+                                    var sindex = result.lastIndexOf('@');
+                                    var exp = new VIException(result.substr(6, sindex - 6), result.substr(sindex + 1));
+                                    return exp;
+                                }
+                                return result;
                             })
                             .catch(function(error) {
+
+                                var result = error.data || '';
+                                if (typeof result == "string" && result.substr(0, 6) == '$@###@') {
+
+                                    var sindex = result.lastIndexOf('@');
+                                    var exp = new VIException(result.substr(6, sindex - 6), result.substr(sindex + 1));
+                                    if (exp.Type == 'com.ctrip.framework.vi.NoPermissionException') {
+                                        $confirm({
+                                                'text': 'You do not have permission for this operation or login has expired!do you wanna logout and login again?'
+                                            })
+                                            .then(function() {
+                                                location.href = 'logout';
+                                            });
+
+                                    }
+                                    return exp;
+                                }
 
                                 $log.error('XHR Failed for get' + path + '.\n' + angular.toJson(error.data, true));
                             });
                     },
                     doGetFunc: function(path, func) {
-                        var path = endpoint + '/' + path;
+                        path = endpoint + '/' + path;
 
                         return $http.get(path)
                             .then(function(response) {

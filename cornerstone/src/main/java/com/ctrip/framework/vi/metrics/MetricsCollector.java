@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.metrics;
+package com.ctrip.framework.vi.metrics;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -106,6 +106,7 @@ public class MetricsCollector {
 
     public Map<String,MetricsSnapshot> getOberserStats(String id){
         MetricsObserver observer = getObserver(id);
+        senderLastUpdateTime =System.currentTimeMillis();
         if(observer==null){
             return null;
         }
@@ -177,21 +178,65 @@ public class MetricsCollector {
     }
 
     public void record(final String key,final long value,Map<String,String> tags){
+        metricNames.add(key);
         try {
-            metricNames.add(key);
+            if (isRunning && (obs.size() == 0)) {
+                    stopAndClear();
+                    return;
+            }
+
             if (isRunning) {
-                if (obs.size() == 0) {
+                if(isFilterKey(key)) {
+                    StatsInfo info = new StatsInfo();
+                    info.key = key;
+                    info.cost = value;
+                    //info.tags = tags;
+                    queue.offer(info);
+                }
+                if ((System.currentTimeMillis() - senderLastUpdateTime) > SENDERMAXWAITTIME) {
                     stopAndClear();
                     return;
                 }
             }
+        }catch (Throwable e){
 
-            if (isRunning && isFilterKey(key)) {
-                StatsInfo info = new StatsInfo();
-                info.key = key;
-                info.cost = value;
-                //info.tags = tags;
-                queue.offer(info);
+        }
+    }
+
+    public long getStartNano(){
+        return isRunning?System.nanoTime():0l;
+    }
+
+    public void addMetricsName(String name){
+        metricNames.add(name);
+    }
+
+    public void removeClassMetrics(String className){
+        className = className.replace('/','.');
+        Set<String> names = new HashSet<>();
+        for(String n:metricNames){
+            if(n.startsWith(className)){
+                names.add(n);
+            }
+        }
+        metricNames.removeAll(names);
+    }
+
+    public void recordNano(String key,long startTime){
+        try {
+            if (isRunning && (obs.size() == 0)) {
+                stopAndClear();
+                return;
+            }
+
+            if (isRunning) {
+                if(isFilterKey(key)) {
+                    StatsInfo info = new StatsInfo();
+                    info.key = key;
+                    info.cost = (System.nanoTime()-startTime)/1000L;
+                    //info.tags = tags;
+                    queue.offer(info);
+                }
                 if ((System.currentTimeMillis() - senderLastUpdateTime) > SENDERMAXWAITTIME) {
                     stopAndClear();
                     return;

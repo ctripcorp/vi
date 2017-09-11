@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.cacheRefresh;
+package com.ctrip.framework.vi.cacheRefresh;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -9,6 +9,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public final class CacheManager {
     private static ConcurrentLinkedQueue<CacheCell> container = new ConcurrentLinkedQueue<>();
     private static Set<String> types = new HashSet<>();
+    public static class KV{
+        public KV(String key,Object value){
+            this.key = key;
+            this.value =value;
+        }
+        String key;
+        Object value;
+    }
     public final static boolean refreshById(String id,String typeName) throws CacheNotFoundException {
 
         return findCellById(id,typeName).refresh();
@@ -22,7 +30,10 @@ public final class CacheManager {
         Map<String,Map<String,Object>> rtn = new HashMap<>();
         for(CacheCell cell:container){
             if(cell.getClass().getName().equalsIgnoreCase(typeName)) {
-                rtn.put(cell.id(), cell.getStatus());
+                Map<String,Object> status = new LinkedHashMap<>();
+                status.put("size", cell.size());
+                status.putAll(cell.getStatus());
+                rtn.put(cell.id(), status);
             }
         }
         return rtn;
@@ -48,6 +59,26 @@ public final class CacheManager {
 
     public final static Map<String,Object> getStatusById(String id,String typeName) throws CacheNotFoundException {
         return findCellById(id,typeName).getStatus();
+    }
+
+    public final static Object findByIndex(String id,String typeName,int index) throws CacheNotFoundException {
+        CacheCell cell = findCellById(id,typeName);
+        Iterable<String> keys = cell.keys();
+        if(keys != null) {
+            Iterator<String> iterator = keys.iterator();
+            int current = 0;
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                if (current == index) {
+                    return new KV(key,cell.getByKey(key));
+                }
+                current++;
+            }
+        }else{
+            throw new CacheNotFoundException();
+        }
+
+        return null;
     }
 
     public final static boolean add(CacheCell item){

@@ -1,15 +1,11 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 /**
  * Created by jiang.j on 2016/4/8.
  */
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
@@ -18,6 +14,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 public class IOUtils {
     private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
@@ -117,15 +115,10 @@ public class IOUtils {
     }
 
     public static String readAll(final InputStream input) throws IOException{
-        StringBuilder stringBuilder = new StringBuilder();
-        try(BufferedReader reader = toBufferedReader(new InputStreamReader(input,Charset.forName("UTF-8")))) {
-            String line = reader.readLine();
-            while (line != null) {
-                stringBuilder.append(line);
-                line = reader.readLine();
-            }
-        }
-        return stringBuilder.toString();
+        String defaultCharset = System.getProperty("sun.jnu.encoding");
+        Charset fileCharset  = defaultCharset!=null?Charset.forName(defaultCharset):Charset.defaultCharset();
+        Scanner s = new Scanner(input,fileCharset.name()).useDelimiter("\\A");
+        return s.hasNext()?s.next():"";
     }
 
     public static byte[] partitionRead(final Path path,int partionSize,int partitionIndex) throws IOException {
@@ -165,6 +158,20 @@ public class IOUtils {
         int nread = 0;
         nread = source.read(buf, nread, capacity - nread) ;
         return (capacity == nread) ? buf : Arrays.copyOf(buf, nread);
+    }
+
+
+    public static InputStream decompressStream(InputStream input) throws IOException {
+        PushbackInputStream pb = new PushbackInputStream( input, 2 ); //we need a pushbackstream to look ahead
+        byte [] signature = new byte[2];
+        int len = pb.read( signature ); //read the signature
+        pb.unread( signature, 0, len ); //push back the signature to the stream
+        if( signature[ 0 ] == (byte) 0x1f && signature[ 1 ] == (byte) 0x8b ) { //check if matches standard gzip magic number
+            return new GZIPInputStream(pb);
+        }
+        else {
+            return pb;
+        }
     }
 
 }

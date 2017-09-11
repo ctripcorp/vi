@@ -29,11 +29,11 @@
             ng-click="vm.clearFilter()">
                 <i class="fa fa-eraser"></i>
             </button>
-
-            <button uib-tooltip="{{vm.onBottom?'滚动到顶部':'滚动到底部'}}" tooltip-placement="bottom-left"
+<button uib-tooltip="{{vm.onBottom?'滚动到顶部':'滚动到底部'}}" tooltip-placement="bottom-left"
             class="btn btn-sm btn-info" ng-click="vm.upDown()">
                 <i class="fa" ng-class="{'fa-chevron-down':!vm.onBottom,'fa-chevron-up':vm.onBottom}"></i>
             </button>
+
             <button uib-tooltip="点击切换搜索模式.文本搜索Txt,正则搜索Regex(正则模式使用回车执行查询)" tooltip-placement="bottom-left"
             class="btn btn-sm btn-info" ng-click="vm.inRegexMode=!vm.inRegexMode">
                 {{vm.inRegexMode?'Regex':'Txt'}}
@@ -44,9 +44,9 @@
                 <input ng-show="vm.showFilter" placeholder="tag name" class="input-sm form-control"
                 ng-model="vm.tagname" type="search" ng-change="vm.searchTag()"
                 />
-                <input ng-show="!vm.showFilter" placeholder="key word" class="input-sm form-control"
-                ng-model="vm.keyword" type="search" ng-keyup="vm.asyncSearch()"
-                ng-keypress="(vm.inRegexMode && $event.which===13)?vm.search(false):0"
+                <input ng-show="!vm.showFilter" placeholder="key word,press enter search" class="input-sm form-control"
+                ng-model="vm.keyword" type="search" 
+                ng-keypress="($event.which===13)?vm.search(!vm.inRegexMode):0"
                 />
 
                 <span ng-show="!vm.showFilter" class="input-group-addon btn btn-info" ng-click="vm.reset()">
@@ -73,12 +73,11 @@
         </div>
 
     </div>
-    <a id="vi-log-top"></a>
-
     <div ng-show="!vm.loadingComplete" class="spinner-panel">
         <i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i>
     </div>
-    <div class="log-list" ng-style="{'paddingTop':vm.getFilterTags().length>0?'70px':'30px'}" ng-show="vm.loadingComplete" ng-class="{'filter':vm.isInFilter}"></div>
+    <scrollbar ng-style="{maxHeight:vm.maxHeight}" name="log-detail-scrollbar" ng-show="vm.loadingComplete">
+    <div class="log-list" ng-style="{'paddingTop':vm.getFilterTags().length>0?'70px':'30px'}" ng-class="{'filter':vm.isInFilter}"></div>
+    </scrollbar>
     <div class="partion-selector"></div>
-    <a id="vi-log-bottom"></a>
 </div>

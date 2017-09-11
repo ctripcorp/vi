@@ -1,8 +1,8 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.annotation.Config;
-import com.ctrip.framework.cornerstone.annotation.FieldValidation;
-import com.ctrip.framework.cornerstone.util.Predicate;
+import com.ctrip.framework.vi.annotation.Config;
+import com.ctrip.framework.vi.annotation.FieldValidation;
+import com.ctrip.framework.vi.util.Predicate;
 
 
 /**

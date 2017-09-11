@@ -20,6 +20,12 @@
             },
             refresh: function(data, func) {
                 return ApiService.doPost(data, apiUrl + 'refresh').then(func);
+            },
+            getByKey: function(data, func) {
+                return ApiService.doPost(data, apiUrl + 'getByKey').then(func);
+            },
+            getByIndex: function(data, func) {
+                return ApiService.doPost(data, apiUrl + 'getByIndex').then(func);
             }
 
         };

@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
 import java.io.InputStream;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
 import java.util.Map;
 

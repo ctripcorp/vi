@@ -1,39 +1,22 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.analyzer.Analyzer;
-import com.ctrip.framework.cornerstone.analyzer.PomDependency;
-import com.ctrip.framework.cornerstone.analyzer.PomInfo;
-import com.ctrip.framework.cornerstone.analyzer.PomDependencyHandler;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.component.defaultComponents.AllConfigFiles;
-import com.ctrip.framework.cornerstone.component.defaultComponents.EnvInfo;
-import com.ctrip.framework.cornerstone.jmx.VIDynamicMBean;
-import com.ctrip.framework.cornerstone.util.DesUtil;
-import com.ctrip.framework.cornerstone.util.IOUtils;
-import com.ctrip.framework.cornerstone.util.SecurityUtil;
-import com.google.gson.Gson;
+import com.ctrip.framework.vi.analyzer.*;
 import org.junit.Test;
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.regex.Pattern;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by jiang.j on 2016/5/19.
@@ -41,7 +24,8 @@ import static org.junit.Assert.assertNotNull;
 public class AnalyzerTest {
 
     @Test
-    public void testSome() throws IOException, NoSuchFieldException {
+    public void testSome() throws IOException, NoSuchFieldException, URISyntaxException, NoSuchAlgorithmException {
+
 
     }
     @Test
@@ -85,4 +69,5 @@ public class AnalyzerTest {
         }
 
     }
+
 }

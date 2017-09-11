@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
 import java.io.InputStream;
 
@@ -7,4 +7,5 @@ import java.io.InputStream;
  */
 public interface EnMaven {
     InputStream getPomInfoByFileName(String[] av,String fileName);
+    InputStream getSourceJarByFileName(String fileName);
 }

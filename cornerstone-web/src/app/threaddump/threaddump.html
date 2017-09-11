@@ -128,7 +128,7 @@
                             <div>堆栈跟踪：</div>
                             <ul>
 				    <li ng-class="{'high-light':vm.needHighlight(trace.declaringClass+trace.methodName+trace.methodDetail)}" ng-repeat="trace in vm.threadInfo.stackTrace">
-                                    {{vm.formatTrace(trace)}}
+					    <span compile="vm.formatTrace(trace)"></span>
                                 </li>
                             </ul>
                         </div>

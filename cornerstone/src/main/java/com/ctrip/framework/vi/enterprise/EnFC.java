@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.cornerstone.HasPermission;
+import com.ctrip.framework.vi.HasPermission;
 import java.util.Map;
 
 /**

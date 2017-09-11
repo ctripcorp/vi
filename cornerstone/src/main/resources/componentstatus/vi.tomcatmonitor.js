@@ -161,7 +161,7 @@
                 vm.threadOptions = {
                     chart: {
                         type: 'lineChart',
-                        yDomain: [0, 10],
+                        forceY: [2],
                         height: 200,
                         xAxis: {
 
@@ -209,29 +209,14 @@
                         }
 			lastUpdateTime = new Date();
 
-                        if (threadBigPastSec >= 0)
-                            threadBigPastSec++;
 
                         vm.maxThreads = data.maxThreads;
                         vm.maxTime = d3.format('#,')(data.maxTime) + 'ms';
 
-                        if (vm.threadOptions.chart.yDomain[1] / 1.2 < data.currentThreadCount) {
-                            vm.threadOptions.chart.yDomain = [0, Math.round(data.currentThreadCount * 1.5)];
-                            threadBigPastSec = 0;
-                        }
 
                         var secRequestCount = data.requestCount - lastData.requestCount;
 
                         var secBytesSent = data.bytesSent - lastData.bytesSent;
-
-                        if (threadBigPastSec > 61) {
-
-                            vm.threadOptions.chart.yDomain = [0, Math.round(d3.max(vm.threadData[0].values, function(d) {
-                                return d.y;
-                            }) * 1.5)];
-                            threadBigPastSec = 0;
-                        }
-
 
 
                         vm.threadData[0].values.shift();

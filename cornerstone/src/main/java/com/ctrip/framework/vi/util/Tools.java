@@ -1,18 +1,23 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
-import com.ctrip.framework.cornerstone.configuration.ConfigurationException;
-import com.ctrip.framework.cornerstone.configuration.PropertiesConfiguration;
+import com.ctrip.framework.vi.configuration.ConfigurationException;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.configuration.PropertiesConfiguration;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Enumeration;
@@ -25,6 +30,8 @@ import java.util.Map;
 public final class  Tools {
 
     private static final Logger logger = LoggerFactory.getLogger(Tools.class);
+    private static URLClassLoader jdkToolClassLoader;
+    private static final String JDKPATHKEY="vi.jdk.path";
 
     public final static String byteToKB(long number){
         DecimalFormat decimalFormat = new DecimalFormat("#,###.# KB");
@@ -98,4 +105,81 @@ public final class  Tools {
         }
         return new NoSuchMethodException("no public static method "+method+" be found in"+belongClass.getName());
     }
+
+    public static String getNoExtensionName(String fileName){
+        if(fileName == null){
+            return null;
+        }
+        int index = fileName.lastIndexOf('.');
+        if(index == -1){
+            return fileName;
+        }else{
+            return fileName.substring(0,index);
+        }
+    }
+
+    public static String getFileName(String path){
+        if(path == null){
+            return null;
+        }
+        if(path.charAt(path.length()-1)=='/'){
+            return "";
+        }
+
+        int index = path.lastIndexOf('/');
+        if(index == -1){
+            return path;
+        }else{
+            return path.substring(index+1);
+        }
+    }
+
+    private static String pid;
+    private static final Object locker = new Object();
+    public static String currentPID(){
+        if(pid == null){
+            synchronized (locker) {
+                if(pid == null) {
+                    final String jvmName = ManagementFactory.getRuntimeMXBean().getName();
+                    final int index = jvmName.indexOf('@');
+                    pid = jvmName.substring(0, index);
+                }
+            }
+        }
+        return pid;
+    }
+
+    private static final Object loaderLocker = new Object();
+    public static Class<?> loadJDKToolClass(String name) throws InitConfigurationException, MalformedURLException, ClassNotFoundException {
+
+        if(jdkToolClassLoader == null) {
+            synchronized (loaderLocker) {
+                if(jdkToolClassLoader == null) {
+                    String javaPath = System.getenv("JAVA_HOME");
+                    if (javaPath == null || javaPath.length() < 5) {
+                        javaPath = ConfigurationManager.getConfigInstance().getString(JDKPATHKEY);
+                    }
+                    String path = javaPath + "/lib/tools.jar";
+                    URL jarURl = new File(path).toURI().toURL();
+                    logger.debug("jdk tools path:" + path);
+                    jdkToolClassLoader = new URLClassLoader(new URL[]{jarURl});
+                }
+            }
+        }
+        return jdkToolClassLoader.loadClass(name);
+    }
+
+    public static boolean isLegalClass(String className){
+        try{
+            Class.forName(className);
+            return true;
+        }catch (Throwable e){
+           logger.warn("illegal class - "+className,e);
+            return false;
+        }
+
+    }
+
+
+
 }

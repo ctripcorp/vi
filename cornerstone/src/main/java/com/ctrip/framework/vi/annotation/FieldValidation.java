@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.annotation;
+package com.ctrip.framework.vi.annotation;
 
-import com.ctrip.framework.cornerstone.util.Predicate;
+import com.ctrip.framework.vi.util.Predicate;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

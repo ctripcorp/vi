@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents;
+package com.ctrip.framework.vi.component.defaultComponents;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.util.JMXQuery;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.util.JMXQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 /**
  * Created by jiang.j on 2016/4/29.
  */
-@ComponentStatus(id = "vi.tomcatmonitor", name = "tomcat monitor", custom = true,description = "tomcat 监控")
+@ComponentStatus(id = "vi.tomcatmonitor", name = "tomcat monitor", custom = true,description = "tomcat 监控",auto = false)
 public class TomcatInfo  extends HashMap<String,Object>{
 
     Logger _logger = LoggerFactory.getLogger(this.getClass());

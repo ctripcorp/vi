@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.ignite;
+package com.ctrip.framework.vi.ignite;
 
-import com.ctrip.framework.cornerstone.IgniteManager;
+import com.ctrip.framework.vi.IgniteManager;
 
 /**
  * Created by jiang.j on 2016/8/11.

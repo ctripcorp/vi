@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.analyzer;
+package com.ctrip.framework.vi.analyzer;
 
 import java.io.Serializable;
 import java.util.List;

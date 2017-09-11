@@ -1,0 +1,54 @@
+.report-section{
+
+	padding-top:15px;
+	.question-mark{
+
+		color:#6fb3e0;
+	}
+	.fullgc-mark{
+
+		fill-opacity:1 !important;
+		stroke-opacity:1 !important;
+		stroke-width:10;
+		stroke:#6fb3e0;
+	}
+	ul{
+		margin:0px;
+		padding:0px;
+		button{
+			width:150px;
+			margin-bottom:10px;
+			padding-top:10px;
+			padding-bottom:10px;
+			&.btn-sele{
+				background:#d15b47 !important;
+			}
+		}
+	}
+	td{
+		border:1px solid #888;
+		padding:10px;
+	}
+	.gclog-sele.form-control{
+
+		width:auto !important;
+		display:inline-block;
+	}
+	.graph-container{
+		height:300px;
+		width:100%;
+		border:1px solid #888;
+
+	}
+	.stat-graph-container{
+		height:300px;
+		width:100%;
+		border:1px solid #888;
+
+	}
+	.big-graph-container{
+		height:500px;
+		width:100%;
+	}
+
+}

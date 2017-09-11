@@ -21,15 +21,60 @@
         return directive;
 
         /** @ngInject */
-        function NavbarController($scope, SiteCache, $cookies, $uibModal, ApiService, $state, enterpriseService) {
+        function NavbarController($scope, SiteCache, $cookies, $uibModal, ApiService, $state, enterpriseService, $rootScope, appService) {
             var vm = this;
             var hostInfo = SiteCache.get('hostInfo');
             vm.loginUser = $cookies.get('vi-user');
             vm.isOriginIp = true;
+            if (typeof $PORTALURL !== 'undefined') {
+                vm.portalUrl = $PORTALURL;
+            }
             enterpriseService.getHelp(function(data) {
                 vm.links = data;
             });
 
+            vm.tabs = {};
+            vm.version = 'dev';
+            if (typeof $VERSION !== 'undefined') {
+                vm.version = $VERSION;
+            }
+
+            var seleIndex = null;
+
+            vm.switch = function(index) {
+
+                if (seleIndex !== null && vm.tabs[seleIndex]) {
+                    vm.tabs[seleIndex].selected = false;
+                }
+
+                if (isNaN(index)) {
+                    vm.tabs[index].selected = true;
+                    seleIndex = index;
+                }
+
+                $rootScope.$broadcast('$switchTab', index);
+            };
+
+            vm.removeTab = function(index) {
+                delete vm.tabs[seleIndex];
+                seleIndex = 0;
+                $rootScope.$broadcast('$removeTab', index);
+
+            };
+
+            $scope.$on('$viViewAdded', function(event, state, name) {
+
+                if (seleIndex !== null && vm.tabs[seleIndex]) {
+                    vm.tabs[seleIndex].selected = false;
+                }
+
+                vm.tabs[state + name] = {
+                    'name': name,
+                    'selected': true
+                };
+                seleIndex = state + name;
+
+            });
 
             vm.changeServer = function() {
 
@@ -168,15 +213,34 @@
 
             $scope.$on('$stateChangeSuccess', function(evt, next, toParams) {
 
+                var vName;
+                var newState = next.name;
+                if (newState != 'Log-Detail' && toParams && toParams.name) {
+                    vName = newState + ' - ' + toParams.name;
+                } else {
+                    vName = newState;
+
+                }
+                appService.uvTrace(vName, function(d) {
+
+                });
+                $rootScope.$broadcast('$switchTab', -1);
+                vm.tabs = {};
                 var moduleName = toParams.name ? toParams.name : next.name;
                 if (currentMenu) {
                     $scope.breadcrumbs = [currentMenu];
                     if (currentMenu.state != next.name) {
                         $scope.breadcrumbs.push({
-                            name: toParams.name ? toParams.name : next.name
+                            name: moduleName
                         });
 
                     }
+                } else {
+
+                    $scope.breadcrumbs = [{
+                        'state': 'empty',
+                        'name': moduleName
+                    }];
                 }
 
             });

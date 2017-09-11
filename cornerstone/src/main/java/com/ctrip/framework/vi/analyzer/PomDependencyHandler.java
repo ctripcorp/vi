@@ -1,9 +1,10 @@
-package com.ctrip.framework.cornerstone.analyzer;
+package com.ctrip.framework.vi.analyzer;
 
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
+import com.ctrip.framework.vi.enterprise.EnFactory;
 import org.xml.sax.*;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.xml.XMLConstants;
 import java.io.InputStream;
 import java.util.*;
 
@@ -90,6 +91,7 @@ public class PomDependencyHandler implements ContentHandler {
                 XMLReader xmlReader = null;
                 try {
                     xmlReader = XMLReaderFactory.createXMLReader();
+                    xmlReader.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING,true);
                     PomDependencyHandler handler;
                     if(this.allParentDeps == null){
                         this.allParentDeps = new ArrayList<>();
@@ -147,9 +149,20 @@ public class PomDependencyHandler implements ContentHandler {
             root.groupId = parentGroupId;
         }
         handleParent();
+        String version = root.version;
+        if(version.startsWith("${")){
+            version = props.get(version.substring(2,version.length()-1));
+            root.version = version;
+        }
         return root;
     }
-
+    /*
+        <dependency>
+            <groupId>com.ctriposs.baiji</groupId>
+            <artifactId>baiji-rpc-server</artifactId>
+            <version>1.6.10</version>
+            <scope>compile</scope>
+            */
     @Override
     public void setDocumentLocator(Locator locator) {
 

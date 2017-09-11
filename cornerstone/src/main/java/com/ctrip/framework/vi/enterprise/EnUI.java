@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.cornerstone.ui.CustomPage;
-import com.ctrip.framework.cornerstone.ui.Menu;
+import com.ctrip.framework.vi.ui.CustomPage;
+import com.ctrip.framework.vi.ui.Menu;
 
 import java.util.List;
 

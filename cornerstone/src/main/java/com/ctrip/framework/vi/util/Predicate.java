@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 /**
  * Created by jiang.j on 2016/4/25.

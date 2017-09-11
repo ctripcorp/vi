@@ -1,12 +1,12 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.enterprise.EnAuthentication;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.enterprise.EnHost;
-import com.ctrip.framework.cornerstone.ui.Menu;
-import com.ctrip.framework.cornerstone.util.IOUtils;
-import com.ctrip.framework.cornerstone.util.IPUtil;
-import com.ctrip.framework.cornerstone.util.SecurityUtil;
+import com.ctrip.framework.vi.enterprise.EnAuthentication;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.enterprise.EnHost;
+import com.ctrip.framework.vi.ui.Menu;
+import com.ctrip.framework.vi.util.IOUtils;
+import com.ctrip.framework.vi.util.IPUtil;
+import com.ctrip.framework.vi.util.SecurityUtil;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,9 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.enterprise.ConfigUrlContainer;
-import com.ctrip.framework.cornerstone.localLog.LocalLogManager;
-import com.ctrip.framework.cornerstone.util.SecurityUtil;
+import com.ctrip.framework.vi.annotation.Sensitive;
+import com.ctrip.framework.vi.enterprise.ConfigUrlContainer;
+import com.ctrip.framework.vi.localLog.LocalLogManager;
+import com.ctrip.framework.vi.util.SecurityUtil;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -35,7 +36,6 @@ public class APIContentExecutor {
     public static RequestResult doGet(String callPath,Map<String,Object> params,String user,String token,String remoteIp){
 
         String validUser= SecurityUtil.getValidUserName(user,token,remoteIp);
-        logger.info("api user "+user + " " + remoteIp + " " + validUser);
         if(callPath.startsWith("/download/log/")) {
             return downloadLogFile(callPath.substring(14));
         }else if(callPath.startsWith("/download/config/") && validUser != null){
@@ -56,7 +56,14 @@ public class APIContentExecutor {
         rtn.headers.put(SecurityUtil.PERMISSIONKEY, String.valueOf(exeResult.getPermission()));
         rtn.responseCode = exeResult.getResponseCode();
         if(exeResult.getData() !=null) {
-            rtn.content = toJsonBytes(exeResult.getData(), params==null?null:params.get(JSONFIELDS));
+            try {
+                rtn.content = toJsonBytes(exeResult.getData(), params == null ? null : params.get(JSONFIELDS));
+            }catch (Throwable e){
+                String reason =callPath + " serialize result failed";
+                logger.warn(reason,e);
+                rtn.content = reason.getBytes();
+                rtn.responseCode = 500;
+            }
         }
 
         return rtn;
@@ -64,6 +71,9 @@ public class APIContentExecutor {
 
     public static void logWarn(String msg,Throwable e){
         logger.warn(msg,e);
+    }
+    public static void logError(String msg,Throwable e){
+        logger.error(msg,e);
     }
 
     private static byte[] toJsonBytes(Object object, final Object rawFields){
@@ -77,7 +87,7 @@ public class APIContentExecutor {
 
                     Pattern pattern = Pattern.compile("(^|,)" + f.getName() + "($|,)", Pattern.CASE_INSENSITIVE);
                     boolean shouldSkip = false;
-                    if (!pattern.matcher(fields).find()){
+                    if (!pattern.matcher(fields).find() || f.getAnnotation(Sensitive.class)!= null){
                         shouldSkip = true;
                     }
                     return shouldSkip;
@@ -88,6 +98,24 @@ public class APIContentExecutor {
                     return false;
                 }
             });
+        }else {
+            builder.setExclusionStrategies(new ExclusionStrategy() {
+                @Override
+                public boolean shouldSkipField(FieldAttributes f) {
+
+                    boolean shouldSkip = false;
+                    if (f.getAnnotation(Sensitive.class)!= null){
+                        shouldSkip = true;
+                    }
+                    return shouldSkip;
+                }
+
+                @Override
+                public boolean shouldSkipClass(Class<?> clazz) {
+                    return false;
+                }
+            });
+
         }
         Gson gson = builder.create();
 
@@ -106,7 +134,14 @@ public class APIContentExecutor {
         VIApiHandler.ExeResult exeResult = handler.executeService(callPath, validUser,params);
         rtn.responseCode = (exeResult.getResponseCode());
         rtn.headers.put(SecurityUtil.PERMISSIONKEY, String.valueOf(exeResult.getPermission()));
-        rtn.content = toJsonBytes(exeResult.getData(),params==null?null:params.get(JSONFIELDS));
+        try {
+            rtn.content = toJsonBytes(exeResult.getData(), params == null ? null : params.get(JSONFIELDS));
+        }catch (Throwable e){
+            String reason =callPath + " serialize result failed";
+            logger.warn(reason,e);
+            rtn.content = reason.getBytes();
+            rtn.responseCode = 500;
+        }
         return rtn;
     }
 
@@ -129,8 +164,10 @@ public class APIContentExecutor {
 
             try {
                 URL rootUrl = Thread.currentThread().getContextClassLoader().getResource("/");
-                Path rootFolderPath = Paths.get(Paths.get(rootUrl.toURI()).getParent().toString(), "web.xml");
-                rtn.content = Files.readAllBytes(rootFolderPath);
+                if(rootUrl!=null) {
+                    Path rootFolderPath = Paths.get(Paths.get(rootUrl.toURI()).getParent().toString(), "web.xml");
+                    rtn.content = Files.readAllBytes(rootFolderPath);
+                }
 
             }catch (Throwable e){
                 logger.warn("get root path failed!",e);
@@ -141,13 +178,14 @@ public class APIContentExecutor {
             if(configPath.length()>0 && Character.isDigit(configPath.charAt(0))){
                 int key = Integer.parseInt(configPath);
                 realPath = "file:" + ConfigUrlContainer.getUrl(key);
-                if(realPath.endsWith(".xml")){
-                    rtn.contentType = "text/xml";
-                }
 
             }
             else if(configPath.startsWith("file:")) {
                 realPath = "jar:" + configPath;
+            }
+
+            if(realPath.endsWith(".xml")){
+                rtn.contentType = "text/xml";
             }
 
             try {
@@ -179,9 +217,15 @@ public class APIContentExecutor {
         RequestResult rtn = new RequestResult();
         try
         {
+            String[] parts = logName.split("@@");
+
+            if(parts.length>1){
+               logName = parts[0]+"/"+parts[1];
+            }
+
             File file = LocalLogManager.getLogFile(logName);
             rtn.streamContent = new FileInputStream(file);
-            rtn.headers.put("Content-disposition", "attachment;filename=" + logName);
+            rtn.headers.put("Content-disposition", "attachment;filename=" + (parts.length>1?parts[1]:logName));
             //rtn.headers.put("Content-Length", String.valueOf(file.length()));
         } catch (Throwable e) {
             logger.warn("download log " + logName + " failed!", e);

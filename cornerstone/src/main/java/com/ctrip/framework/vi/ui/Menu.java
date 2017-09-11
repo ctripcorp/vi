@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.ui;
+package com.ctrip.framework.vi.ui;
 
 import java.util.ArrayList;
 import java.util.List;

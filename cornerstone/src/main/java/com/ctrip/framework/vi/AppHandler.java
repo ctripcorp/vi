@@ -1,8 +1,13 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.component.ComponentManager;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.util.HttpUtil;
+import com.ctrip.framework.vi.watcher.EventLogger;
+import com.ctrip.framework.vi.watcher.EventLoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 
 /**
@@ -10,17 +15,43 @@ import java.util.Map;
  */
 public class AppHandler implements ViFunctionHandler {
     private  String startPath ="/app/";
+    private transient EventLogger eventLogger = EventLoggerFactory.getLogger(getClass(),"vi.uv");
+
     @Override
     public Object execute(String path, String user, int permission, Logger logger, Map<String, Object> params) throws Exception {
-        Object rtn = null;
+        Object rtn = "";
         AppInfo appInfo = ComponentManager.getStatus(AppInfo.class);
-        if(!(user!=null && user.length()>2 && user.equals(appInfo.getAppOwner()))) {
+
+        String opPath = path.substring(startPath.length()).toLowerCase();
+        if(!(user!=null && user.length()>2 && user.equals(appInfo.getAppOwner())) && !"uvtrace".equals(opPath)) {
             throw new NoPermissionException();
         }
-        if(path.equals(startPath+"markdown")){
-            OwnerJudge.getInstance().toAbnormal();
-        }else if(path.equals(startPath+"markup")){
-            OwnerJudge.getInstance().toNormal();
+        switch (opPath){
+            case "markdown":
+                if(!appInfo.isStatusSourceEnabled()){
+                    throw new Exception("can't markdwon. because statusSources be disabled!");
+                }
+                OwnerJudge.getInstance().toAbnormal();
+                logger.warn(user + " markdown the app.");
+                break;
+            case "markup":
+                if(!appInfo.isStatusSourceEnabled()){
+                    throw new Exception("can't markup. because statusSources be disabled!");
+                }
+                OwnerJudge.getInstance().toNormal();
+                logger.warn(user + " markup the app.");
+                break;
+            case "enablestatussource":
+                appInfo.enableStatusSource();
+                logger.warn(user + " enable statusSources.");
+                break;
+            case "disablestatussource":
+                appInfo.disableStatusSource();
+                logger.warn(user + " disable statusSources.");
+                break;
+            case "uvtrace":
+                eventLogger.fireEvent(HttpUtil.getJsonParamVal(params.get("name")));
+                break;
         }
         return rtn;
     }

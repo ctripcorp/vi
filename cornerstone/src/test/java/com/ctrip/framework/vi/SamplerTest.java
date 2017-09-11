@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.analyzer.JVMSampler;
-import com.ctrip.framework.cornerstone.component.defaultComponents.linux.LinuxSocketInfo;
+import com.ctrip.framework.vi.analyzer.JVMSampler;
+import com.ctrip.framework.vi.component.defaultComponents.linux.LinuxSocketInfo;
 import org.junit.Test;
 
 import java.io.IOException;

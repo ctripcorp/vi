@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,0 +1,114 @@
+ $perm-color:#366f97;
+ $old-color:#669fc7;
+ $eden-color:#96bff7;
+ $s0-color:#2ffff7;
+ $s1-color:#26bff7;
+ .col-right {
+     text-align: right;
+ }
+ .gc-list {
+	 .gc-parameters{
+		 color:orange;
+		 font-weight:bold;
+		 .gc-parameter-value{
+
+			 font-weight:normal;
+			 padding-left:10px;
+		 }
+	 }
+     .graph {
+         padding-top: 10px;
+	 .panel{
+		 padding-bottom:0px !important;
+		 &>.content{
+
+		 }
+	 }
+     }
+     padding-top:10px;
+     width:100%;
+     height:800px;
+     overflow-x:hidden;
+     .gc-gen {
+         height: 500px;
+         &>div {
+             height: 100%;
+         }
+     }
+     .histogram {
+         height: 120px;
+	 margin-left:0px;
+	 padding-left:0px;
+         &>div {
+             height: 100%;
+	     display:inline-block;
+	 margin-left:5px;
+         }
+     }
+ .bar-panel {
+     &.perm {
+	 height: 100%;
+	 .progress-bar {
+	     background: $perm-color;
+	 }
+     }
+     &.old {
+	 height: 100%;
+	 .progress-bar {
+	     background: $old-color;
+	 }
+     }
+     &.eden {
+	 height: 55%;
+	 .progress-bar {
+	     background: $eden-color;
+	 }
+     }
+     &.s0 {
+	 height: 20%;
+	 .progress-bar {
+	     background: $s0-color;
+	 }
+     }
+     &.s1 {
+	 height: 20%;
+	 .progress-bar {
+	     background: $s1-color;
+	 }
+     }
+     border:1px solid #bbb;
+     padding:0px;
+     margin-top:10px;
+     padding-top:10px;
+     padding-bottom:0px;
+     border-radius:4px;
+     box-shadow:0 1px 1px rgba(0,
+     0,
+     0,
+     0.05);
+     &>.title {
+	 position: relative;
+	 top: -18px;
+	 left: 3px;
+	 background: #fff;
+     }
+     .bar-container {
+	 position: relative;
+	 display: block;
+	 margin-top: -18px;
+	 height: 100%;
+	 width: 100%;
+	 overflow: hidden;
+     }
+     .bar-txt {
+	 color: #2ca02c;
+	 margin-top: -10px;
+     }
+     .bar-process {
+	 display: block;
+	 position: relative;
+	 height: 100%;
+	 width: 100%;
+     }
+ }
+ }

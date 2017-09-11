@@ -31,7 +31,7 @@
                                 'description': fmeta.description
                             };
                             var extendPat = /@{[^{]*}/g;
-                            var extendInfo = item.description.match(extendPat);
+                            var extendInfo = (item.description||'').match(extendPat);
                             if (extendInfo != null && extendInfo.length > 0) {
                                 item.description = item.description.replace(extendPat, '');
                                 angular.merge(item, $scope.$eval(extendInfo[0].substr(1)));
@@ -56,18 +56,31 @@
                                 }
                             }
 
+			    if(item.value instanceof Object){
+				    item.objValue = item.value;
+				    delete item.value;
+
+			    }
+
                             vm.rowCollection.push(item);
 
                         }
 
                     }
 
-                    if (vm.rowCollection.length == 0) {
+                    if (vm.rowCollection.length === 0) {
                         for (var k in data) {
-                            vm.rowCollection.push({
-                                'name': k,
-                                'value': data[k]
-                            });
+
+				var val = data[k];
+				var newItem = {'name':k};
+				if(val instanceof Object){
+
+				  newItem.objValue = val;
+				}else{
+
+					 newItem.value = val;
+				}
+                            vm.rowCollection.push(newItem);
                         }
                     }
 

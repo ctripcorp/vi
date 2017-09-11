@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.configuration.validation;
+package com.ctrip.framework.vi.configuration.validation;
 
 /**
  * Created by jiang.j on 2016/4/7.

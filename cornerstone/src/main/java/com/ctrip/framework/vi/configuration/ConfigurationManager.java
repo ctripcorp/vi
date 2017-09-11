@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.configuration;
+package com.ctrip.framework.vi.configuration;
 
 import java.io.*;
 import java.net.URL;
@@ -16,8 +16,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.util.Tools;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.util.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,7 +180,6 @@ public class ConfigurationManager {
                     addNewProps(name,props,config);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new InitConfigurationException(e);
             }
         }
@@ -287,13 +286,14 @@ public class ConfigurationManager {
         String[] dirFiles;
         InputStream dirStream = loader.getResourceAsStream(dir);
         if(dirStream!=null) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(dirStream));
-            List<String> names = new ArrayList<>();
-            String fname;
-            while ((fname = reader.readLine()) != null) {
-                names.add(fname);
+            try(BufferedReader reader = new BufferedReader(new InputStreamReader(dirStream))) {
+                List<String> names = new ArrayList<>();
+                String fname;
+                while ((fname = reader.readLine()) != null) {
+                    names.add(fname);
+                }
+                dirFiles = names.toArray(new String[names.size()]);
             }
-            dirFiles = names.toArray(new String[0]);
         }else{
 
             URL dirUrl = loader.getResource(dir);

@@ -1,11 +1,18 @@
-package com.ctrip.framework.cornerstone.component;
+package com.ctrip.framework.vi.component;
 
-import com.ctrip.framework.cornerstone.Permission;
-import com.ctrip.framework.cornerstone.ViFunctionHandler;
-import com.ctrip.framework.cornerstone.util.TextUtils;
-import com.ctrip.framework.cornerstone.util.Tools;
+import com.ctrip.framework.vi.Permission;
+import com.ctrip.framework.vi.ViFunctionHandler;
+import com.ctrip.framework.vi.configuration.Configuration;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.util.IOUtils;
+import com.ctrip.framework.vi.util.TextUtils;
+import com.ctrip.framework.vi.util.Tools;
 import org.slf4j.Logger;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,14 +41,29 @@ public class ComponentHandler implements ViFunctionHandler {
 
             if(seleComponent!=null){
                 if(parts.length==1) {
-                    rtn = ComponentManager.getStatus(seleComponent);
+                    rtn = ComponentManager.getStatus(seleComponent,user);
                 }else if(parts.length==2){
                     String sub = parts[1].toLowerCase();
                     if(sub.equals("custom")) {
+                        String compId = parts[0];
                         Map<String, String> cdata = new HashMap<>();
                         String folder = "componentstatus";
-                        cdata.put("html", Tools.getInnerResources(seleComponent,folder, parts[0], "html"));
-                        cdata.put("js", Tools.getInnerResources(seleComponent,folder, parts[0], "js"));
+                        String devKey = "vi.component.dev."+compId;
+                        Configuration configuration = ConfigurationManager.getConfigInstance();
+                        if(configuration.containsKey(devKey)) {
+                            String devPath = configuration.getString(devKey);
+                            try(InputStream is= new FileInputStream(Paths.get(devPath,compId+".html").toFile())) {
+                                cdata.put("html", IOUtils.readAll(is));
+                            }
+                            try(InputStream is= new FileInputStream(Paths.get(devPath,compId+".js").toFile())) {
+                                cdata.put("js", IOUtils.readAll(is));
+                            }
+
+                        }
+                        if(!cdata.containsKey("html")) {
+                            cdata.put("html", Tools.getInnerResources(seleComponent, folder, compId, "html"));
+                            cdata.put("js", Tools.getInnerResources(seleComponent, folder, compId, "js"));
+                        }
                         rtn = cdata;
                     }else{
                         rtn = Tools.doClassStaticMethod(seleComponent, sub, params);

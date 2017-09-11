@@ -1,11 +1,59 @@
+<script type="text/ng-template" id="cache-view.html">
+    <div class="modal-header">
+	<h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class=" row">
+            <div class="col-sm-3">
+            <label class="search-title control-label">View By:</label>
+                <div class="btn-group">
+                    <label ng-show="hasIndex" class="btn btn-primary" ng-model="searchType" uib-btn-radio="'index'">Index</label>
+                    <label class="btn btn-primary" ng-model="searchType" uib-btn-radio="'key'">Key</label>
+                </div>
+            </div>
+            <div class="col-sm-9 form-inline" ng-show="searchType == 'key'">
+                <div class="form-group">
+                    <input ng-model="searchKey" placeholder="key name" ng-keydown="onKeyDown($event)" class="input-sm form-control"
+                    type="search" />
+                </div>
+                <button type="button" class="btn btn-primary" ng-click="searchByKey()">Search</button>
+            </div>
+        </div>
+
+        <div class="cache-content">
+            <json-formatter ng-show="jsonContent != null" class="json-content" open="2" json="jsonContent"></json-formatter>
+            <nav ng-show="searchType == 'index' && hasIndex">
+                <ul class="pagination">
+                    <li><a ng-click="selectPage(1)">First</a>
+                    </li>
+                    <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+                    </li>
+                    <li>
+                        <a>
+                            <page-select></page-select>of {{numPages}}</a>
+                    </li>
+                    <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+                    </li>
+                    <li><a ng-click="selectPage(numPages)">Last</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+    </div>
+</script>
 <table st-table="displayCollection" st-sticky-header st-safe-src="vm.cellCollection"
 class="table table-striped" st-sticky-header-top="65">
     <thead class="sticky-header">
         <tr>
-		<th colspan="{{vm.colCount}}" class="search-container">
+            <th colspan="{{vm.colCount}}" class="search-container">
                 <div class="widget-header">
-                    <span class="title">Cache Refresh</span>
-                    <select class="form-control" ng-change="vm.typeChange()" ng-model="vm.selectedType" ng-options="name.name for name in vm.types"></select>
+                    <span class="title">Cache Management</span>
+                    <select class="form-control" ng-change="vm.typeChange()" ng-model="vm.selectedType"
+                    ng-options="name.name for name in vm.types"></select>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-search"></i>
                         </div>
@@ -23,7 +71,10 @@ class="table table-striped" st-sticky-header-top="65">
 
     <tbody>
         <tr ng-repeat="item in displayCollection">
-	    <td><button ng-click="vm.refresh(item)" class="btn btn-primary">refresh</button></td>
+            <td>
+                <button ng-click="vm.refresh(item)" class="btn btn-primary">refresh</button>
+                <button ng-click="vm.view(item)" class="btn btn-primary">view</button>
+            </td>
             <td ng-repeat="col in vm.cols">{{item[col.name]}}</td>
         </tr>
     </tbody>

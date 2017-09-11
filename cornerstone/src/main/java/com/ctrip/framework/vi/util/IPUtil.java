@@ -1,5 +1,7 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by jiang.j on 2016/5/3.
@@ -125,5 +127,15 @@ public final class IPUtil {
             default:
                 return false;
         }
+    }
+
+    public static int parseIP(String address) {
+
+        String[] parts = address.split("\\.");
+        return (Integer.parseInt(parts[0]) << 24) | (Integer.parseInt(parts[1]) << 16) | (Integer.parseInt(parts[2]) << 8) | (Integer.parseInt(parts[3]));
+    }
+
+    public static int getIPV4(HttpServletRequest req){
+       return 0;
     }
 }

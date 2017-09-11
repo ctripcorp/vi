@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.ui;
+package com.ctrip.framework.vi.ui;
 
 /**
  * Created by jiang.j on 2016/11/1.
@@ -11,7 +11,7 @@ public class BuildInCache implements BuildInPage {
 
     @Override
     public String getName() {
-        return "Cache Refresh";
+        return "Cache Manager";
     }
 
     @Override

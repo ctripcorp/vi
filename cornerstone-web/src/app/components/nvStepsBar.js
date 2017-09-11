@@ -18,6 +18,7 @@ nv.models.stepsChart = function() {
         noData = null,
         dispatch = d3.dispatch('renderEnd'),
         currentIndex = 0,
+	stepClick=function(){},
         currentStatus;
 
     //============================================================
@@ -28,10 +29,10 @@ nv.models.stepsChart = function() {
 
     tooltip.contentGenerator(function(d) {
 
-        return '<div style="padding:10px"><div class"row"><div class="col-md-3" style="text-align: right;font-weight:bolder">ID:</div><div style="padding:0px" class="col-md-9">' + d.id + '</div></div>' +
-            '<div class"row"><div class="col-md-3" style="text-align: right;font-weight:bolder">ClassName:</div><div class="col-md-9" style="padding:0px">' + d.name + '</div></div>' +
-            '<div class"row"><div class="col-md-3" style="text-align: right;font-weight:bolder">Before:</div><div class="col-md-9" style="padding:0px">' + d.before + '&nbsp; </div></div>' +
-            '<div class"row"><div class="col-md-3" style="text-align: right;font-weight:bolder">After:</div><div class="col-md-9" style="padding:0px">' + d.after + '</div></div>' +
+        return '<div class="steps-tooltip" style="padding:10px"><div class="row"><div class="col-md-3" style="text-align: right;font-weight:bolder">ID:</div><div style="padding:0px" class="col-md-9">' + d.id + '</div></div>' +
+            '<div class="row"><div class="col-md-3" style="text-align: right;font-weight:bolder">ClassName:</div><div class="content col-md-9" style="padding:0px">' + d.name + '</div></div>' +
+            '<div class="row"><div class="col-md-3" style="text-align: right;font-weight:bolder">Before:</div><div class="content col-md-9" style="padding:0px">' + d.before + '&nbsp; </div></div>' +
+            '<div class="row"><div class="col-md-3" style="text-align: right;font-weight:bolder">After:</div><div class="content col-md-9" style="padding:0px">' + d.after + '</div></div>' +
 	    '</div>';
     });
 
@@ -138,7 +139,10 @@ nv.models.stepsChart = function() {
                         })
                         .on('mouseout', function(d) {
                             tooltip.hidden(true);
-                        });
+                        })
+			.on('click',function(d){
+				stepClick(d);
+			});
 
                     steps.append('circle')
                         .attr('r', 8)
@@ -182,6 +186,15 @@ nv.models.stepsChart = function() {
                 width = _;
             }
         },
+	    stepClick:{
+            get: function() {
+                return stepClick;
+            },
+            set: function(_) {
+                stepClick = _;
+            }
+
+	    },
         currentIndex: {
             get: function() {
                 return currentIndex;

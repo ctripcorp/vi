@@ -1,10 +1,10 @@
-package com.ctrip.framework.cornerstone.component;
+package com.ctrip.framework.vi.component;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.AppInfo;
-import com.ctrip.framework.cornerstone.component.defaultComponents.HostInfo;
-import com.ctrip.framework.cornerstone.component.defaultComponents.PerformanceStatus;
-import com.ctrip.framework.cornerstone.util.Tools;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.AppInfo;
+import com.ctrip.framework.vi.component.defaultComponents.HostInfo;
+import com.ctrip.framework.vi.component.defaultComponents.PerformanceStatus;
+import com.ctrip.framework.vi.util.Tools;
 import org.junit.Test;
 
 import java.io.IOException;

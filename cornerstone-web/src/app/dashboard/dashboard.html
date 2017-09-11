@@ -1,21 +1,3 @@
-<script type="text/ng-template" id="pagination.custom.html">
-    <nav ng-if="pages.length >= 2">
-        <ul class="pagination">
-            <li><a ng-click="selectPage(1)">First</a>
-            </li>
-            <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
-            </li>
-            <li>
-                <a>
-                    <page-select></page-select>of {{numPages}}</a>
-            </li>
-            <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
-            </li>
-            <li><a ng-click="selectPage(numPages)">Last</a>
-            </li>
-        </ul>
-    </nav>
-</script>
 <div class="dashboard">
     <div class="row">
         <div class="col-md-6 form-group" uib-dropdown is-open="vm.isOpen" keyboard-nav>
@@ -28,13 +10,13 @@
                     <tbody>
                         <tr ng-class="{'select-row':index==vm.selectedIndex}" ng-repeat="(index,m) in vm.list"
                         ng-click="vm.selectName(m)">
-                            <td>{{m}}</td>
+                            <td>{{vm.metricName(m)}}</td>
                         </tr>
                     </tbody>
                     <tfoot ng-click="$event.stopPropagation()">
                         <tr>
                             <td class="text-center">
-                                <div st-items-by-page="10" st-pagination="" st-template="pagination.custom.html"></div>
+                                <div st-items-by-page="10" st-pagination=""></div>
                             </td>
                         </tr>
                     </tfoot>
@@ -44,7 +26,7 @@
         <div class="selected col-md-6 form-group">
             <ul>
                 <li ng-repeat="m in vm.selectedNames" ng-click="vm.removeName(m)">
-                    <span>{{m}}</span>
+                    <span>{{vm.metricName(m)}}</span>
                     <button class="btn sm-btn red"><i class="fa fa-close"></i>
                     </button>
                 </li>
@@ -61,6 +43,9 @@
         <div class="col-md-6">
             <button class="monitor-btn btn btn-danger active" ng-click="vm.monitor()">Monitor</button>
 	    <label><input type="checkbox" ng-model="vm.enablePercentile"/> Enable percentile</label>
+                        <button class="btn btn-info" ng-click="vm.openSettings()">
+				Add any class to Metrics 
+                        </button>
         </div>
     </div>
     <div class="row">

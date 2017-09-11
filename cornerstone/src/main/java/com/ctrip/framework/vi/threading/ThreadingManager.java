@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.threading;
+package com.ctrip.framework.vi.threading;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;

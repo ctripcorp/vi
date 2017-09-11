@@ -9,8 +9,14 @@
     /** @ngInject */
     function LogController($scope, logInfo, SiteCache) {
         var vm = this;
+
 	vm.download=function(name){
-		logInfo.download(name);
+
+		logInfo.download(name.split('|')[0]);
+	};
+	vm.formatName = function(name){
+
+		return name.replace(/@@/,'/');
 	};
         logInfo.getAll(function(data) {
 

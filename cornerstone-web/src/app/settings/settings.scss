@@ -1,0 +1,31 @@
+.metrics-setting{
+	padding-top:10px;
+	.class-container{
+		margin-top:10px;
+		border:solid #aaa 1px;
+	}
+	.btn-area{
+		text-align:center;
+		padding-top:180px;
+
+	}
+
+	ul{
+		li{
+
+			cursor:pointer;
+			padding:5px;
+			outline:none;
+			&.selected,
+			&:hover{
+
+				background:#555;
+				color:#fff;
+			}
+		}
+
+	}
+
+}
+
+

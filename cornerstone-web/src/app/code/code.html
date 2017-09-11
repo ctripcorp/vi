@@ -1,0 +1,65 @@
+<table class="code table" st-table="vm.displayList" st-safe-src="vm.list">
+    <thead>
+        <tr>
+            <th>
+                <div class="widget-header">
+                    <span class="selector title" uib-dropdown>{{vm.isJar(vm.currentSource)?'jar':'git'}}:<a ng-click="vm.backToRoot()" href="#code/folder/{{vm.nameForUrl(vm.currentSource)}}">{{vm.currentSource}}</a>
+                <a href="#" uib-dropdown-toggle>
+                    <span class="caret"></span>
+                    </a>
+                    <div uib-dropdown-menu>
+                        <input placeholder="key word" class="input-sm form-control" type="search" ng-model="vm.jarSearch"
+                        ng-click="$event.stopPropagation()" ng-change="vm.refreshScroll()"/>
+                        <scrollbar ng-style="{maxHeight:vm.menuMaxHeight}" name="jar-list-scrollbar">
+                            <ul class="source-menu" role="menu" aria-labelledby="split-button">
+                                <li role="menuitem" ng-repeat="item in vm.sources|filter:vm.jarSearch">
+                                    <a ng-click="vm.changeCodeSource(item)" href="">
+                                        <i ng-if="!vm.isJar(item)" class="fa fa-git"></i>
+                                        {{item}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </scrollbar>
+                    </div>
+                    </span>
+                    <span class="title" ng-repeat="l in vm.pathParts track by $index">
+			    <a href="" ng-click="vm.viewFolder($index)">{{l}}/</a></span>
+                    <div class="class-search input-group" uib-dropdown is-open="vm.isOpen">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input placeholder="class name" class="input-bg form-control" ng-model="vm.searchName" type="search" uib-dropdown-toggle ng-keydown="vm.onClassSearchKeyDown($event)"/>
+                        <div class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                            <table search-watch-model="vm.searchName" st-table="vm.classList" st-safe-src="vm.rawClassList" class="table">
+                                <tbody>
+					<tr ng-class="{'select-row':i==vm.selectedIndex}" ng-repeat="(i,n) in vm.classList"
+                                    ng-click="vm.viewClass(n)">
+                                        <td>{{n}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-click="$event.stopPropagation()">
+                                    <tr>
+                                        <td class="text-center">
+                                            <div st-items-by-page="10" st-pagination=""></div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </th>
+
+        </tr>
+        <tr class="widget-header">
+            <th class="sorting" st-sort="name">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="item in vm.displayList">
+            <th><i ng-class="{'fa-folder':item.folder,'fa-file-text-o fa-fw':!item.folder}"
+                class="code-icon fa"></i><a href="" ng-click="vm.viewDetail(item)">{{item.name}}</a>
+            </th>
+        </tr>
+
+    </tbody>
+</table>

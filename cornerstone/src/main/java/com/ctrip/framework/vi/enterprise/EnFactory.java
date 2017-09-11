@@ -1,9 +1,11 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
@@ -20,6 +22,7 @@ public class EnFactory {
     private static EnMaven enMaven = new DefaultEnMaven();
     private static EnUI enUI = new DefaultEnUI();
     private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static String initError=null;
     static {
         Properties enPros = new Properties();
 
@@ -80,6 +83,9 @@ public class EnFactory {
         }catch (Throwable e){
             e.printStackTrace();
             logger.warn("init enFactory failed",e);
+            StringWriter writer = new StringWriter();
+             e.printStackTrace(new PrintWriter(writer));
+            initError = writer.toString();
         }
     }
 
@@ -112,5 +118,9 @@ public class EnFactory {
 
     public static EnUI getEnUI(){
         return enUI;
+    }
+
+    public static String getInitError(){
+        return initError;
     }
 }

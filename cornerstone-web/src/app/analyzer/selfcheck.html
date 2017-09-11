@@ -1,0 +1,82 @@
+<script type="text/ng-template" id="pagination.custom.html">
+    <nav ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li><a ng-click="selectPage(1)">First</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+            </li>
+            <li>
+                <a>
+                    <page-select></page-select>of {{numPages}}</a>
+            </li>
+            <li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+            </li>
+            <li><a ng-click="selectPage(numPages)">Last</a>
+            </li>
+        </ul>
+    </nav>
+</script>
+<div class="main-search">
+    <div class="input-group search-bar" uib-dropdown is-open="vm.isOpen" keyboard-nav>
+
+        <input class="input-sm form-control" ng-model="vm.keyword" type="search" uib-dropdown-toggle
+        ng-keydown="$event.stopPropagation();vm.onKeyDown($event)" />
+        <div class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <table search-watch-model="vm.keyword" st-table="vm.list" st-safe-src="vm.rawlist"
+            class="table">
+                <tbody>
+                    <tr ng-class="{'select-row':index==vm.selectedIndex}" ng-repeat="(index,m) in vm.list"
+                    ng-click="vm.selectName(m)">
+                        <td>{{m.name}}</td>
+                    </tr>
+                </tbody>
+                <tfoot ng-click="$event.stopPropagation()">
+                    <tr>
+                        <td class="text-center">
+                            <div st-items-by-page="10" st-pagination="" st-template="pagination.custom.html"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <span class="input-group-addon btn btn-info" ng-show="vm.keyword.length>0" ng-click="vm.keyword=''"> <i class="fa fa-close"></i></span>
+    </div>
+
+    <div class="detail">
+<div class="row ">
+    <div class="col-md-6 title">
+        <span>Plugin ID:</span>
+    </div>
+    <div class="col-md-6 content">
+        {{vm.pluginID}}
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-6 title">
+        <span>开始时间:</span>
+    </div>
+    <div class="col-md-6 content">
+        {{vm.startTime|date:'yyyy-MM-dd HH:mm:ss'}}
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-6 title">
+        <span>状态:</span>
+    </div>
+    <div class="col-md-6 content {{vm.status}}">
+        {{vm.status}}<i ng-show="vm.status=='running'" class="fa fa-spinner fa-pulse fa-fw"></i>
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-6 title">
+        <span>耗时:</span>
+    </div>
+    <div class="col-md-6 content">
+        {{vm.cost}}
+    </div>
+</div>
+<scrollbar class="log" ng-style="{maxHeight:vm.maxHeight}">
+    <span compile="vm.msgHtml"></span>
+</scrollbar>
+    </div>
+</div>

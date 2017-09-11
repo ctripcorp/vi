@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <h3 class="modal-title"><i class="fa fa-cogs"></i> Settings</h3>
+</div>
+<div class="modal-body">
+	<uib-tabset active="vm.seleTab">
+        <uib-tab index="0" heading="Debug">
+            <br/>
+            <p class="form-group">
+                <label>Gitlab Private token <span class="warning">(You can get your Gitlab private token in gitlab <a target="_blank" href="{{vm.debug.gitlabAccountUrl}}">profile account page</a>.)</span>
+                </label>
+                <input class="form-control" ng-model="vm.debug.gitPrivateToken" ng-change="vm.debug.save()">
+            </p>
+            <p class="form-group">
+                <label>Allow Debug</label>
+                <div>
+                    <switch ng-model="vm.debug.allowDebug" class="green" ng-change="vm.debug.setAllowDebug()" />
+                </div>
+            </p>
+            <p class="form-group">
+                <label>Header TraceIdKey</label>
+                <div>
+		<input class="form-control" ng-model="vm.debug.headerTraceIdKey">
+                </div>
+            </p>
+        </uib-tab>
+        <uib-tab index="1" heading="Metrics">
+            <div class="metrics-setting">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+				package:
+                        </div>
+                        <select class="form-control" ng-change="vm.metrics.jarChange()" ng-model="vm.metrics.seleJar">
+				<option value="{{v}}" ng-repeat="(k,v) in vm.metrics.jars">{{k}}</option>
+                        </select>
+                    </div>
+		    <br/>
+		    <div class="input-group" ng-style="{width:'100%'}">
+                        <div class="input-group-addon"><i class="fa fa-search"></i>
+                        </div>
+                        <input placeholder="class name" class="form-control" type="search" ng-model="vm.metrics.searchClass" />
+                    </div>
+                        <scrollbar class="class-container" ng-style="{height:'320px',width:'100%'}">
+                            <ul class="nav nav-list">
+				    <li ng-repeat="item in vm.metrics.jarClasses|filter:vm.metrics.searchClass" ng-class="{'selected':item.selected}" ng-click="vm.metrics.seleClass(item)" ng-dblclick="vm.metrics.addToSelect(item)">{{item.name}}</li>
+                            </ul>
+                        </scrollbar>
+			<strong>（注：双击将类添加到[已被Metrics监控的类]列表）</strong>
+                </div>
+                <div class="col-md-6">
+			<h4>已被Metrics监控的类</h4>
+                    <scrollbar ng-style="{height:'375px',width:'100%'}" class="class-container">
+                            <ul class="nav nav-list">
+                        <li ng-repeat="(k,item) in vm.metrics.seleClasses" ng-class="{'selected':item.selected}" ng-click="vm.metrics.seleClass(item)" ng-dblclick="vm.metrics.removeSeleClass(k)">{{k}}</li>
+			    </ul>
+                    </scrollbar>
+			<strong>（注：双击将类从[已被Metrics监控的类]列表中移除）</strong>
+                </div>
+	    </div>
+        </uib-tab>
+    </uib-tabset>
+
+    </div>

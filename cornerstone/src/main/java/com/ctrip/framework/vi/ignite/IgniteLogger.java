@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.ignite;
+package com.ctrip.framework.vi.ignite;
 
 import org.slf4j.Logger;
 import org.slf4j.Marker;

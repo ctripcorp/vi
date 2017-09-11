@@ -60,6 +60,12 @@
             </a>
         </div>
         <div class="navbar-right">
+
+            <div ng-show="vm.portalUrl" class="navbar-button to-portal-button" tooltip-placement="bottom" uib-tooltip="go to vi portal">
+		    <a href="{{vm.portalUrl}}" target="_blank">
+                    <i class="ace-icon fa fa-object-group"></i>
+                </a>
+	    </div>
             <div class="navbar-button mail-button" uib-dropdown>
                 <a href="#" uib-dropdown-toggle>
                     <i class="ace-icon fa fa-question"></i>
@@ -90,15 +96,16 @@
     <div class="breadcrumbs">
 
         <div class="sysinfo">
-            Host: <span class="link" ng-click="vm.changeServer()">{{vm.hostName}}/{{vm.hostIp}}</span>&nbsp;/
+            Host: <span class="link" ng-click="vm.changeServer()">{{vm.hostName}}/{{vm.hostIp}}</span>&nbsp;|&nbsp;
         </div>
-        <ul class="breadcrumb">
+	<span class="nav-tab" ng-class="{'selected':t.selected}" ng-repeat="(k,t) in vm.tabs" ng-click="vm.switch(k)">{{t.name}} <i ng-click="vm.removeTab(k)" class="fa fa-times"></i> </span>
+        <ul class="breadcrumb" ng-click="vm.switch(0)">
             <li ng-class="{'link':k==0 && v.state!='empty'}" ui-sref="{{k==0 && v.state!='empty'?v.state:'.'}}"
             ng-repeat="(k,v) in breadcrumbs">{{v.name}}</li>
 
         </ul>
         <div class="version">
-            vi version: 0.9.3
+		vi version: {{vm.version}}
         </div>
         <!-- /.breadcrumb -->
 

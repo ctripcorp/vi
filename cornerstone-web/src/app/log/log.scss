@@ -41,6 +41,7 @@
     }
     .toolbar {
         position: fixed;
+	z-index:1000;
         .input-group {
             width: 70%;
         }

@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.configuration;
+package com.ctrip.framework.vi.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,17 +171,14 @@ public class ConfigurationUtils {
      */
     public static Properties loadPropertiesFromInputStream(InputStream fin) throws IOException {
         Properties props = new Properties();
-        InputStreamReader reader = new InputStreamReader(fin, "UTF-8");
-        try {
+        if(fin == null){
+            return props;
+        }
+        try(InputStreamReader reader = new InputStreamReader(fin, "UTF-8")) {
             props.load(reader);
             return props;
         } finally {
-            if (reader != null) {
-                reader.close();
-            }
-            if (fin != null) {
                 fin.close();
-            }
         }
     }
 }

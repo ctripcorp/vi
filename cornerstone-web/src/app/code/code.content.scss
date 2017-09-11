@@ -1,0 +1,41 @@
+.condition-editor{
+	span.link{
+		cursor:pointer;
+		color:$navbar-inverse-link-color;
+
+	}
+
+	span.link {
+		i.fa{
+			padding-left:5px;
+			padding-right:5px;
+
+		}
+
+	}
+
+	ul[uib-dropdown-menu]{
+		padding:5px;
+	li{
+
+		padding:5px;
+		width:100%;
+		cursor:pointer;
+		&:hover{
+			background:$nav-bg-color;
+			color:$nav-color;
+
+		}
+	}
+	}
+
+}
+div.has-result{
+
+	div.line[selected]{
+
+		background-color:$sele-background;
+		color:red !important;
+		
+	}
+}

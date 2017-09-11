@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.threading;
+package com.ctrip.framework.vi.threading;
 
-import com.ctrip.framework.cornerstone.Permission;
-import com.ctrip.framework.cornerstone.ViFunctionHandler;
+import com.ctrip.framework.vi.Permission;
+import com.ctrip.framework.vi.ViFunctionHandler;
 import org.slf4j.Logger;
 
 import java.util.Map;

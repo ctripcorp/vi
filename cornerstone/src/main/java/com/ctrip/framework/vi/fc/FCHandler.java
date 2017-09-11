@@ -1,8 +1,8 @@
-package com.ctrip.framework.cornerstone.fc;
+package com.ctrip.framework.vi.fc;
 
-import com.ctrip.framework.cornerstone.NoPermissionException;
-import com.ctrip.framework.cornerstone.Permission;
-import com.ctrip.framework.cornerstone.ViFunctionHandler;
+import com.ctrip.framework.vi.NoPermissionException;
+import com.ctrip.framework.vi.Permission;
+import com.ctrip.framework.vi.ViFunctionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

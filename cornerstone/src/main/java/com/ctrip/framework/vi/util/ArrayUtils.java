@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.util;
+package com.ctrip.framework.vi.util;
 
 import java.lang.reflect.Array;
 
@@ -15,7 +15,7 @@ public class ArrayUtils {
         }
     } else {
         for (final T e : array) {
-            if (e == v || v.equals(e))
+            if (e.equals(v) || v.equals(e))
                 return true;
         }
     }
@@ -32,5 +32,41 @@ public class ArrayUtils {
         System.arraycopy(b, 0, rtn, aLen, bLen);
 
         return rtn;
+    }
+
+    public static int[] mergeSortedArray(int[] a,int[] b){
+        int[] rtn = new int[a.length+b.length];
+        int i = a.length -1, j= b.length - 1, k=rtn.length;
+
+        while (k>0){
+           rtn[--k] = (j<0 || (i >=0 && a[i] >= b[j])) ? a[i--]:b[j--];
+        }
+        return rtn;
+    }
+
+    public static int[] subtractSortedArray(int[] source,int[] part){
+
+        int[] left = new int[source.length-part.length];
+
+        int k=0, last = part[part.length-1] ,first = part[0];
+
+        for (int aSource : source) {
+            boolean needDel = false;
+            if(aSource>first && aSource<last ) {
+                for (int aPart : part) {
+                    if (aSource == aPart) {
+                        needDel = true;
+                        break;
+                    }
+                }
+            }else if(aSource == first || aSource == last){
+                needDel = true;
+            }
+            if (!needDel) {
+                left[k++] = aSource;
+            }
+        }
+
+        return left;
     }
 }

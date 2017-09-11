@@ -1,8 +1,8 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.configuration.InitConfigurationException;
-import com.ctrip.framework.cornerstone.localLog.LocalLogManager;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.localLog.LocalLogManager;
 import org.junit.Test;
 
 import java.io.IOException;

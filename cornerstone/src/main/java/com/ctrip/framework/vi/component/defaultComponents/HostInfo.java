@@ -1,11 +1,12 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents;
+package com.ctrip.framework.vi.component.defaultComponents;
 
-import com.ctrip.framework.cornerstone.VIServletContextListener;
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.component.Refreshable;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.util.LinuxInfoUtil;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
+import com.ctrip.framework.vi.SysKeys;
+import com.ctrip.framework.vi.VIServletContextListener;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.component.Refreshable;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.util.LinuxInfoUtil;
+import com.ctrip.framework.vi.annotation.FieldInfo;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
@@ -39,6 +40,10 @@ public class HostInfo implements Refreshable{
     protected  float systemCpuLoad;
     @FieldInfo(name = "CPU Load Averages",description = "cpu 平均负载(仅linux下有值，1分钟、5分钟、15分钟、活动进程数/总进程数、当前运行进程ID)")
     protected String cpuLoadAverages="N/A";
+    @FieldInfo(name = "Process Cpu Time",description = "进程cpu时间",type = FieldInfo.FieldType.Number)
+    protected long processCpuTime;
+    @FieldInfo(name = "Process Cpu Load",description = "进程cpu load",type = FieldInfo.FieldType.Number)
+    protected double processCpuLoad;
     @FieldInfo(name = "Disk Avaliable",description = "可用磁盘空间",type = FieldInfo.FieldType.Bytes)
     protected long DiskAvaliable;
     @FieldInfo(name = "Disk Total",description = "总磁盘空间",type = FieldInfo.FieldType.Bytes)
@@ -61,15 +66,11 @@ public class HostInfo implements Refreshable{
     private static transient boolean _isTomcat;
     static {
 
-        try {
-            if ("linux".equalsIgnoreCase(System.getProperty("os.name"))) {
-                _isLinux = true;
-            }
-            if(System.getProperty("catalina.home") != null){
-                _isTomcat = true;
-            }
-        }catch (Throwable e){
-
+        if ("linux".equalsIgnoreCase(System.getProperty("os.name"))) {
+            _isLinux = true;
+        }
+        if(System.getProperty("catalina.home") != null){
+            _isTomcat = true;
         }
     }
 
@@ -79,7 +80,7 @@ public class HostInfo implements Refreshable{
             final Method method = os.getClass().getDeclaredMethod(name);
             method.setAccessible(true);
             return (Long) method.invoke(os);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return -1;
         }
     }
@@ -100,7 +101,7 @@ public class HostInfo implements Refreshable{
 
         OSName = bean.getName() + " " + bean.getVersion()+"/"+bean.getArch();
         try {
-            Container = VIServletContextListener.ServerInfo;
+            Container = System.getProperty(SysKeys.ServerInfo);
         }catch (Throwable e){
             logger.info("No servlet api");
         }
@@ -133,6 +134,9 @@ public class HostInfo implements Refreshable{
         PhysicalMemoryAvaliable = bean.getFreePhysicalMemorySize();
         PhysicalMemoryTotal = bean.getTotalPhysicalMemorySize();
         systemCpuLoad = (float) bean.getSystemCpuLoad();
+        processCpuTime = bean.getProcessCpuTime();
+        processCpuLoad = bean.getProcessCpuLoad();
+
         File[] roots = File.listRoots();
         long diskAvaliable=0,diskTotal=0;
         for(File file:roots){

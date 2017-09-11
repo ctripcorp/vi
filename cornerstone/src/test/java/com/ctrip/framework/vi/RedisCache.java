@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheCell;
+import com.ctrip.framework.vi.cacheRefresh.CacheCell;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,10 @@ import java.util.Map;
  * Created by jiang.j on 2016/5/17.
  */
 public class RedisCache implements CacheCell {
+    public class Person{
+        public String name;
+        public String des;
+    }
     private String id;
     public RedisCache(String id){
         this.id =id;
@@ -30,5 +34,24 @@ public class RedisCache implements CacheCell {
         rtn.put("hello",id);
         rtn.put("ni","dddd");
         return rtn;
+    }
+
+    @Override
+    public Object getByKey(String key) {
+        Person p = new Person();
+        p.name = "peter";
+        p.des="secret";
+        return p;
+    }
+
+    @Override
+    public Iterable<String> keys() {
+        return null;
+    }
+
+
+    @Override
+    public int size() {
+        return 1;
     }
 }

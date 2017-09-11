@@ -8,13 +8,13 @@
     function formatTrace(trace) {
         var methodDetail = 'Native method';
         if (trace.lineNumber > 0) {
-            methodDetail = trace.fileName + ':' + trace.lineNumber;
+            var ns = trace.declaringClass.substr(0, trace.declaringClass.lastIndexOf('.'));
+            methodDetail = '<span jns="' + ns + '" ng-click="vm.viewSource($event)" class="link">' + trace.fileName + ':' + trace.lineNumber + '</span>';
         }
         return trace.declaringClass + '.' + trace.methodName + '(' + methodDetail + ')';
     }
 
     function ThreadModalController($scope, data, $uibModalInstance) {
-
         $scope.close = function() {
             $uibModalInstance.dismiss('cancel');
         };
@@ -31,12 +31,20 @@
     }
 
     /** @ngInject */
-    function ThreadDumpController($scope, toastr, $window, $element, $timeout, threadService, SiteCache, $uibModal) {
+    function ThreadDumpController($scope, toastr, $window, $element, $timeout, threadService, SiteCache, $uibModal,codeService,$rootScope) {
         var vm = this;
         vm.showDiagram = true;
         vm.maxDepth = 3;
         var REFRESHINTERVAL = 3000;
         var lastUpdateTime;
+
+        vm.viewSource = function(event) {
+
+            var $this = angular.element(event.currentTarget);
+            var ns = $this.attr('jns');
+            var name = $this.text();
+	    codeService.viewCode(ns,name);
+        };
 
 
         vm.threadDump = function(onlyDeadLock) {
@@ -53,7 +61,7 @@
                     animation: true,
                     templateUrl: 'threadModal.html',
                     controller: ThreadModalController,
-                    size: 'llg',
+                    size: 'lg',
                     resolve: {
                         data: {
                             items: data,
@@ -63,7 +71,7 @@
                 });
             });
         };
-        var dumpContainerHeight = $window.outerHeight - 550;
+        var dumpContainerHeight = $window.outerHeight - 570;
         if (dumpContainerHeight < 300) {
             dumpContainerHeight = 300;
         }
@@ -71,7 +79,7 @@
         vm.needHighlight = function(str) {
             if (vm.highlightWords) {
                 var words = vm.highlightWords.split(/\s+/);
-                var pattern = new RegExp('(' + words.join(')|(') + ')','gi');
+                var pattern = new RegExp('(' + words.join(')|(') + ')', 'gi');
                 return pattern.test(str);
             } else {
                 return false;

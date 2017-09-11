@@ -18,6 +18,36 @@
                 controller: 'ConfigController',
                 controllerAs: 'vm'
             })
+            .state('Settings', {
+		    url: '/settings/:tab',
+                templateUrl: 'app/settings/settings.html',
+                controller: 'SettingsController',
+                controllerAs: 'vm'
+            })
+            .state('Code', {
+                url: '/code/folder/:path',
+                templateUrl: 'app/code/code.html',
+                controller: 'CodeController',
+                controllerAs: 'vm',
+                resolve: {
+			'codeServiceData':function(codeService){
+
+				return codeService.promise;
+			}
+                }
+            })
+            .state('Code-Content', {
+                url: '/code/content/:path',
+                templateUrl: 'app/code/code.content.html',
+                controller: 'CodeContentController',
+                controllerAs: 'vm',
+                resolve: {
+			'codeServiceData':function(codeService){
+
+				return codeService.promise;
+			}
+                }
+            })
             .state('Dashboard', {
                 url: '/dashboard',
                 templateUrl: 'app/dashboard/dashboard.html',
@@ -105,6 +135,31 @@
                 url: '/analyzer/jardeps',
                 templateUrl: 'app/analyzer/jardeps.html',
                 controller: 'JardepsController',
+                controllerAs: 'vm'
+            })
+            .state('Analyzer-VisualGC', {
+                url: '/analyzer/visualgc',
+                templateUrl: 'app/analyzer/visualgc.html',
+                controller: 'VisualGCController',
+                controllerAs: 'vm'
+            })
+            .state('Analyzer-GCLogAnalyzer', {
+                url: '/analyzer/gcloganalyzer',
+                templateUrl: 'app/analyzer/gcloganalyzer.html',
+                controller: 'GCLogAnalyzerController',
+                controllerAs: 'vm',
+		resolve:{
+			'gclogDurationRange':function(configService){
+
+				return configService.get('vi.gclog.duration.range');
+
+			}
+		}
+            })
+            .state('Analyzer-SelfCheck', {
+                url: '/analyzer/selfcheck',
+                templateUrl: 'app/analyzer/selfcheck.html',
+                controller: 'SelfCheckController',
                 controllerAs: 'vm'
             })
             .state('Analyzer-JVMSampler', {

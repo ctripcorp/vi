@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.jmx;
+package com.ctrip.framework.vi.jmx;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;

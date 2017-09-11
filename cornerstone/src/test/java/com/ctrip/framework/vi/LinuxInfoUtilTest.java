@@ -1,8 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.util.LinuxInfoUtil;
-import com.ctrip.framework.cornerstone.util.Tools;
-import junit.framework.Assert;
+import com.ctrip.framework.vi.util.LinuxInfoUtil;
 import org.junit.Test;
 
 import java.io.IOException;

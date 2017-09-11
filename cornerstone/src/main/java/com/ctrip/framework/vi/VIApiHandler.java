@@ -1,21 +1,23 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.analyzer.AnalyzerHandler;
-import com.ctrip.framework.cornerstone.annotation.EventSource;
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheHandler;
-import com.ctrip.framework.cornerstone.enterprise.EnterpriseHandler;
-import com.ctrip.framework.cornerstone.component.ComponentHandler;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.configuration.ConfigHandler;
-import com.ctrip.framework.cornerstone.fc.FCHandler;
-import com.ctrip.framework.cornerstone.localLog.LogHandler;
-import com.ctrip.framework.cornerstone.metrics.Metrics;
-import com.ctrip.framework.cornerstone.metrics.MetricsCollector;
-import com.ctrip.framework.cornerstone.metrics.MetricsHandler;
-import com.ctrip.framework.cornerstone.threading.ThreadingHandler;
-import com.ctrip.framework.cornerstone.util.TextUtils;
-import com.ctrip.framework.cornerstone.watcher.EventLogger;
-import com.ctrip.framework.cornerstone.watcher.EventLoggerFactory;
+import com.ctrip.framework.vi.analyzer.AnalyzerHandler;
+import com.ctrip.framework.vi.annotation.EventSource;
+import com.ctrip.framework.vi.cacheRefresh.CacheHandler;
+import com.ctrip.framework.vi.code.CodeHandler;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.enterprise.EnterpriseHandler;
+import com.ctrip.framework.vi.component.ComponentHandler;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.configuration.ConfigHandler;
+import com.ctrip.framework.vi.fc.FCHandler;
+import com.ctrip.framework.vi.localLog.LogHandler;
+import com.ctrip.framework.vi.metrics.Metrics;
+import com.ctrip.framework.vi.metrics.MetricsCollector;
+import com.ctrip.framework.vi.metrics.MetricsHandler;
+import com.ctrip.framework.vi.threading.ThreadingHandler;
+import com.ctrip.framework.vi.util.TextUtils;
+import com.ctrip.framework.vi.watcher.EventLogger;
+import com.ctrip.framework.vi.watcher.EventLoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +30,10 @@ import java.util.Map;
  */
 @EventSource(name="vi.api")
 public class VIApiHandler{
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private  final int SC_OK = 200;
     private  final int SC_NOTFOUND = 404;
+    private  final int SC_METHODNOTALLOWED = 405;
     private static VIApiHandler handler;
     private Map<String,ViFunctionHandler> handlersMap = new HashMap<>();
     public static synchronized VIApiHandler getInstance(){
@@ -85,6 +88,7 @@ public class VIApiHandler{
         this.register(new MetricsHandler());
         this.register(new AppHandler());
         this.register(new EnterpriseHandler());
+        this.register(new CodeHandler());
     }
 
     public ExeResult  executeService(String path,String user,Map<String,Object> params){
@@ -164,6 +168,7 @@ public class VIApiHandler{
 
         }catch (Throwable e){
             logger.warn("execute service error",e);
+            e.printStackTrace();
             eventLogger.fireEvent(EventLogger.TRANSEND,e);
             Throwable rootCause;
             if(e.getCause()!=null){
@@ -172,6 +177,9 @@ public class VIApiHandler{
                 rootCause = e;
             }
             rtn = TextUtils.makeJSErrorMsg(rootCause.getMessage(),e.getClass().getName());
+            if(e instanceof  NoPermissionException){
+                responseCode = SC_METHODNOTALLOWED;
+            }
         }finally {
             eventLogger.fireEvent(EventLogger.TRANSFINALLY);
         }

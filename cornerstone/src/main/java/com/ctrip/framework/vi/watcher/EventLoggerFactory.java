@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.watcher;
+package com.ctrip.framework.vi.watcher;
 
-import com.ctrip.framework.cornerstone.annotation.EventSource;
-import com.ctrip.framework.cornerstone.util.VIThreadFactory;
+import com.ctrip.framework.vi.annotation.EventSource;
+import com.ctrip.framework.vi.util.VIThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,27 +19,70 @@ public class EventLoggerFactory {
     private static ConcurrentMap<Class<? extends EventLogger>,Boolean> _eventLoggers = new ConcurrentHashMap<>();
     private static Map<Integer,EventLogger> _classEventLoggers = new ConcurrentHashMap<>();
 
-    private static ExecutorService executorService = Executors.newSingleThreadExecutor(new VIThreadFactory("vi-eventLoggerFactory"));
-
     private static Logger _logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    public static boolean addLogger(Class<? extends EventLogger> clazz,boolean canLogTrans){
-        return _eventLoggers.put(clazz,canLogTrans)==null;
+    public synchronized static boolean addLogger(Class<? extends EventLogger> clazz,boolean canLogTrans){
+       boolean rtn = _eventLoggers.put(clazz,canLogTrans)==null;
+        updateCurrentLogger(clazz,canLogTrans);
+
+        return rtn;
     }
-    public static boolean addLogger(Class<? extends EventLogger> clazz){
-        return _eventLoggers.put(clazz,false) == null;
+    public synchronized static boolean addLogger(Class<? extends EventLogger> clazz){
+        return addLogger(clazz,false);
+    }
+
+    private static void updateCurrentLogger(Class<? extends EventLogger> clazz,boolean canLogTrans){
+
+        for(EventLogger logger:_classEventLoggers.values()){
+            if(logger instanceof  EventProxy){
+                EventProxy proxy = (EventProxy) logger;
+                if(!canLogTrans && proxy.isTrans()){
+                    continue;
+                }
+
+                boolean hasThis = false;
+                List<EventLogger> loggers = proxy.getLoggers();
+                for(EventLogger eventLogger:loggers){
+
+                    if(clazz.isAssignableFrom(eventLogger.getClass())){
+                        hasThis = true;
+                        break;
+                    }
+                }
+
+                if(!hasThis){
+                    try {
+                        loggers.add(clazz.newInstance());
+                    } catch (Throwable e) {
+                        _logger.warn("initiate event logger failed",e);
+                    }
+                }
+
+            }
+        }
+
     }
     private static class EventProxy implements EventLogger{
 
         List<EventLogger> loggers = new ArrayList<>();
         private String typeName;
+        private boolean trans;
 
 
         public EventProxy(boolean isTrans,Class<?> belongClass){
             this(isTrans,belongClass,null);
         }
 
+        public List<EventLogger> getLoggers(){
+            return this.loggers;
+        }
+
+        public boolean isTrans(){
+           return this.trans;
+        }
+
         public EventProxy(boolean isTrans,Class<?> belongClass,String type){
 
+            this.trans = isTrans;
             if(type != null){
                 typeName = type;
             }else {
@@ -66,20 +109,13 @@ public class EventLoggerFactory {
         public void fireEvent(final String message, final Object... args) {
 
             try {
-
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        for (EventLogger eventLogger : loggers) {
-                            try {
-                                eventLogger.fireEvent(message, typeName, args);
-                            } catch (Throwable e) {
-                                _logger.error("logger fire event failed!", e);
-                            }
-                        }
+                for (EventLogger eventLogger : loggers) {
+                    try {
+                        eventLogger.fireEvent(message, typeName, args);
+                    } catch (Throwable e) {
+                        _logger.error("logger fire event failed!", e);
                     }
-                });
+                }
             }catch (Throwable e){
                 _logger.error("fire event failed!",e);
             }

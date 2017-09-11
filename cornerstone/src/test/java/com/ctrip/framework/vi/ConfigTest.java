@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
 import org.junit.Test;
 import java.lang.reflect.Field;

@@ -3,12 +3,22 @@
 
     angular
         .module('viModule')
-        .controller('DashboardController', function($document, $element, $scope, metricsService, $timeout, toastr) {
+        .controller('DashboardController', function($document, $element, $scope, metricsService, $timeout, toastr,$location) {
             var metricsCount = 100;
             var vm = this;
             var observerId;
+            var seleNamesTypes = [];
             vm.metrics = [];
 
+	    vm.openSettings = function(){
+
+		    $location.url('/settings/metrics');
+
+	    };
+
+            vm.metricName = function(m) {
+                return /.*##\d*$/.test(m) ? m.substr(0, m.lastIndexOf('#') - 1) : m;
+            };
             vm.onKeyDown = function(event) {
                 if (!vm.isOpen && (event.keyCode == 38 || event.keyCode == 40)) {
                     vm.isOpen = true;
@@ -35,7 +45,6 @@
                             }
                             break;
                         case 40: //down
-                            console.log(vm.selectedIndex);
                             if (vm.selectedIndex >= 0) {
 
                                 vm.selectedIndex++;
@@ -108,7 +117,7 @@
                     currentIndex = 0;
                     var i = 0;
                     for (var i = 0; i < vm.selectedNames.length; i++) {
-                        var mName = vm.selectedNames[i];
+                        var mName = vm.metricName(vm.selectedNames[i]);
                         vm.chartData.push({
                             values: [],
                             key: mName + '.count',
@@ -121,6 +130,7 @@
                             key: mName + '.average',
                             color: colors[i]
                         });
+
                         angular.forEach(percentiles, function(val) {
 
                             vm.chartCostData.push({
@@ -150,14 +160,27 @@
             };
 
             vm.selectedNames = [];
+            seleNamesTypes = [];
             vm.selectName = function(m) {
                 if (vm.selectedNames.length > 4) {
                     toastr.warning('max metrics count is 5!');
                     return;
                 }
-                if (vm.selectedNames.indexOf(m) < 0)
+                if (vm.selectedNames.indexOf(m) < 0) {
                     vm.selectedNames.push(m);
-                else {
+                    var tmp = m.split('##');
+                    var val = 1;
+                    switch (tmp.length > 1 ? tmp[1] : '-1') {
+                        case '0': //second
+                            val = 0.001;
+                            break;
+                        case '2':
+                            val = 1000;
+                            break;
+
+                    }
+                    seleNamesTypes.push(val);
+                } else {
 
                     toastr.warning('already exist!');
                 }
@@ -175,12 +198,12 @@
             var startDate;
             vm.startDate = d3.time.format('%Y-%m-%d %H:%M:%S')(new Date());
 
-            vm.chartOptions = vm.chartCostOptions = {
+            vm.chartOptions = {
                 chart: {
                     type: 'lineWithFocusChart',
                     height: 250,
-		    forceX:[100],
-		    forceY:[5],
+                    forceX: [100],
+                    forceY: [0,5],
                     noData: '',
                     xAxis: {
                         tickFormat: function(d) {
@@ -193,6 +216,7 @@
                         }
                     },
                     yAxis: {
+                        axisLabel: 'Count',
                         tickFormat: function(d) {
                             return VIUtil.formatNumber(d);
                         }
@@ -204,11 +228,18 @@
                 }
             };
 
+            vm.chartCostOptions = angular.copy(vm.chartOptions);
 
+            vm.chartCostOptions.chart.yAxis.axisLabel = 'MilliSecond';
+            vm.chartCostOptions.chart.forceY = [1];
             var colors = d3.scale.category20().range();
             var currentIndex = 0;
             var maxPointCount = 1800;
 
+
+	    function getShowValue(factor,value){
+		    return (factor < 1 ? VIUtil.noop : Math.round)(value) / factor;
+	    }
             function updateData() {
                 metricsService.getCurrent(observerId, function(data) {
 
@@ -222,6 +253,7 @@
                     for (var i, k = 0; i < yCount; i++, k++) {
                         var key = vm.selectedNames[i];
                         var sele = vm.chartData[i];
+                        var factor = seleNamesTypes[i];
 
                         var val = 0;
                         var avergeCost, maxCost, minCost = 0;
@@ -229,11 +261,13 @@
                         if (data && data[key]) {
                             var dataItem = data[key];
                             val = dataItem.count;
-                            avergeCost = (dataItem.total / dataItem.count).toFixed(2) - 0;
-                            maxCost = dataItem.max;
-                            minCost = dataItem.min;
+                            avergeCost = getShowValue(factor,dataItem.total / dataItem.count);
+                            maxCost = getShowValue(factor,dataItem.max);
+                            minCost =  getShowValue(factor,dataItem.min);
                             percentileValues = dataItem.percentileValues;
                         }
+
+                        if (!sele.values) return;
 
                         sele.values.push({
                             x: currentIndex,
@@ -251,8 +285,8 @@
                         angular.forEach(percentiles, function(val, index) {
                             vm.chartCostData[k * 3 + index + 1].values.push({
                                 x: currentIndex,
-                                y: percentileValues[index]
-                            })
+                                y:getShowValue(factor, percentileValues[index])
+                            });
 
                         });
 

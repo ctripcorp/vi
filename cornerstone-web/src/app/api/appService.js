@@ -17,6 +17,15 @@
             },
             markUp: function(func) {
                 return ApiService.doPost({},apiUrl + 'markup').then(func);
+            },
+            enableStatusSource: function(func) {
+                return ApiService.doPost({},apiUrl + 'enablestatussource').then(func);
+            },
+            disableStatusSource: function(func) {
+                return ApiService.doPost({},apiUrl + 'disablestatussource').then(func);
+            },
+            uvTrace: function(name,func) {
+                return ApiService.doPost({'name':name},apiUrl + 'uvTrace').then(func);
             }
         };
 

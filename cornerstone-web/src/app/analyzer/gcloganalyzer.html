@@ -1,0 +1,538 @@
+<section class="report-section bg-grey  arrow-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <h2>GC Analysis Report</h2>
+            </div>
+            <div class="col-md-4 col-sm-12">
+
+            </div>
+            <div class="col-md-4 col-sm-12 text-right">
+            </div>
+            <div class="col-lg-12">
+                <p>GC log file: <strong>
+                <select class="gclog-sele form-control" ng-model="vm.seleGCLog" ng-options="x for x in vm.GCLogs" ng-change="vm.logFileChange()"></select>
+	</strong>
+                </p>
+                <p>Measurement time: <strong>{{vm.spendTime}}</strong>
+                </p>
+                <hr>
+            </div>
+        </div>
+        <div>
+            <uib-tabset active="active">
+                <uib-tab index="0" heading="当前JVM 参数:">
+                    <br/>{{vm.jvmOptions}}
+                </uib-tab>
+                <uib-tab index="1" heading="JVM 参数说明:">
+                    <div class="show-content">
+                        <br/>
+                        <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/gc01/index.html"
+                        target="_blank">点击查看官方文档</a>
+                        <h4>堆参数</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>-Xms</td>
+                                    <td>设置JVM启动时堆的初始化大小。</td>
+                                </tr>
+                                <tr>
+                                    <td>-Xmx</td>
+                                    <td>设置堆最大值。</td>
+                                </tr>
+                                <tr>
+                                    <td>-Xmn</td>
+                                    <td>设置年轻代的空间大小，剩下的为老年代的空间大小。</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:PermGen</td>
+                                    <td>设置永久代内存的初始化大小。</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:MaxPermGen</td>
+                                    <td>设置永久代的最大值。</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:SurvivorRatio</td>
+                                    <td>提供Eden区和survivor区的空间比例。比如，如果年轻代的大小为10m并且VM开关是-XX:SurvivorRatio=2，那么将会保留5m内存给Eden区和每个Survivor区分配2.5m内存。默认比例是8。</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:NewRatio</td>
+                                    <td>提供年老代和年轻代的比例大小。默认值是2。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h4>回收器参数</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th style="text-align:center">描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>-XX:+UseSerialGC（串行）</td>
+                                    <td>Young区和old区都使用serial 垃圾回收算法，。算法：标记，清除（正常清除，整理清除：重新整理冗余空间，提高重新分配空间效率）</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:+UseParallelGC（并行）</td>
+                                    <td>Young区：使用Parallel scavenge 回收算法，会产生多个线程并行回收。通过-XX:ParallelGCThreads=n参数指定有线程数，默认是CPU核数。old区单线程。</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:+UseParallelOldGC（并行）</td>
+                                    <td>和UseParallelGC一样,年轻代垃圾收集和年老代垃圾回收时都使用<strong>多线程</strong>收集</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:+UseConcMarkSweepGC（并发）</td>
+                                    <td>
+                                        <strong>短暂停顿</strong>的并发的收集。Young区：可以使用普通的或者parallel
+                                        垃圾回收算法，由参数 -XX:+UseParNewGC来控制。Old 区：只能使用Concurrent
+                                        Mark Sweep</td>
+                                </tr>
+                                <tr>
+                                    <td>-XX:+UseG1GC</td>
+                                    <td>并行的、并发的和增量式压缩短暂停顿的垃圾收集器。不区分年轻代和年老代空间。它把堆空间划分为多个大小相等的区域。当进行垃圾收集时，它会优先收集存活对象较少的区域，因此叫“Garbage
+                                        First”。
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>目前主要有串行、并行和并发三种，对于大内存的应用而言，串行的性能太低，因此使用到的主要是并行和并发两种。
+                            <br>并行和并发GC的策略通过UseParallelGC和UseConcMarkSweepGC来指定，
+                            <br>还有一些细节的配置参数用来配置策略的执行方式，
+                            <br>例如XX:ParallelGCThreads, XX:CMSInitiatingOccupancyFraction等。
+                            <br>通常：young区对象回收只可选择并行（<strong>耗时间</strong>），old区选择并发（<strong>耗CPU</strong>）。</p>
+                        <blockquote>
+                            <p>项目中常用配置：
+                                <br>-Xms3g -Xmx3g
+                                <br>-XX:+UseConcMarkSweepGC
+                                <br>-XX:CMSMaxAbortablePrecleanTime=5000
+                                <br>-XX:+CMSClassUnloadingEnabled
+                                <br>-XX:CMSInitiatingOccupancyFraction=80 (old区百分之80触发cms
+                                gc,跟UseCMSInitiatingOccupancyOnly一起配合使用)
+                                <br>-XX:+UseCMSInitiatingOccupancyOnly</p>
+                        </blockquote>
+                        <h4>常用组合</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Young</th>
+                                    <th style="text-align:center">Old</th>
+                                    <th style="text-align:center">JVM options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Serial</td>
+                                    <td>Serial</td>
+                                    <td>-XX:+UserSerialGC</td>
+                                </tr>
+                                <tr>
+                                    <td>Parallel scavenge</td>
+                                    <td>Parallel Old/Serial</td>
+                                    <td>-XX:+UserParallelGC -XX:-UserParallelOldGC</td>
+                                </tr>
+                                <tr>
+                                    <td>Serial/Parallel scavenge</td>
+                                    <td>CMS</td>
+                                    <td>-XX:-UserParNewGC -XX:+UseConcMarkSweepGC</td>
+                                </tr>
+                                <tr>
+                                    <td>G1</td>
+                                    <td></td>
+                                    <td>-XX:UserG1GC</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </uib-tab>
+
+            </uib-tabset>
+        </div>
+        <hr>
+
+
+        <p style="display:none"><i class="fa fa-smile-o fa-3x" data-toggle="tooltip" data-placement="bottom"></i> 恭喜!
+            你的应用GC很健康.
+        </p>
+
+        <hr>
+        <div class="row">
+            <div>
+                <h2><i class="fa fa-gears"></i> Heap size Tuning Tips</h2>
+                <p>(<b>CAUTION:</b>通用优化指南,仅供参考,请实施前充分测试)</p>
+                <p></p>
+                <ul class="green-arrow">
+
+                    <li>
+                        -Xms {{vm.suggestHeapMin|size}} ~ {{vm.suggestHeapMax|size}}
+                    </li>
+                    <li>
+                        -Xmx {{vm.suggestHeapMin|size}} ~ {{vm.suggestHeapMax|size}}
+                    </li>
+                </ul>
+                <p></p>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <h2><i class="fa fa-stack-exchange"></i> JVM Heap Size</h2>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><b>Generation</b>
+                            </td>
+                            <td width="110px"><b>Allocated <i class="fa fa-question-circle question-mark" tooltip-placement="bottom" uib-tooltip="{{vm.alloTip}}"></i></b>
+                            </td>
+                            <td><b>Peak <i class="fa fa-question-circle question-mark" tooltip-placement="bottom" uib-tooltip="{{vm.peakTip}}"></i></b>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="item in vm.heapSize">
+                            <td>{{item.name}}</td>
+                            <td>{{item.allocated|size}}</td>
+                            <td>{{item.peak|size}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>{{vm.heapSize|sumOfValue:'allocated'|size}}</td>
+                            <td>{{vm.heapSize|sumOfValue:'peak'|size}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-8 col-sm-12">
+                <div class="graph-container">
+                    <nvd3 options="vm.jvmHeapOptions" data="vm.jvmHeapData"></nvd3>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <h2>
+						<i class="fa fa-key"></i> Key Performance Indicators
+					</h2>
+                <p style="display:none"><span style="underline;">(此部分内容很重要. 了解更多KPIs信息, <a href="https://blog.gceasy.io/2016/10/01/garbage-collection-kpi/" target="_blank"><u>click here</u></a>)</span>
+                </p>
+            </div>
+
+            <div class="col-md-4 col-sm-12">
+                <p>
+                    <div style="display:none">
+                        <span class="badge" style="background-color:#000;">1</span><b> Throughput <i class="fa fa-question-circle question-mark"   tooltip-placement="bottom" uib-tooltip="{{vm.throughputTip}}"></i> : {{vm.kpi.throughput}}%</b>
+                    </div>
+                    <br>
+                    <br><span class="badge" style="background-color:#000;">1</span><b> Latency: </b>
+                    <br>
+                </p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Avg GC Time <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="{{vm.avgGCTimeTip}}"></i>
+                            </td>
+                            <td><b>{{vm.kpi.avgTime}} ms</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Max GC Time <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="{{vm.maxGCTimeTip}}"></i>
+                            </td>
+                            <td><b>{{vm.kpi.maxTimeStr}}</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <strong>GC Duration Time Range</strong>
+                <i class="fa fa-question-circle question-mark" tooltip-placement="bottom" uib-tooltip="GC耗时区间"></i>:
+                <p></p>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><b>Duration (secs)</b>
+                            </td>
+                            <td><b>No. of GCs</b>
+                            </td>
+                            <td><b>Percentage</b>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="item in vm.kpi.durations">
+                            <td align="center">{{item.duration}}</td>
+                            <td align="center">{{item.gcCount}}</td>
+                            <td align="center">{{item.percentage}}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col-md-8 col-sm-12">
+
+                <div class="graph-container">
+                    <nvd3 options="vm.kpiOptions" data="vm.kpiData"></nvd3>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <hr>
+            </div>
+        </div>
+
+        <div class="result_box">
+            <div>
+                <h2><i class="fa fa-signal"></i> Interactive Graphs</h2>
+                <p><i>(所有图形均可缩放)</i>
+                </p>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <table class="big-graph-container">
+                    <tbody>
+                        <tr valign="top">
+                            <td>
+                                <ul>
+                                    <li ng-click="vm.switchGraph(opr)" ng-repeat="opr in vm.operations">
+                                        <button ng-class="{'btn-sele':opr.selected}" class="btn btn-info">{{opr.name}}</button>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td width="90%">
+                                <div class="big-graph-container">
+                                    <nvd3 options="vm.interactiveGraphOptions" data="vm.interactiveGraphData"></nvd3>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <h2>
+			<i class="fa fa-compass"></i> GC Statistics <i class="fa fa-question-circle question-mark" tooltip-placement="bottom" uib-tooltip="{{vm.statisticTip}}"></i> </h2>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="stat-graph-container">
+                    <nvd3 options="vm.reclaBytesOptions" data="vm.reclaBytesData"></nvd3>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="stat-graph-container">
+                    <nvd3 options="vm.cumuTimeOptions" data="vm.cumuTimeData"></nvd3>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="stat-graph-container">
+                    <nvd3 options="vm.avgTimeOptions" data="vm.avgTimeData"></nvd3>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <br>
+                <br>
+                <h3>Total GC stats</h3>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width:50%">Total GC count</td>
+                            <td>{{vm.stats.totalCount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total reclaimed bytes <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="通过GC从内存中移除的总bytes"></i>
+                            </td>
+                            <td>{{vm.stats.totalReclaimedBytes|size}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total GC time
+                            </td>
+                            <td>{{vm.stats.totalTime}}</td>
+                        </tr>
+                        <tr>
+                            <td>Avg GC time
+                            </td>
+                            <td>{{vm.stats.avgTime}}</td>
+                        </tr>
+                        <tr>
+                            <td>GC avg time std dev</td>
+                            <td>{{vm.stats.avgTimeStdDev}}</td>
+                        </tr>
+                        <tr>
+                            <td>GC min/max time</td>
+                            <td>{{vm.stats.minTime}}/ {{vm.stats.maxTime}}</td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td>GC Interval avg time <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="GC事件平均时间间隔"></i>
+                            </td>
+                            <td>{{vm.stats.intervalAvgTime}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <br>
+                <br>
+                <h3>Minor GC stats</h3>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width:50%">Minor GC count</td>
+                            <td>{{vm.stats.minorCount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Minor reclaimed bytes <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="通过Minor GC从内存中移除的总bytes"></i>
+                            </td>
+                            <td>{{vm.stats.minorReclaimedBytes|size}}</td>
+                        </tr>
+                        <tr>
+                            <td>Minor GC time
+                            </td>
+                            <td>{{vm.stats.minorTime}}</td>
+                        </tr>
+                        <tr>
+                            <td>Minor Avg GC time
+                            </td>
+                            <td>{{vm.stats.minorAvg}}</td>
+                        </tr>
+                        <tr>
+                            <td>Minor GC avg time std dev</td>
+                            <td>{{vm.stats.minorAvgStdDev}}</td>
+                        </tr>
+                        <tr>
+                            <td>Minor GC min/max time</td>
+                            <td>{{vm.stats.minorMin}}/ {{vm.stats.minorMax}}</td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td>Minor GC Interval avg time <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="Minor GC事件平均时间间隔"></i>
+                            </td>
+                            <td>{{vm.stats.minorIntervalAvg}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <br>
+                <br>
+                <h3>Full GC stats</h3>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width:50%">Full GC count</td>
+                            <td>{{vm.stats.fullCount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full reclaimed bytes <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="通过Full GC从内存中移除的总bytes"></i>
+                            </td>
+                            <td>{{vm.stats.fullReclaimedBytes|size}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full GC time
+                            </td>
+                            <td>{{vm.stats.fullTime}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full Avg GC time
+                            </td>
+                            <td>{{vm.stats.fullAvg}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full GC avg time std dev</td>
+                            <td>{{vm.stats.fullAvgStdDev}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full GC min/max time</td>
+                            <td>{{vm.stats.fullMin}}/ {{vm.stats.fullMax}}</td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td>Full GC Interval avg time <i class="fa fa-question-circle question-mark"
+                                tooltip-placement="bottom" uib-tooltip="Full GC事件平均时间间隔"></i>
+                            </td>
+                            <td>{{vm.stats.fullIntervalAvg}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <hr>
+        <div class="row">
+            <div>
+                <h2>
+						<i class="fa fa-gear"></i> Object Stats
+					</h2>
+                <p><span style="underline;">   These are good metrics to compare with previous baseline</span>
+                </p>
+                <div class="col-md-12 col-sm-12">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Total created bytes <i class="fa fa-question-circle question-mark"
+                                    tooltip-placement="top" uib-tooltip="应用创建的总字节数. 为达到更好性能，请尽可能降低此值"></i>
+                                </td>
+                                <td>{{vm.stats.totalReclaimedBytes|size}}</td>
+                            </tr>
+                            <tr>
+                                <td>Total promoted bytes <i class="fa fa-question-circle question-mark"
+                                    tooltip-placement="top" uib-tooltip="从年轻代提升到老年代字节数的总和"></i>
+                                </td>
+                                <td>{{vm.stats.totalPromotedBytes|size}}</td>
+                            </tr>
+                            <tr>
+                                <td>Avg creation rate <i class="fa fa-question-circle question-mark"
+                                    tooltip-placement="top" uib-tooltip="应用对象创建率. 当更多的对象被创建时, 需要更多的GC执行以在内存中回收这些对象. 性能优化的单一秘诀，请尽可能降低对象创建率."></i>
+                                </td>
+                                <td>{{vm.stats.reclaimedBytesRate|size}}/sec</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td>Avg promotion rate <i class="fa fa-question-circle question-mark"
+                                    tooltip-placement="top" uib-tooltip="从年轻代提升到老年代的速率. 当更多对象提升到老年代, 会引发更加频繁的Full GC."></i>
+                                </td>
+                                <td>{{vm.stats.promotedBytesRate|size}}/sec</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+    </div>
+</section>

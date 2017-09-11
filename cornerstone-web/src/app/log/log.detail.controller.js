@@ -49,12 +49,30 @@
         };
     }
 
-    function LogDetailController($scope, $location, $stateParams, logInfo, $sce, SiteCache, $element, $uibModal, toastr, $timeout) {
+    function LogDetailController($scope, $location, $stateParams, logInfo, $sce, SiteCache, $element, $uibModal, toastr, $timeout, $rootScope, codeService, $window, ScrollbarService) {
         var vm = this;
         var currentKeyword = '';
         var allTags = {};
         vm.seleTags = {};
         vm.tags = [];
+        var detailScrollbar;
+
+        vm.maxHeight = ($window.innerHeight - 100) + 'px';
+
+
+        var resizeFun = function() {
+            $scope.$apply(function() {
+                vm.maxHeight = ($window.innerHeight - 100) + 'px';
+            });
+        };
+        angular.element($window).on('resize', resizeFun);
+        $scope.$on('$destroy', function(e) {
+            angular.element($window).off('resize', resizeFun);
+        });
+
+        ScrollbarService.getInstance('log-detail-scrollbar').then(function(x) {
+            detailScrollbar = x;
+        });
         var logSize = $stateParams.size;
         var maxSize = Math.ceil(logSize / 1024.0 / 1024);
         var stepSizes = d3.range(1, maxSize + 1, 1);
@@ -82,13 +100,17 @@
         // Render the slider in the div
         var sliderWidth = maxSize * 30;
         d3.select('.partion-selector').style('width', (sliderWidth > eleWidth ? eleWidth : sliderWidth) + 'px').call(slider);
-        var container = d3.select($element[0]).select('.log-detail>.log-list').on('click', function() {
-            $scope.$apply(function() {
-                vm.showFilter = false;
-            });
-        });
+        var container;
 
         var tagRegex = /(\[\s*([^\]\s]{2,80})\s*\])|(\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}\:\d{2}\.\d{3})/g;
+
+        var viewSourceFunc = function() {
+
+            var ns = (d3.select(this).attr('jns'));
+            var name = (d3.select(this).text());
+            codeService.viewCode(ns, name);
+        };
+
 
         var loadData = function(partitionIndex) {
             vm.foundCount = 0;
@@ -100,6 +122,11 @@
                 'partitionIndex': partitionIndex
             }, function(data) {
 
+                container = d3.select($element[0]).select('.log-list').on('click', function() {
+                    $scope.$apply(function() {
+                        vm.showFilter = false;
+                    });
+                });
                 var isBeginArea = true;
                 var areaTag = 'normal';
                 var num = 0;
@@ -146,6 +173,17 @@
                             p1 = '\n';
                         }
 
+                        p1 = p1.replace(/(\s+at\s+)(.+)\(([a-z0-9_\$]+\.java\:\d+)\)/i, function(match, m1, m2, m3) {
+                            var tmp = m2.split('.');
+                            var ns;
+                            if (tmp.length > 3) {
+                                ns = tmp.slice(0, tmp.length - 2).join('.');
+                            }
+
+
+                            return m1 + m2 + '(<span jns="' + ns + '" class="link stack-m">' + m3 + '</span>)';
+                        });
+
 
                         var lineHtml = '<div class="line" num="' + (num++) + '">' + p1 + '</div>';
                         var areaBeginHtml = '<div class="area ' + areaTag +
@@ -161,10 +199,14 @@
                         }
                     }) + '</div>');
                 vm.loadingComplete = true;
+                detailScrollbar.update();
+		detailScrollbar.scrollTo(0,0);
                 container.selectAll('div.area>.more:first-child').on('click', function() {
                     d3.select(this.parentElement.previousElementSibling).attr('show', 'show').attr('all', 'all').select('.more:last-child').attr('hide', 'hide');
                     d3.select(this).attr('hide', 'hide');
                 });
+
+                container.selectAll('span.stack-m.link').on('click', viewSourceFunc);
 
                 container.selectAll('div.area>.tools').on('click', function() {
                     var parentNode = d3.select(this.parentElement);
@@ -214,7 +256,7 @@
             var pattern = new RegExp(regexPa.join('|'), 'ig');
             return pattern;
         };
-	var currentTags = [];
+        var currentTags = [];
         vm.filterTag = function(tag) {
             showAreas = {};
             vm.foundCount = 0;
@@ -242,7 +284,7 @@
             } else if (seleTagsCount <= 0) {
 
                 delete vm.tagRegex;
-                vm.search();
+                vm.search(false);
                 return;
             }
 
@@ -286,6 +328,8 @@
 
             });
             vm.loadingComplete = true;
+            detailScrollbar.update();
+	    detailScrollbar.scrollTo(0,0);
         };
 
 
@@ -314,35 +358,37 @@
 
         vm.getFilterTags = function() {
 
-		return currentTags;
+            return currentTags;
         };
 
         var searchTimer;
         vm.asyncSearch = function() {
 
-            if (vm.inRegexMode) return;
+            //if (vm.inRegexMode) return;
 
+            vm.loadingComplete = false;
             if (searchTimer !== null) {
                 $timeout.cancel(searchTimer);
             }
             if (vm.keyword != currentKeyword) {
                 searchTimer = $timeout(function() {
-                    vm.search(true);
-                }, 250);
+                    vm.search(false);
+                    vm.loadingComplete = true;
+                }, 3);
             }
         };
         vm.reset = function() {
             vm.keyword = '';
             vm.foundCount = 0;
             vm.currentMatches = null;
-            vm.search();
+            vm.search(false);
         };
         vm.upDown = function() {
-            if (vm.onBottom) {
-                $location.hash('vi-log-top');
-            } else {
-                $location.hash('vi-log-bottom');
-            }
+
+            detailScrollbar.update();
+            var height = detailScrollbar.getSize().content.height;
+            detailScrollbar.scrollTo(0, vm.onBottom ? 0 : height);
+
 
             vm.onBottom = !vm.onBottom;
         };
@@ -373,9 +419,6 @@
 
         vm.search = function(changeEvent) {
 
-            if (vm.inRegexMode && changeEvent) {
-                return;
-            }
 
             if (seleTagsCount === 0 && vm.keyword.length === 0) {
                 vm.clearFilter();
@@ -383,6 +426,7 @@
             }
 
             var keyword = vm.keyword;
+            vm.loadingComplete = false;
             try {
                 if (!changeEvent && vm.inRegexMode) {
                     keyword = new RegExp(keyword, 'gi');
@@ -395,7 +439,6 @@
             }
             container.selectAll('.area').attr('all', null);
 
-            vm.loadingComplete = false;
             vm.isInFilter = true;
             vm.foundCount = 0;
             vm.currentMatches = {};
@@ -440,9 +483,24 @@
                     }
                 }
 
-                $this.html(currentTxt.replace(vm.getHighlightRegex(), function(x) {
+                currentTxt = currentTxt.replace(vm.getHighlightRegex(), function(x) {
                     return '<span class="highlight">' + x + '</span>';
-                }));
+                });
+                currentTxt = currentTxt.replace(/(\s+at\s+)(.+)\(([a-z0-9_\$]+\.java\:\d+)\)/i, function(match, m1, m2, m3) {
+                    var tmp = m2.split('.');
+                    var ns;
+                    if (tmp.length > 3) {
+                        ns = tmp.slice(0, tmp.length - 2).join('.');
+                        ns = angular.element('<span>' + ns + '</span>').text();
+                        return m1 + m2 + '(<span jns="' + ns + '" class="link stack-m">' + m3 + '</span>)';
+                    } else {
+
+                        return match;
+                    }
+
+
+                });
+                $this.html(currentTxt);
                 $this.attr('show', rtn);
                 var $parent = d3.select(this.parentElement);
                 if (rtn == 'show') {
@@ -451,9 +509,13 @@
                     $parent.attr('show', null);
                 }
 
+
             });
 
+            container.selectAll('span.stack-m.link').on('click', viewSourceFunc);
             vm.loadingComplete = true;
+            detailScrollbar.update();
+            detailScrollbar.scrollTo(0,0);
         };
 
     }

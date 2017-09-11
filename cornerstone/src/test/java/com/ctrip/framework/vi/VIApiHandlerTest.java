@@ -1,7 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.threading.ThreadingManager;
-import junit.framework.Assert;
+import com.ctrip.framework.vi.threading.ThreadingManager;
 import org.junit.Test;
 
 import java.lang.management.ThreadInfo;

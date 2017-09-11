@@ -1,9 +1,9 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.component.Refreshable;
-import com.ctrip.framework.cornerstone.ignite.Status;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.component.Refreshable;
+import com.ctrip.framework.vi.ignite.Status;
 
 import java.util.ArrayList;
 import java.util.Date;

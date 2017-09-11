@@ -1,9 +1,12 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.configuration.InitConfigurationException;
-import com.ctrip.framework.cornerstone.ignite.Status;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.ignite.Status;
 import org.junit.Test;
+
+import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
@@ -14,7 +17,7 @@ public class IgniteFailTest {
 
     @Test
     public void testIgniteFail() throws InterruptedException, InitConfigurationException {
-        ConfigurationManager.getConfigKeys("ignite").add("com.ctrip.framework.cornerstone.plugins.TestIginite5");
+        ConfigurationManager.getConfigKeys("ignite").add("com.ctrip.framework.vi.plugins.TestIginite5");
         IgniteManager.ignite();
         IgniteStatus status = IgniteManager.getStatus();
 

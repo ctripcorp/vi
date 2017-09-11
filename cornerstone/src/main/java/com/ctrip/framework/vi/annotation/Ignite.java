@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.annotation;
+package com.ctrip.framework.vi.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -53,5 +53,12 @@ public @interface Ignite {
      * @return 点火插件类型
      */
     PluginType type() default PluginType.App;
+
+    /**
+     * 选填，默认值为false
+     * 当为true时，该点火插件会自动注册
+     * @return 是否自动注册
+     */
+    boolean auto() default false;
 
 }

@@ -1,18 +1,21 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.annotation.EventSource;
-import com.ctrip.framework.cornerstone.annotation.Ignite;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.component.defaultComponents.HostInfo;
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.configuration.InitConfigurationException;
-import com.ctrip.framework.cornerstone.enterprise.EnApp;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.ignite.*;
-import com.ctrip.framework.cornerstone.util.DepSortUtil;
-import com.ctrip.framework.cornerstone.util.LoopReferenceNodeException;
-import com.ctrip.framework.cornerstone.watcher.EventLogger;
-import com.ctrip.framework.cornerstone.watcher.EventLoggerFactory;
+import com.ctrip.framework.vi.annotation.EventSource;
+import com.ctrip.framework.vi.annotation.Ignite;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.component.defaultComponents.HostInfo;
+import com.ctrip.framework.vi.configuration.Configuration;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.enterprise.EnApp;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.ignite.*;
+import com.ctrip.framework.vi.ui.AutoRegister;
+import com.ctrip.framework.vi.util.DepSortUtil;
+import com.ctrip.framework.vi.util.LogHelper;
+import com.ctrip.framework.vi.util.LoopReferenceNodeException;
+import com.ctrip.framework.vi.watcher.EventLogger;
+import com.ctrip.framework.vi.watcher.EventLoggerFactory;
 import com.google.gson.internal.LinkedTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jiang.j on 2016/8/11.
@@ -31,52 +36,110 @@ public final class IgniteManager {
     static IgniteStatus igniteStatus ;
     static final String CONFNAME="ignite";
     static final String IGNITESYNCKEY="ignite.sync";
-    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-    static  SimpleLogger simpleLogger = new SimpleLogger();
+    static  SimpleLogger simpleLogger ;
+    static Map<String,IgnitePlugin> readonlyPluginContainers;
+    static final String EXECUTEPLUGIN ="execute plugin" ;
+
     static {
             igniteStatus = ComponentManager.getStatus(IgniteStatus.class);
             igniteStatus.status = Status.Uninitiated;
+            simpleLogger = new SimpleLogger(igniteStatus.getMessages(),logger);
+    }
+
+
+    public static Map<String,IgnitePlugin> getPluginMap(){
+        return readonlyPluginContainers;
     }
 
     public static class SimpleLogger{
-        private SimpleLogger() {
-        }
-        void blankLine(){
-            igniteStatus.messages.add("\r\n");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        List<String> msgContainer;
+        Logger logger;
+        private SimpleLogger(List<String> messageContainer,Logger logger) {
+            this.msgContainer = messageContainer;
+            this.logger = logger;
         }
 
+        public SimpleLogger(){
+            msgContainer = new ArrayList<>();
+            logger = LoggerFactory.getLogger(getClass());
+        }
+
+
+        void blankLine(){
+            this.msgContainer.add("\r\n");
+        }
+
+        public List<String> getMsgs(int index){
+            if(msgContainer.size()>0) {
+                return msgContainer.subList(index, msgContainer.size());
+            }else{
+                return null;
+            }
+        }
+
+        private Pattern pattern = Pattern.compile(".+<time>(.+)</time>$");
+        private final int TIMETAGLEN = 14;
         public void info(String msg){
-            logger.info(msg);
-            igniteStatus.messages.add("[INFO] " + dateFormat.format(new Date()) + " - " + msg + "\r\n");
+            Matcher matcher = pattern.matcher(msg);
+            String time = null;
+            if(matcher.matches()){
+               time = matcher.group(1);
+                msg = msg.substring(0,msg.length()-time.length()-TIMETAGLEN);
+            }
+            if(msg.startsWith(LogHelper.SPECIALINFOPREFIX)){
+                logger.info(msg.substring(LogHelper.SPECIALINFOPREFIX.length()));
+                this.msgContainer.add( msg + " #" +dateFormat.format(new Date()));
+            } else{
+                logger.info(msg);
+                this.msgContainer.add("[INFO] " + (time==null?dateFormat.format(new Date()):time) + " - " + msg + "\r\n");
+            }
 
         }
         public void warn(String msg){
+            Matcher matcher = pattern.matcher(msg);
+            String time = null;
+            if(matcher.matches()){
+                time = matcher.group(1);
+                msg = msg.substring(0,msg.length()-time.length()-TIMETAGLEN);
+            }
             logger.warn(msg);
-            igniteStatus.messages.add("[WARN] " + dateFormat.format(new Date()) + " - " + msg + "\r\n");
+            this.msgContainer.add("[WARN] " +(time==null?dateFormat.format(new Date()):time) + " - " + msg + "\r\n");
         }
         public void error(String msg){
+            Matcher matcher = pattern.matcher(msg);
+            String time = null;
+            if(matcher.matches()){
+                time = matcher.group(1);
+                msg = msg.substring(0,msg.length()-time.length()-TIMETAGLEN);
+            }
             logger.error(msg);
-            igniteStatus.messages.add("[ERROR] " + dateFormat.format(new Date()) + " - " + msg + "\r\n");
+            this.msgContainer.add("[ERROR] " +(time==null?dateFormat.format(new Date()):time)+ " - " + msg + "\r\n");
         }
         public void error(String msg,Throwable throwable){
-
+            Matcher matcher = pattern.matcher(msg);
+            String time = null;
+            if(matcher.matches()){
+                time = matcher.group(1);
+                msg = msg.substring(0,msg.length()-time.length()-TIMETAGLEN);
+            }
             StringWriter sw = new StringWriter();
             throwable.printStackTrace(new PrintWriter(sw));
             logger.error(msg,throwable);
-            igniteStatus.messages.add("[ERROR] " + dateFormat.format(new Date()) + " - " + msg + "\r\n" + sw.toString());
+            this.msgContainer.add("[ERROR] " +(time==null?dateFormat.format(new Date()):time)+ " - " + msg + "\r\n" + sw.toString());
         }
     }
     public static IgniteStatus getStatus(){
         return igniteStatus;
     }
 
-    private static Map<String,IgnitePlugin> getSortedPlugins(SimpleLogger logger) throws InitConfigurationException, RuntimeException, WrongPluginIdException {
+    private static Map<String,IgnitePlugin> getSortedPlugins(SimpleLogger logger) throws InitConfigurationException, RuntimeException, WrongPluginIdException, IgnitePluginNoIgniteAnnotationException {
 
         logger.blankLine();
         logger.info("Begin init and sort plugins");
         Set<String> keys = ConfigurationManager.getConfigKeys(CONFNAME);
         int skipCount = CONFNAME.length()+1;
-        String viPackagePrex = "com.ctrip.framework.cornerstone.";
+        String viPackagePrex = "com.ctrip.framework.vi.";
 
         List<String> needRemoves = new ArrayList<>();
         for (String key:keys){
@@ -105,29 +168,27 @@ public final class IgniteManager {
         pluginInfos.add(viIgniteInfo);
         plugins.put(viIgniteInfo.id(),viIgnitePlugin);
 
-        if(keys != null) {
-            for (String key : keys) {
-                String className = key.substring(CONFNAME.length() + 1);
-                try {
-                    Class<?> pClass = Class.forName(className);
-                    Ignite pInfo = pClass.getAnnotation(Ignite.class);
-                    if(pInfo == null){
-                        throw  new IgnitePluginNoIgniteAnnotationException(className);
-                    }
-                    IgnitePlugin plugin = (IgnitePlugin) pClass.newInstance();
-                    String pId = pInfo.id();
-                    if (plugins.containsKey(pId)) {
-                        throw new DuplicatePluginIdException(pId + " must be unique, but it be used in[" + className + "," + plugins.get(pId).getClass().getName() + "]");
-                    }
-
-                    pluginInfos.add(pInfo);
-
-                    plugins.put(pId, plugin);
-                } catch (Throwable e) {
-                    throw new RuntimeException("init ignite plugin, " + className + " failed!", e);
+        for (String key : keys) {
+            String className = key.substring(CONFNAME.length() + 1);
+            try {
+                Class<?> pClass = Class.forName(className);
+                Ignite pInfo = pClass.getAnnotation(Ignite.class);
+                if(pInfo == null){
+                    throw  new IgnitePluginNoIgniteAnnotationException(className);
+                }
+                IgnitePlugin plugin = (IgnitePlugin) pClass.newInstance();
+                String pId = pInfo.id();
+                if (plugins.containsKey(pId)) {
+                    throw new DuplicatePluginIdException(pId + " must be unique, but it be used in[" + className + "," + plugins.get(pId).getClass().getName() + "]");
                 }
 
+                pluginInfos.add(pInfo);
+
+                plugins.put(pId, plugin);
+            } catch (Throwable e) {
+                throw new RuntimeException("init ignite plugin, " + className + " failed!", e);
             }
+
         }
 
         logger.info("End init");
@@ -165,7 +226,7 @@ public final class IgniteManager {
         } catch (LoopReferenceNodeException e) {
             StringBuilder builder = new StringBuilder("Loop reference be found in [");
             for(String id:e.ids()){
-                builder.append("plugin class: "+plugins.get(id).getClass().getName() + ", id: "+id+";\r\n");
+                builder.append("plugin class: ").append(plugins.get(id).getClass().getName()).append(", id: ").append(id).append(";\r\n");
             }
 
             builder.append("]");
@@ -183,6 +244,10 @@ public final class IgniteManager {
                     igniteInfo = item;
                     break;
                 }
+            }
+
+            if(igniteInfo == null){
+                throw  new IgnitePluginNoIgniteAnnotationException(plugin.getClass().getName());
             }
 
             igniteStatus.infos.add(new IgniteStatus.PluginInfo(id, plugin.getClass().getName(),
@@ -239,23 +304,49 @@ public final class IgniteManager {
             Thread igniteThread = new Thread("igniteThread"){
                 @Override
                 public void run(){
+                    Map<String,IgnitePlugin> tmpMap = new HashMap<>();
                     try {
-                        Map<String,IgnitePlugin> pluginMap = getSortedPlugins(simpleLogger);
+                        Configuration configuration = ConfigurationManager.getConfigInstance();
+
+                        String scanKey = "vi.scan.enable";
+                        if(configuration.containsKey(scanKey) && "false".equalsIgnoreCase(configuration.getString(scanKey))){
+                            simpleLogger.warn("Auto scan be disabled!");
+                        }else {
+                            simpleLogger.info("Begin annotation auto scan.");
+                            AutoRegister.autoRegister(simpleLogger);
+                            simpleLogger.info("End annotation auto scan.");
+                        }
+
+                        Map<String,IgnitePlugin> pluginMap;
+                        Throwable sortedError = null;
+                        try{
+                             pluginMap = getSortedPlugins(simpleLogger);
+                        }catch (Throwable e){
+                            sortedError = e;
+                            pluginMap = new HashMap<>();
+                            VICoreIgnite viIgnitePlugin = new VICoreIgnite();
+                            Ignite viIgniteInfo = VICoreIgnite.class.getAnnotation(Ignite.class);
+                            pluginMap.put(viIgniteInfo.id(), viIgnitePlugin);
+
+                        }
                         int i=0;
 
                         for (Map.Entry<String,IgnitePlugin> plugin:pluginMap.entrySet()){
                             simpleLogger.blankLine();
-                            long pStartTime = System.currentTimeMillis();
+                            //long pStartTime = System.currentTimeMillis();
                             String pKey = plugin.getKey();
                             IgnitePlugin currentPlugin = plugin.getValue();
                             igniteStatus.currentPluginIndex = i++;
                             EventLogger transLogger = EventLoggerFactory.getTransLogger(IgniteManager.class);
                             appinfo.setLatestNews("executing plugin id:" + pKey);
-                            simpleLogger.info("Begin execute plugin id:" + pKey + ", class:"+currentPlugin.getClass().getName());
-                            boolean outcome;
+                            simpleLogger.info(LogHelper.beginBlock(EXECUTEPLUGIN, new String[]{"id", pKey, "class", currentPlugin.getClass().getName()}));
+                            boolean outcome = false;
                             try {
                                 transLogger.fireEvent(EventLogger.TRANSSTART,pKey);
                                 outcome = currentPlugin.run(simpleLogger);
+                                if(currentPlugin instanceof  AbstractIgnitePlugin){
+                                    tmpMap.put(pKey,currentPlugin);
+                                }
                                 transLogger.fireEvent(EventLogger.TRANSEND);
                                 if(!outcome){
                                     String msg = "Ignite Plugin " + pKey + " finish execute, but return false";
@@ -274,8 +365,12 @@ public final class IgniteManager {
 
                             }finally {
                                 transLogger.fireEvent(EventLogger.TRANSFINALLY);
-                                simpleLogger.info("End execute plugin id:" + pKey + "  cost:" + (System.currentTimeMillis() - pStartTime) + "ms");
+                                simpleLogger.info(LogHelper.endBlock(EXECUTEPLUGIN,new String[]{"isPass",String.valueOf(outcome)}));
                             }
+                        }
+
+                        if(sortedError != null){
+                            throw sortedError;
                         }
                         igniteStatus.status= Status.Success;
                         appinfo.setAppStatus(AppStatus.Initiated);
@@ -284,8 +379,13 @@ public final class IgniteManager {
                         igniteStatus.status = Status.Failure;
                         appinfo.setAppStatus(AppStatus.InitiatedFailed);
                     }finally {
+                        readonlyPluginContainers = Collections.unmodifiableMap(tmpMap);
                         simpleLogger.blankLine();
                         simpleLogger.info("Ignite result:" + igniteStatus.status);
+                        String initError = EnFactory.getInitError();
+                        if(initError != null){
+                            simpleLogger.error(initError);
+                        }
                         simpleLogger.info("End ignite");
                         simpleLogger.blankLine();
                         logger = null;
@@ -303,6 +403,14 @@ public final class IgniteManager {
             }
         }
 
+    }
+
+    public static void reset(){
+
+        AppInfo.getInstance().setAppStatus(AppStatus.Uninitiated);
+        AppInfo.getInstance().cleanStatusSource();
+        igniteStatus.status = Status.Uninitiated;
+        //simpleLogger = new SimpleLogger(new ArrayList<String>(),logger);
     }
 
 }

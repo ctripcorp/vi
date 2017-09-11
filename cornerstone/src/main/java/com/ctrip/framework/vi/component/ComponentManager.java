@@ -1,11 +1,12 @@
-package com.ctrip.framework.cornerstone.component;
+package com.ctrip.framework.vi.component;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
-import com.ctrip.framework.cornerstone.component.defaultComponents.HostInfo;
-import com.ctrip.framework.cornerstone.jmx.VIDynamicMBean;
-import com.ctrip.framework.cornerstone.util.ArrayUtils;
-import com.ctrip.framework.cornerstone.util.ServerConnector;
+import com.ctrip.framework.vi.UserAction;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.FieldInfo;
+import com.ctrip.framework.vi.component.defaultComponents.HostInfo;
+import com.ctrip.framework.vi.jmx.VIDynamicMBean;
+import com.ctrip.framework.vi.util.ArrayUtils;
+import com.ctrip.framework.vi.util.ServerConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,7 @@ public final class ComponentManager {
         add(cb);
     }
 
-    public static <T> T getStatus(Class<T> statusClass){
+    public static <T> T getStatus(Class<T> statusClass,String user){
         if(!container.values().contains(statusClass)) {
           add(statusClass);
         }
@@ -98,7 +99,14 @@ public final class ComponentManager {
             ((Refreshable)rtn).refresh();
         }
 
+        if(rtn instanceof UserAction){
+            ((UserAction)rtn).userAction(user);
+        }
+
         return rtn;
+    }
+    public static <T> T getStatus(Class<T> statusClass){
+        return getStatus(statusClass,"");
     }
 
 

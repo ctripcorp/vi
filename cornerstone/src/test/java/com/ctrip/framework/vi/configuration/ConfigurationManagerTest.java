@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.configuration;
+package com.ctrip.framework.vi.configuration;
 
-import com.ctrip.framework.cornerstone.util.IOUtils;
+import com.ctrip.framework.vi.util.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <groupId>com.ctrip.framework</groupId>
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <groupId>com.ctrip.framework</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cornerstone</artifactId>
-    <version>0.9.3-SNAPSHOT</version>
+    <version>${vi.version}</version>
     <inceptionYear>2016</inceptionYear>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.test.jvmArgs>-Denv=fws</maven.test.jvmArgs>
+        <vi.version>0.11.2</vi.version>
+    </properties>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -16,6 +21,20 @@ xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLS
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Agent-Class>com.ctrip.framework.vi.instrument.AgentMain</Agent-Class>
+                                <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                                <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
@@ -75,8 +94,4 @@ xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLS
             <scope>compile</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.test.jvmArgs>-Denv=fws</maven.test.jvmArgs>
-    </properties>
 </project>

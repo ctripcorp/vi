@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents;
+package com.ctrip.framework.vi.component.defaultComponents;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,8 +18,7 @@ public class ProcessInfo {
         try {
             Process proc =Runtime.getRuntime().exec("powershell  get-wmiobject win32_process|select ProcessId,Name,CreationDate,VirtualSize,WorkingSetSize,Handles,UserModeTime,KernelModeTime");
             proc.getOutputStream().close();
-            try(InputStream in = proc.getInputStream()) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            try(InputStream in = proc.getInputStream();BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
                 String line = reader.readLine();
                 while (line!=null) {
                     line = reader.readLine();

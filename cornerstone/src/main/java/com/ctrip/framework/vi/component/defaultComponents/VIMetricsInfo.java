@@ -1,9 +1,9 @@
-package com.ctrip.framework.cornerstone.component.defaultComponents;
+package com.ctrip.framework.vi.component.defaultComponents;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
-import com.ctrip.framework.cornerstone.annotation.FieldInfo;
-import com.ctrip.framework.cornerstone.metrics.MetricsCollector;
-import com.ctrip.framework.cornerstone.metrics.MetricsObserver;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.FieldInfo;
+import com.ctrip.framework.vi.metrics.MetricsCollector;
+import com.ctrip.framework.vi.metrics.MetricsObserver;
 
 import java.util.Map;
 

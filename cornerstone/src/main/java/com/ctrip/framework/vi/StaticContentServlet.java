@@ -1,12 +1,15 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
 
-import com.ctrip.framework.cornerstone.component.defaultComponents.HostInfo;
-import com.ctrip.framework.cornerstone.enterprise.EnAuthentication;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.enterprise.EnHost;
-import com.ctrip.framework.cornerstone.ui.Menu;
-import com.ctrip.framework.cornerstone.util.*;
+import com.ctrip.framework.vi.component.defaultComponents.HostInfo;
+import com.ctrip.framework.vi.configuration.Configuration;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.enterprise.EnAuthentication;
+import com.ctrip.framework.vi.enterprise.EnBase;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.enterprise.EnHost;
+import com.ctrip.framework.vi.ui.Menu;
+import com.ctrip.framework.vi.util.*;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +59,16 @@ public class StaticContentServlet extends HttpServlet {
         }
 
         String path = req.getPathInfo();
-        String viRootPath = req.getServletPath().substring(1);
 
+        String servletPath = req.getServletPath();
+        String viRootPath = "";
+        if(servletPath.length()>1) {
+            viRootPath = servletPath.substring(1);
+        }
+
+        if(path == null && viRootPath.startsWith("vi/")){
+            path = viRootPath.substring(2);
+        }
         if(path==null) {
             resp.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
             resp.setHeader("Location", viRootPath + "/index.html");
@@ -142,7 +154,7 @@ public class StaticContentServlet extends HttpServlet {
 
         }
 
-        String ext = path.substring(path.lastIndexOf(".")+1);
+        String ext = path.substring(path.lastIndexOf(".") + 1);
         String mediaType = EXT_TO_MEDIATYPE.get(ext);
         byte[] contentBytes = null;
 
@@ -162,6 +174,27 @@ public class StaticContentServlet extends HttpServlet {
                         CONTENT_CACHE.putIfAbsent(path, contentBytes);
                     }else{
                         String indexHtml = IOUtils.readAll(is);
+                        String portalUrl = null;
+                        try{
+                            Configuration config = ConfigurationManager.getConfigInstance();
+                            if(config.containsKey("vi.portal.url")) {
+                                EnBase enBase = EnFactory.getEnBase();
+                                String env = "others";
+                                switch (enBase.getEnvType().toLowerCase()){
+                                    case "pro":
+                                        env = "pro";
+                                        break;
+                                    case "uat":
+                                        env="uat";
+                                        break;
+                                }
+                                portalUrl = config.getString("vi.portal.url")+"#/app/"+enBase.getAppId() +"?env="+env;
+                            }
+                        }catch (Throwable e){
+                           e.printStackTrace();
+
+                        }
+
                         String pattern = "//$SMENU";
                         int menuIndex =  indexHtml.indexOf(pattern);
                         if(menuIndex > 0){
@@ -169,7 +202,9 @@ public class StaticContentServlet extends HttpServlet {
                             Gson gson = new Gson();
                             EnHost enHost = EnFactory.getEnHost();
                             indexHtml = indexHtml.substring(0,menuIndex) + "$SMENU = " + gson.toJson(menus) +
-                                    ";$CIP='"+enHost.getHostAddress()+"';$CHOSTNAME='"+enHost.getHostName()+"';"
+                                    ";$CIP='"+enHost.getHostAddress()+"';$CHOSTNAME='"+enHost.getHostName()+"';"+
+                                    "$VERSION='"+ Version.VERSION +"';"+
+                                    (portalUrl!=null?"$PORTALURL='"+portalUrl+"';":"")
                                     + "$ISLINUX="+ HostInfo.isLinux()+";$ISTOMCAT="+HostInfo.isTomcat()+";"
                                     + indexHtml.substring(menuIndex+pattern.length());
                         }

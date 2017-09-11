@@ -22,7 +22,10 @@
     <tbody>
         <tr ng-repeat="row in vm.displayCollection">
             <td>{{row.name}}</td>
-            <td ng-bind-html="row.value"></td>
+            <td >
+		    <span ng-bind-html="row.value"></span>
+            <json-formatter class="json-content" open="2" ng-show="row.objValue!=null" json="row.objValue" style="min-height:0px;"></json-formatter>
+	    </td>
             <td ng-show="vm.hasMeta">{{row.description}} <a ng-show="row.link" href="{{row.link}}" target="_blank">&nbsp;{{row.linkTxt}}</a></td>
         </tr>
     </tbody>

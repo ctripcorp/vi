@@ -1,12 +1,12 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.enterprise.DefaultEnUI;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.ui.CustomPage;
+import com.ctrip.framework.vi.enterprise.DefaultEnUI;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.ui.CustomPage;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -18,7 +18,7 @@ public class EnUITest {
 
         @Override
         public String getId() {
-            return "demo-id";
+            return "ctrip-clog";
         }
 
         @Override
@@ -36,6 +36,6 @@ public class EnUITest {
         DefaultEnUI enUI = (DefaultEnUI) EnFactory.getEnUI();
         assertTrue(enUI.getMenus().size()>0);
         enUI.addMenu(new DemoPage());
-        assertNotNull(enUI.getPageById("demo-id"));
+        assertNotNull(enUI.getPageById("ctrip-clog"));
     }
 }

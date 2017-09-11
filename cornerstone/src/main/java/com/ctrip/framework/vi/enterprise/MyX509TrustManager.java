@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;

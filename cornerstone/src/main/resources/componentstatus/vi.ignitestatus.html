@@ -25,6 +25,28 @@
         padding-right: 0px;
         word-break: break-all;
     }
+    div.block{
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    }
+    div.block>span{
+    outline:none;
+    }
+    div.inner{
+      margin-left:10px;
+
+    }
+    span.meta-inf{
+    margin-left: 10px;
+    background: #26b3f7;
+    color: #fff;
+    padding-left: 5px;
+    padding-right: 5px;
+    }
+
 </style>
 <div class="main">
     <div class="row">
@@ -49,21 +71,19 @@
         </div>
         <div class="row ">
             <div class="col-md-2 title">
-                <span>耗时(毫秒):</span>
+                <span>耗时:</span>
             </div>
             <div class="col-md-10 content">
                 {{vm.data["cost"]}}
             </div>
         </div>
-    <scrollbar ng-style="{maxHeight:vm.maxHeight}">
+    <scrollbar ng-style="{maxHeight:vm.maxHeight}" name="ignitestatusScrollbar">
         <div class="row ">
             <div class="col-md-2 title">
                 <span>详情:</span>
             </div>
             <div class="col-md-10 content">
-                <div ng-repeat="m in vm.data['messages'] track by $index" class="{{vm.colorMsg(m)}}">
-                    <span ng-bind-html="vm.formatMsg(m)"></span>
-                </div>
+                    <span compile="vm.msgHtml"></span>
             </div>
         </div>
     </scrollbar>

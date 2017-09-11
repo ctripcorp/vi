@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.enterprise;
+package com.ctrip.framework.vi.enterprise;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,9 @@ public class DefaultEnBase implements EnBase {
 
         try(InputStream is =Thread.currentThread().getContextClassLoader().getResourceAsStream("META-INF/app.properties")) {
             if(is!=null) {
-                properties.load(new InputStreamReader(is, Charset.defaultCharset()));
+                try(InputStreamReader reader =new InputStreamReader(is, Charset.defaultCharset())) {
+                    properties.load(reader);
+                }
             }
         } catch (Throwable e) {
             logger.warn("read app info error!", e);

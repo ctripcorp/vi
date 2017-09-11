@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone;
+package com.ctrip.framework.vi;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
 
 import java.util.Date;
 

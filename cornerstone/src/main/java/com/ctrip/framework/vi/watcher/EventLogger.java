@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.watcher;
+package com.ctrip.framework.vi.watcher;
 
 /**
  * Created by jiang.j on 2016/10/17.
