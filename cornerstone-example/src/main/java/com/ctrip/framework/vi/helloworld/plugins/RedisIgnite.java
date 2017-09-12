@@ -1,11 +1,11 @@
-package com.ctrip.framework.cornerstone.helloworld.plugins;
+package com.ctrip.framework.vi.helloworld.plugins;
 
-import com.ctrip.framework.cornerstone.AppInfo;
-import com.ctrip.framework.cornerstone.AppStatus;
-import com.ctrip.framework.cornerstone.IgniteManager;
-import com.ctrip.framework.cornerstone.annotation.Ignite;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.ignite.IgnitePlugin;
+import com.ctrip.framework.vi.AppInfo;
+import com.ctrip.framework.vi.AppStatus;
+import com.ctrip.framework.vi.IgniteManager;
+import com.ctrip.framework.vi.annotation.Ignite;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.ignite.IgnitePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

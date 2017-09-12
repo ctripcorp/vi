@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.helloworld;
+package com.ctrip.framework.vi.helloworld;
 
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheCell;
+import com.ctrip.framework.vi.cacheRefresh.CacheCell;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -33,5 +33,20 @@ public class TestCache implements CacheCell{
     public Map<String, Object> getStatus() {
         status.put("visitCount",Math.random()*1000);
         return status;
+    }
+
+    @Override
+    public Object getByKey(String key) {
+        return null;
+    }
+
+    @Override
+    public Iterable<String> keys() {
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 }

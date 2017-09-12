@@ -129,7 +129,9 @@ public class AutoRegister {
         scanJar( ignitePlugins,simpleLogger);
 
         //remove default ignite plugin
-        ignitePlugins.remove("ignite.com.ctrip.framework.vi.ignite.VICoreIgnite");
+        if(ignitePlugins != null) {
+            ignitePlugins.remove("ignite.com.ctrip.framework.vi.ignite.VICoreIgnite");
+        }
 
     }
 }

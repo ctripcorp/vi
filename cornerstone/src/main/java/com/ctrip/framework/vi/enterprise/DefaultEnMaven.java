@@ -1,6 +1,6 @@
 package com.ctrip.framework.vi.enterprise;
 
-import com.ctrip.framework.vi.analyzer.PomInfo;
+import com.ctrip.framework.vi.util.PomUtil;
 import com.ctrip.framework.vi.util.SecurityUtil;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -31,11 +31,21 @@ public class DefaultEnMaven implements EnMaven {
         SearchResponse response;
     }
     Logger logger = LoggerFactory.getLogger(getClass());
-    @Override
-    public InputStream getPomInfoByFileName(String[] av, String fileName) {
+
+    private InputStream getContentByName(String[] av,String fileName){
+
         InputStream rtn = null;
-        if(av==null)
+        String endsWith = ".pom";
+        if(av == null && fileName == null){
             return null;
+        }else if(av==null) {
+            endsWith = "-sources.jar";
+            av = PomUtil.getArtifactIdAndVersion(fileName);
+        }
+
+        if(av == null){
+            return null;
+        }
 
         String searchUrl = "http://search.maven.org/solrsearch/select?q=a:%22";
         if(av.length>2){
@@ -59,11 +69,11 @@ public class DefaultEnMaven implements EnMaven {
                 if(results.response!=null && results.response.docs !=null && results.response.docs.length >0 ){
 
                     PomDoc pomInfo = results.response.docs[0];
-                    String pomUrl = "https://search.maven.org/remotecontent?filepath="+pomInfo.g.replace('.','/')+"/"+pomInfo.a+"/"+pomInfo.v+"/"+pomInfo.a+"-"+pomInfo.v+".pom";
+                    String pomUrl = "https://search.maven.org/remotecontent?filepath="+pomInfo.g.replace('.','/')+"/"+pomInfo.a+"/"+pomInfo.v+"/"+pomInfo.a+"-"+pomInfo.v+endsWith;
                     //com/jolira/guice/3.0.0/guice-3.0.0.pom
                     logger.info(pomUrl);
                     HttpsURLConnection pomConn = (HttpsURLConnection) new URL(pomUrl).openConnection();
-                   pomConn.setSSLSocketFactory(SecurityUtil.getSSLSocketFactory());
+                    pomConn.setSSLSocketFactory(SecurityUtil.getSSLSocketFactory());
                     pomConn.setRequestMethod("GET");
                     rtn = pomConn.getInputStream();
                 }
@@ -73,11 +83,16 @@ public class DefaultEnMaven implements EnMaven {
         }
         return rtn;
 
+    }
 
+    @Override
+    public InputStream getPomInfoByFileName(String[] av, String fileName) {
+
+        return getContentByName(av,fileName);
     }
 
     @Override
     public InputStream getSourceJarByFileName(String fileName) {
-        return null;
+        return getContentByName(null,fileName);
     }
 }

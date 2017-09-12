@@ -142,9 +142,12 @@ public final class IgniteManager {
         String viPackagePrex = "com.ctrip.framework.vi.";
 
         List<String> needRemoves = new ArrayList<>();
-        for (String key:keys){
-            if(key.charAt(skipCount) == '-'){
-                needRemoves.add(key);
+
+        if(keys != null) {
+            for (String key : keys) {
+                if (key.charAt(skipCount) == '-') {
+                    needRemoves.add(key);
+                }
             }
         }
 
@@ -168,27 +171,29 @@ public final class IgniteManager {
         pluginInfos.add(viIgniteInfo);
         plugins.put(viIgniteInfo.id(),viIgnitePlugin);
 
-        for (String key : keys) {
-            String className = key.substring(CONFNAME.length() + 1);
-            try {
-                Class<?> pClass = Class.forName(className);
-                Ignite pInfo = pClass.getAnnotation(Ignite.class);
-                if(pInfo == null){
-                    throw  new IgnitePluginNoIgniteAnnotationException(className);
-                }
-                IgnitePlugin plugin = (IgnitePlugin) pClass.newInstance();
-                String pId = pInfo.id();
-                if (plugins.containsKey(pId)) {
-                    throw new DuplicatePluginIdException(pId + " must be unique, but it be used in[" + className + "," + plugins.get(pId).getClass().getName() + "]");
+        if(keys != null) {
+            for (String key : keys) {
+                String className = key.substring(CONFNAME.length() + 1);
+                try {
+                    Class<?> pClass = Class.forName(className);
+                    Ignite pInfo = pClass.getAnnotation(Ignite.class);
+                    if (pInfo == null) {
+                        throw new IgnitePluginNoIgniteAnnotationException(className);
+                    }
+                    IgnitePlugin plugin = (IgnitePlugin) pClass.newInstance();
+                    String pId = pInfo.id();
+                    if (plugins.containsKey(pId)) {
+                        throw new DuplicatePluginIdException(pId + " must be unique, but it be used in[" + className + "," + plugins.get(pId).getClass().getName() + "]");
+                    }
+
+                    pluginInfos.add(pInfo);
+
+                    plugins.put(pId, plugin);
+                } catch (Throwable e) {
+                    throw new RuntimeException("init ignite plugin, " + className + " failed!", e);
                 }
 
-                pluginInfos.add(pInfo);
-
-                plugins.put(pId, plugin);
-            } catch (Throwable e) {
-                throw new RuntimeException("init ignite plugin, " + className + " failed!", e);
             }
-
         }
 
         logger.info("End init");

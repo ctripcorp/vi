@@ -19,6 +19,7 @@
         <module>cornerstone-server</module>
         <module>cornerstone-example</module>
         <module>cornerstone-netty</module>
+        <module>spring-boot-example</module>
     </modules>
     <build>
         <pluginManagement>

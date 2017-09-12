@@ -5,6 +5,6 @@
          version="3.0" metadata-complete="true">
     <display-name>hello-world-service</display-name>
     <listener>
-        <listener-class>com.ctrip.framework.cornerstone.VIServletContextListener</listener-class>
+        <listener-class>com.ctrip.framework.vi.VIServletContextListener</listener-class>
     </listener>
 </web-app>

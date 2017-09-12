@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.helloworld;
+package com.ctrip.framework.vi.helloworld;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;

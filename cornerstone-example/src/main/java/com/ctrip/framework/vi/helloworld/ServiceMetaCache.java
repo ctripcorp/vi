@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.helloworld;
+package com.ctrip.framework.vi.helloworld;
 
 /**
  * Created by jiang.j on 2017/2/7.

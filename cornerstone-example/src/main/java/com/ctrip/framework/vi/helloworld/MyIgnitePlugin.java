@@ -1,13 +1,13 @@
-package com.ctrip.framework.cornerstone.helloworld;
+package com.ctrip.framework.vi.helloworld;
 
-import com.ctrip.framework.cornerstone.AppInfo;
-import com.ctrip.framework.cornerstone.IgniteManager;
-import com.ctrip.framework.cornerstone.annotation.Ignite;
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheCell;
-import com.ctrip.framework.cornerstone.cacheRefresh.CacheManager;
-import com.ctrip.framework.cornerstone.component.ComponentManager;
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
-import com.ctrip.framework.cornerstone.configuration.InitConfigurationException;
+import com.ctrip.framework.vi.AppInfo;
+import com.ctrip.framework.vi.IgniteManager;
+import com.ctrip.framework.vi.annotation.Ignite;
+import com.ctrip.framework.vi.cacheRefresh.CacheCell;
+import com.ctrip.framework.vi.cacheRefresh.CacheManager;
+import com.ctrip.framework.vi.component.ComponentManager;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.InitConfigurationException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import java.util.Properties;
  * Created by jiang.j on 2016/8/17.
  */
 @Ignite(id = "vi.example.ignite")
-public class MyIgnitePlugin implements com.ctrip.framework.cornerstone.ignite.IgnitePlugin {
+public class MyIgnitePlugin implements com.ctrip.framework.vi.ignite.IgnitePlugin {
     public class MyCacheCell implements CacheCell{
 
         private String _id;
@@ -41,6 +41,21 @@ public class MyIgnitePlugin implements com.ctrip.framework.cornerstone.ignite.Ig
         @Override
         public Map<String, Object> getStatus() {
             return _status;
+        }
+
+        @Override
+        public Object getByKey(String key) {
+            return null;
+        }
+
+        @Override
+        public Iterable<String> keys() {
+            return null;
+        }
+
+        @Override
+        public int size() {
+            return 0;
         }
     }
     @Override

@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.helloworld;
+package com.ctrip.framework.vi.helloworld;
 
-import com.ctrip.framework.cornerstone.annotation.ComponentStatus;
+import com.ctrip.framework.vi.annotation.ComponentStatus;
 
 /**
  * Created by jiang.j on 2016/6/20.

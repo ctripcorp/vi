@@ -1,4 +1,4 @@
-package com.ctrip.framework.vi.helloworld;
+package com.ctrip.framework.vi.spring.example;
 
 import com.ctrip.framework.vi.annotation.ComponentStatus;
 import com.ctrip.framework.vi.annotation.FieldInfo;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by jiang.j on 2016/7/12.
  */
-@ComponentStatus(id="com.ctrip.dal.client.DatabasesetConfig",name="com.ctrip.dal.client.databasesetconfig",description = "DAL Database Set config",list = true)
+@ComponentStatus(id="com.ctrip.dal.client.DatabasesetConfig",name="com.ctrip.dal.client.databasesetconfig",description = "DAL Database Set config",list = true,auto = true)
 public class ListStatusComponent {
 
     @FieldInfo(name = "Name",description = "姓名")
