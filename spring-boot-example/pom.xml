@@ -51,7 +51,6 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
-            <version>1.5.2.RELEASE</version>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>${tomcat.embed.scope}</scope>
