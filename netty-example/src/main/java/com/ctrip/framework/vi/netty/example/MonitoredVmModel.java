@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.netty.example;
+package com.ctrip.framework.vi.netty.example;
 
 /**
  * Created by jiang.j on 2017/2/21.

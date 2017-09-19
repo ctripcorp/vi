@@ -1,15 +1,15 @@
-package com.ctrip.framework.cornerstone.netty;
+package com.ctrip.framework.vi.netty;
 
-import com.ctrip.framework.cornerstone.APIContentExecutor;
-import com.ctrip.framework.cornerstone.IgniteManager;
-import com.ctrip.framework.cornerstone.RequestResult;
-import com.ctrip.framework.cornerstone.StaticContentExecutor;
-import com.ctrip.framework.cornerstone.enterprise.EnFactory;
-import com.ctrip.framework.cornerstone.netty.http.Cookie;
-import com.ctrip.framework.cornerstone.netty.http.DefaultCookie;
-import com.ctrip.framework.cornerstone.netty.http.ServerCookieDecoder;
-import com.ctrip.framework.cornerstone.netty.http.ServerCookieEncoder;
-import com.ctrip.framework.cornerstone.util.SecurityUtil;
+import com.ctrip.framework.vi.APIContentExecutor;
+import com.ctrip.framework.vi.IgniteManager;
+import com.ctrip.framework.vi.RequestResult;
+import com.ctrip.framework.vi.StaticContentExecutor;
+import com.ctrip.framework.vi.enterprise.EnFactory;
+import com.ctrip.framework.vi.netty.http.Cookie;
+import com.ctrip.framework.vi.netty.http.DefaultCookie;
+import com.ctrip.framework.vi.netty.http.ServerCookieDecoder;
+import com.ctrip.framework.vi.netty.http.ServerCookieEncoder;
+import com.ctrip.framework.vi.util.SecurityUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

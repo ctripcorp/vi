@@ -1,6 +1,6 @@
-package com.ctrip.framework.cornerstone.netty.http;
+package com.ctrip.framework.vi.netty.http;
 
-import static com.ctrip.framework.cornerstone.netty.http.CookieUtil.*;
+import static com.ctrip.framework.vi.netty.http.CookieUtil.*;
 
 /**
  * Created by jiang.j on 2017/2/14.

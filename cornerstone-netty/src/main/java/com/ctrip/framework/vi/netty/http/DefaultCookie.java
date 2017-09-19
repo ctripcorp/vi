@@ -1,12 +1,12 @@
-package com.ctrip.framework.cornerstone.netty.http;
+package com.ctrip.framework.vi.netty.http;
 
 /**
  * Created by jiang.j on 2017/2/14.
  */
 
 
-import static com.ctrip.framework.cornerstone.netty.http.CookieUtil.validateAttributeValue;
-import static com.ctrip.framework.cornerstone.util.Preconditions.checkNotNull;
+import static com.ctrip.framework.vi.netty.http.CookieUtil.validateAttributeValue;
+import static com.ctrip.framework.vi.util.Preconditions.checkNotNull;
 
 /**
  * The default {@link Cookie} implementation.

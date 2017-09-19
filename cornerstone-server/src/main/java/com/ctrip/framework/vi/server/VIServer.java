@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.server;
+package com.ctrip.framework.vi.server;
 
-import com.ctrip.framework.cornerstone.*;
-import com.ctrip.framework.cornerstone.servlet.AuthenticationFilter;
+import com.ctrip.framework.vi.*;
+import com.ctrip.framework.vi.servlet.AuthenticationFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;

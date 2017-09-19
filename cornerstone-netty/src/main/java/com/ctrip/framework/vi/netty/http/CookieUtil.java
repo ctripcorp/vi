@@ -1,4 +1,4 @@
-package com.ctrip.framework.cornerstone.netty.http;
+package com.ctrip.framework.vi.netty.http;
 
 import java.util.BitSet;
 

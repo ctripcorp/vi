@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.netty.example;
+package com.ctrip.framework.vi.netty.example;
 
 import sun.jvmstat.monitor.MonitoredHost;
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;

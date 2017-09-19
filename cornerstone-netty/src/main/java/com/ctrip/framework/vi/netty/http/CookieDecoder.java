@@ -1,13 +1,13 @@
-package com.ctrip.framework.cornerstone.netty.http;
+package com.ctrip.framework.vi.netty.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.CharBuffer;
 
-import static com.ctrip.framework.cornerstone.netty.http.CookieUtil.firstInvalidCookieNameOctet;
-import static com.ctrip.framework.cornerstone.netty.http.CookieUtil.firstInvalidCookieValueOctet;
-import static com.ctrip.framework.cornerstone.netty.http.CookieUtil.unwrapValue;
+import static com.ctrip.framework.vi.netty.http.CookieUtil.firstInvalidCookieNameOctet;
+import static com.ctrip.framework.vi.netty.http.CookieUtil.firstInvalidCookieValueOctet;
+import static com.ctrip.framework.vi.netty.http.CookieUtil.unwrapValue;
 
 /**
  * Created by jiang.j on 2017/2/14.

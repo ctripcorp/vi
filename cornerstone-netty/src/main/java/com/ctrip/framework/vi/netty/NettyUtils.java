@@ -1,7 +1,7 @@
-package com.ctrip.framework.cornerstone.netty;
+package com.ctrip.framework.vi.netty;
 
-import com.ctrip.framework.cornerstone.netty.http.Cookie;
-import com.ctrip.framework.cornerstone.util.IOUtils;
+import com.ctrip.framework.vi.netty.http.Cookie;
+import com.ctrip.framework.vi.util.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;

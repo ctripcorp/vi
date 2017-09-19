@@ -1,10 +1,10 @@
-package com.ctrip.framework.cornerstone.netty.http;
+package com.ctrip.framework.vi.netty.http;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.ctrip.framework.cornerstone.util.Preconditions.checkNotNull;
+import static com.ctrip.framework.vi.util.Preconditions.checkNotNull;
 
 /**
  * Created by jiang.j on 2017/2/14.

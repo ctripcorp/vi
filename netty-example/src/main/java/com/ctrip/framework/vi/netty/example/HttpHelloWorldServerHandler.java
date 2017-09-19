@@ -1,9 +1,9 @@
-package com.ctrip.framework.cornerstone.netty.example;
+package com.ctrip.framework.vi.netty.example;
 
 /**
  * Created by jiang.j on 2016/12/20.
  */
-import com.ctrip.framework.cornerstone.configuration.ConfigurationManager;
+import com.ctrip.framework.vi.configuration.ConfigurationManager;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
