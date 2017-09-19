@@ -51,10 +51,11 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
+            <version>1.5.2.RELEASE</version>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>${tomcat.embed.scope}</scope>
-            <version>7.0.73.ctrip.1</version>
+            <version>1.5.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.ctrip.framework</groupId>
