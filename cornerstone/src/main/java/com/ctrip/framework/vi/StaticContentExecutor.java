@@ -70,7 +70,7 @@ public class StaticContentExecutor {
     }
      */
     final static Map<String, String> EXT_TO_MEDIATYPE = new HashMap<>();
-    final static String WEBPATH = "vi-web";
+    final static String WEBPATH = "cornerstone-web";
     static {
         EXT_TO_MEDIATYPE.put("js", "text/javascript");
         EXT_TO_MEDIATYPE.put("png", "image/png");

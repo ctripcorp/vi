@@ -22,7 +22,7 @@
 
 
         /** @ngInject */
-        function SidebarController($scope, $window, $rootScope, serviceInfo, $filter,$location) {
+        function SidebarController($scope, $window, $rootScope, serviceInfo, $filter,$location,ScrollbarService) {
 
             var vm = this;
             $scope.isCollapse = false;
@@ -36,6 +36,11 @@
 		    $location.url('/settings/');
 
 	    };
+	    var sidebarScrollbar;
+
+        ScrollbarService.getInstance('sidebar-scrollbar').then(function(x) {
+            sidebarScrollbar= x;
+        });
 
             var resizeFun = function() {
                 $scope.$apply(function() {
@@ -74,7 +79,9 @@
                     t += bheight * (index);
                 }
 
-                vm.subMenuTop = t + 'px';
+		var ty=t-sidebarScrollbar.offset.y;
+
+                vm.subMenuTop = ty + 'px';
             };
 
             serviceInfo.getComponentMeta().then(function(data) {

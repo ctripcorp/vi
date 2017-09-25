@@ -18,7 +18,7 @@
                         </button>
                     </div>
                 </div>
-                <scrollbar ng-style="{maxHeight:vm.menuMaxHeight}">
+                <scrollbar ng-style="{maxHeight:vm.menuMaxHeight}" name="sidebar-scrollbar">
                     <ul class="nav nav-list">
                         <li ng-mouseenter="vm.hoverMenu(m,$index)" ng-repeat="m in menus">
                             <div ui-sref="{{m.state}}" ng-class="{'sele-menu': m.selected,'hover':hover}">
