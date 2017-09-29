@@ -61,18 +61,19 @@
                 });
             };
 
-            vm.hoverMenu = function(m, index) {
+            vm.hoverMenu = function(m, index,event) {
 
                 vm.currentHover = m;
+		var tw = (event.srcElement.clientWidth)+'px';
                 var t = 45;
                 var bheight = 56;
                 if ($scope.isCollapse) {
-                    vm.subMenuLeft = '48px';
+                    vm.subMenuLeft = tw;
                     t = 32;
                     bheight = 32;
                 } else {
 
-                    vm.subMenuLeft = '102px';
+                    vm.subMenuLeft = tw;
                 }
 
                 if (index > 0) {
