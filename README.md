@@ -40,7 +40,7 @@ Cornerstone（基石）是携程框架部门研发的内部可视化组件VI的�
 当想了解应用健康状况。当想了解应用启动过程。当想了解使用组件的运行情况时。当需要定位问题时。当你需要暴露应用运行数据时。当想了解应用各类资源占用情况时。当想查找各类配置时。当需要给应用性能调优时 。。。
 总之，你所关心应用运行的一切，都可以通过这个窗口了解和控制。
 
-#Screenshots
+# Screenshots
 ![默认界面](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/doc/imgs/cs-main.png)
 ![启动日志](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/doc/imgs/cs-ignite.png)
 ![实时metrics](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/doc/imgs/cs-metrics.png)
