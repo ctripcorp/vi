@@ -4,12 +4,12 @@
         <groupId>com.ctrip.framework</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cornerstone</artifactId>
-    <version>${vi.version}</version>
+    <version>${cs.version}</version>
     <inceptionYear>2016</inceptionYear>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.jvmArgs>-Denv=fws</maven.test.jvmArgs>
-        <vi.version>0.11.2</vi.version>
+        <cs.version>0.1.0-SNAPSHOT</cs.version>
     </properties>
     <licenses>
         <license>
@@ -28,7 +28,7 @@
                     <configuration>
                         <archive>
                             <manifestEntries>
-                                <Agent-Class>com.ctrip.framework.vi.instrument.AgentMain</Agent-Class>
+                                <Agent-Class>com.ctrip.framework.cs.instrument.AgentMain</Agent-Class>
                                 <Can-Redefine-Classes>true</Can-Redefine-Classes>
                                 <Can-Retransform-Classes>true</Can-Retransform-Classes>
                             </manifestEntries>

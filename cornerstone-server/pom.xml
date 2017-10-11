@@ -9,6 +9,7 @@ xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLS
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cs.version>0.1.0-SNAPSHOT</cs.version>
     </properties>
     <licenses>
         <license>
@@ -55,7 +56,7 @@ xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLS
         <dependency>
             <groupId>com.ctrip.framework</groupId>
             <artifactId>cornerstone</artifactId>
-            <version>0.11.2</version>
+            <version>${cs.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

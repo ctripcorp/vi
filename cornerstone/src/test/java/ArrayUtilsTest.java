@@ -1,4 +1,4 @@
-import com.ctrip.framework.vi.util.ArrayUtils;
+import com.ctrip.framework.cs.util.ArrayUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
