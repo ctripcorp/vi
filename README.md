@@ -47,5 +47,8 @@ Cornerstone（基石）是携程框架部门研发的内部可视化组件VI的�
 ![动态埋点](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/doc/imgs/cs-debug.png)
 ![GC日志分析](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/doc/imgs/cs-gc.png)
 
+# Developers
+* tyaloo <tyaloo@qq.com>
+
 # License
 The project is licensed under the [Apache 2 license](https://github.com/ctripcorp/apollo/blob/master/LICENSE).
