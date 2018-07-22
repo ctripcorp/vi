@@ -50,9 +50,9 @@ Cornerstone（基石）是携程框架部门研发的内部可视化组件VI的�
   这是一个web项目，将编译后的war包部署到tomcat里即可运行,例如将这个war包部署在本地的端口为8080的tomcat服务器，访问路径为http://localhost:8080/cornerstone-example-0/@in。  
 
 - **想快速了解VI，可以使用spring boot example项目, 运行简单，使用方便**  
-   mvn方式: 在项目根目录运行 **mvn -pl spring-boot-example spring-boot:run** 即运行了一个含VI的spring boot应用。  
-   运行端口为9090,可以使用**http://localhost:9090/@in**来访问VI。
-   IDE方式： 直接运行项目中ServiceStarter.java的main方法，来运行或调试。 
+   - mvn方式: 在项目根目录运行 **mvn -pl spring-boot-example spring-boot:run** 即运行了一个含VI的spring boot应用。   
+运行端口为9090,可以使用http://localhost:9090/@in 来访问VI。  
+   - IDE方式： 直接运行项目中**ServiceStarter.java** 的main方法，来运行或调试。 
 
 - 下面主要介绍**寄生模式**（自主模式可以参考cornerstone-server里的测试用例）  
   web和spring项目只需依赖vi的jar包即可使用。可以自己编译cornerstone子模块得到jar包,也可以使用[预编译好的jar包(寄生模式)](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/release/vi-0.2.0-alpha.zip)。  
