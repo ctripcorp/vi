@@ -13,7 +13,14 @@
     </dependencies>
     <packaging>pom</packaging>
     <name>parent</name>
-    <description>framework validateinternals</description>
+    <description>validation internals</description>
+    <properties>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <tomcat.embed.scope>compile</tomcat.embed.scope>
+        <cs.version>0.2.0-alpha</cs.version>
+        <spring.version>4.3.4.RELEASE</spring.version>
+        <springboot.version>1.4.3.RELEASE</springboot.version>
+    </properties>
     <modules>
         <module>cornerstone</module>
         <module>cornerstone-server</module>
@@ -51,7 +58,37 @@
         </pluginManagement>
     </build>
 
-    <properties>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-tomcat</artifactId>
+                <scope>${tomcat.embed.scope}</scope>
+                <version>${springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ctrip.framework</groupId>
+                <artifactId>cornerstone</artifactId>
+                <version>${cs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>

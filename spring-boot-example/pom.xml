@@ -14,7 +14,7 @@
     <packaging>war</packaging>
     <properties>
         <tomcat.embed.scope>compile</tomcat.embed.scope>
-        <cs.version>0.1.0-SNAPSHOT</cs.version>
+        <cs.version>0.2.0-alpha</cs.version>
     </properties>
     <build>
         <plugins>
@@ -39,38 +39,22 @@
             </plugin>
         </plugins>
     </build>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>1.4.3.RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>${tomcat.embed.scope}</scope>
-            <version>1.5.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.ctrip.framework</groupId>
             <artifactId>cornerstone</artifactId>
-            <version>${cs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>4.3.4.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>1.4.3.RELEASE</version>
         </dependency>
     </dependencies>
 </project>

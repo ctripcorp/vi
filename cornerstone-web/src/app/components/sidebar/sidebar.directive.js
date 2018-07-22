@@ -64,7 +64,7 @@
             vm.hoverMenu = function(m, index,event) {
 
                 vm.currentHover = m;
-		var tw = (event.srcElement.clientWidth)+'px';
+                var tw = ((event.srcElement?event.srcElement:event.target).clientWidth)+'px';
                 var t = 45;
                 var bheight = 56;
                 if ($scope.isCollapse) {
@@ -80,7 +80,7 @@
                     t += bheight * (index);
                 }
 
-		var ty=t-sidebarScrollbar.offset.y;
+                var ty=t-sidebarScrollbar.offset.y;
 
                 vm.subMenuTop = ty + 'px';
             };

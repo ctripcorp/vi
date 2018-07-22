@@ -1,5 +1,6 @@
 package com.ctrip.framework.cs.enterprise;
 
+import com.ctrip.framework.cs.Permission;
 import com.ctrip.framework.cs.util.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,6 @@ public class DefaultEnFC implements EnFC {
 
     @Override
     public int getPermission(String user) {
-        return 0;
+        return Permission.ALL.getValue();
     }
 }

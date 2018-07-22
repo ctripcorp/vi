@@ -21,7 +21,7 @@ public class ProfileAdapter extends AdviceAdapter{
      * @param mv     the method visitor to which this adapter delegates calls.
      * @param access the method's access flags (see {@link com.ctrip.framework.cs.asm.Opcodes}).
      * @param name   the method's name.
-     * @param desc   the method's descriptor (see {@link com.ctrip.framework..vi.asm.Type Type}).
+     * @param desc   the method's descriptor (see {@link com.ctrip.framework.cs.asm.Type Type}).
      */
     protected ProfileAdapter(int api, MethodVisitor mv, int access, String name, String desc,String fullName) {
         super(api, mv, access, name, desc);
@@ -37,8 +37,8 @@ public class ProfileAdapter extends AdviceAdapter{
     protected void onMethodEnter() {
         super.onMethodEnter();
         startTimeVar = newLocal(Type.LONG_TYPE);
-        mv.visitMethodInsn(INVOKESTATIC, "com/ctrip/framework/vi/metrics/MetricsCollector", "getCollector", "()Lcom/ctrip/framework/vi/metrics/MetricsCollector;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "com/ctrip/framework/vi/metrics/MetricsCollector", "getStartNano", "()J", false);
+        mv.visitMethodInsn(INVOKESTATIC, "com/ctrip/framework/cs/metrics/MetricsCollector", "getCollector", "()Lcom/ctrip/framework/cs/metrics/MetricsCollector;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "com/ctrip/framework/cs/metrics/MetricsCollector", "getStartNano", "()J", false);
         mv.visitVarInsn(LSTORE, startTimeVar);
     }
 
@@ -53,12 +53,12 @@ public class ProfileAdapter extends AdviceAdapter{
     }
 
     private void methodTrace(){
-        mv.visitMethodInsn(INVOKESTATIC, "com/ctrip/framework/vi/metrics/MetricsCollector", "getCollector", "()Lcom/ctrip/framework/vi/metrics/MetricsCollector;", false);
+        mv.visitMethodInsn(INVOKESTATIC, "com/ctrip/framework/cs/metrics/MetricsCollector", "getCollector", "()Lcom/ctrip/framework/cs/metrics/MetricsCollector;", false);
         String metricName = fullName + "." + name+"##"+ MetricsValueType.MicroSec.getValue();
         MetricsCollector.getCollector().addMetricsName(metricName);
         mv.visitLdcInsn(metricName);
         mv.visitVarInsn(LLOAD, startTimeVar);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "com/ctrip/framework/vi/metrics/MetricsCollector", "recordNano", "(Ljava/lang/String;J)V", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "com/ctrip/framework/cs/metrics/MetricsCollector", "recordNano", "(Ljava/lang/String;J)V", false);
     }
     @Override
     public void visitMaxs(int stack, int locals){

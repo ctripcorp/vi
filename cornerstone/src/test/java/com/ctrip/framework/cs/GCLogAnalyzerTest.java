@@ -18,12 +18,6 @@ import static junit.framework.TestCase.assertEquals;
 public class GCLogAnalyzerTest {
 
     @Test
-    public void test() throws IOException {
-        short n = -123;
-        System.out.println(Short.reverseBytes(n));
-
-    }
-    @Test
     public void testParseFullGCInfo1(){
         String data="2017-05-03T10:53:06.881+0800: 2174.037: [GC[YG occupancy: 259391 K (471872 K)]2017-05-03T10:53:06.882+0800: 2174.037: [Rescan (parallel) , 0.0415120 secs]2017-05-03T10:53:06.923+0800: 2174.079: [weak refs processing, 0.0394110 secs]2017-05-03T10:53:06.963+0800: 2174.118: [class unloading, 0.0196060 secs]2017-05-03T10:53:06.983+0800: 2174.138: [scrub symbol table, 0.0143320 secs]2017-05-03T10:53:06.997+0800: 2174.152: [scrub string table, 0.0018640 secs] [1 CMS-remark: 395107K(523264K)] 654498K(995136K), 0.1266980 secs] [Times: user=0.38 sys=0.00, real=0.13 secs]";
         InputStream is = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));

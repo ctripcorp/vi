@@ -2,7 +2,7 @@ package com.ctrip.framework.cs;
 /**
  * Created by jiang.j on 2016/5/4.
  */
-public enum Permission{
+public enum Permission {
     DENY(0),ALL(1),READ(2),EDIT(4);
     private int value;
     private Permission(int permission){

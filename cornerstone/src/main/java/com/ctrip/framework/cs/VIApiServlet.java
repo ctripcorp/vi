@@ -49,7 +49,7 @@ public class VIApiServlet extends HttpServlet {
                             HttpUtil.getCookieByName(req, SecurityUtil.TOKENKEY, "/"), remoteIp);
                 } else {
 
-                    exeResult = APIContentExecutor.doPost(req.getPathInfo(), HttpUtil.loadPostParams(req), HttpUtil.getCookieByName(req, SecurityUtil.USERKEY, "/"),
+                    exeResult = APIContentExecutor.doPost(path, HttpUtil.loadPostParams(req), HttpUtil.getCookieByName(req, SecurityUtil.USERKEY, "/"),
                             HttpUtil.getCookieByName(req, SecurityUtil.TOKENKEY, "/"), remoteIp);
                 }
             }
