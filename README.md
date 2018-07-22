@@ -41,13 +41,23 @@ Cornerstone（基石）是携程框架部门研发的内部可视化组件VI的�
 总之，你所关心应用运行的一切，都可以通过这个窗口了解和控制。
 
 # 如何使用
-(特别注意：目前VI只支持JDK>=1.7应用)
-任何java应用都可以接入VI，VI接入有两种模式，寄生模式和自主模式。寄生模式VI会寄生在已有的WEB容器里，不需要新开端口。自主模式，等于在应用上启动一个http协议的web服务。
-下面主要介绍寄生模式（自主模式可以参考cornerstone-server里的测试用例）
-web和spring项目只需依赖vi的jar包即可使用。可以自己编译cornerstone子模块得到jar包,也可以使用预编译好的jar包(https://raw.githubusercontent.com/ctripcorp/cornerstone/master/release/cornerstone-0.2.0-alpha.jar)。
-在web和spring boot应用的默认模式，VI是寄生在应用容器运行，当应用启动后，即可访问VI,VI会接管[应用路径]/@in的路径。例如tomcat应用,如果部署完成后的访问根路径为http://localhost/tomcat-demo,那么可以使用http://localhost/tomcat-demo/@in来访问。
-VI主要功能演示都在cornerstone-example子项目中，这是一个web项目，将编译后的war包部署到tomcat里即可运行,例如将这个war包部署在本地的端口为8080的tomcat服务器，访问路径为http://localhost:8080/cornerstone-example-0/@in。
-想最简单、快速了解VI，可以使用spring boot example项目，在项目根目录运行mvn -pl spring-boot-example spring-boot:run即运行了一个含VI的spring boot应用,运行端口为9090,可以使用http://localhost:9090/@in来访问VI。
+**(特别注意：目前VI只支持JDK>=1.7应用)**
+- 任何java应用都可以接入VI，VI接入有两种模式，寄生模式和自主模式。  
+  寄生模式VI会寄生在已有的WEB容器里，不需要新开端口。  
+  自主模式，等于在应用上启动一个http协议的web服务。
+---
+- 下面主要介绍**寄生模式**（自主模式可以参考cornerstone-server里的测试用例）  
+  web和spring项目只需依赖vi的jar包即可使用。可以自己编译cornerstone子模块得到jar包,也可以使用[预编译好的jar包](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/release/vi-0.2.0-alpha.zip)。  
+
+在web和spring boot应用的默认模式，VI是寄生在应用容器运行，当应用启动后，即可访问VI,VI会接管[应用路径]/@in的路径。  
+例如tomcat应用,如果部署完成后的访问根路径为http://localhost/tomcat-demo,那么可以使用http://localhost/tomcat-demo/@in来访问VI。  
+
+   - VI主要功能演示都在cornerstone-example子项目中。  
+   这是一个web项目，将编译后的war包部署到tomcat里即可运行,例如将这个war包部署在本地的端口为8080的tomcat服务器，访问路径为http://localhost:8080/cornerstone-example-0/@in。  
+
+   - 想最简单、快速了解VI，可以使用spring boot example项目。 
+   在项目根目录运行 **mvn -pl spring-boot-example spring-boot:run** 即运行了一个含VI的spring boot应用。  
+   运行端口为9090,可以使用**http://localhost:9090/@in**来访问VI。
 
 # Screenshots
 ![默认界面](https://raw.githubusercontent.com/ctripcorp/cornerstone/master/doc/imgs/cs-main.png)

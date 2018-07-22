@@ -4,13 +4,6 @@
     <groupId>com.ctrip.framework</groupId>
     <artifactId>parent</artifactId>
     <version>0.3.1</version>
-    <dependencies>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.0.35.Final</version>
-        </dependency>
-    </dependencies>
     <packaging>pom</packaging>
     <name>parent</name>
     <description>validation internals</description>
@@ -54,6 +47,7 @@
                         <skip>true</skip>
                     </configuration>
                 </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
@@ -87,6 +81,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.0.35.Final</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
