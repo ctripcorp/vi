@@ -1,14 +1,13 @@
 package com.ctrip.framework.cs.util;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import java.io.IOException;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
-import java.io.IOException;
-import java.security.SecureRandom;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * Created by jiang.j on 2016/5/3.
@@ -20,7 +19,7 @@ public class DesUtil {
 
     public static String encrypt(String data, String key) throws Exception {
         byte[] bt = encrypt(data.getBytes(), key.getBytes());
-        String strs = new BASE64Encoder().encode(bt);
+        String strs = DatatypeConverter.printBase64Binary(bt);
         return strs;
     }
 
@@ -28,8 +27,8 @@ public class DesUtil {
             Exception {
         if (data == null)
             return null;
-        BASE64Decoder decoder = new BASE64Decoder();
-        byte[] buf = decoder.decodeBuffer(data);
+
+        byte[] buf = DatatypeConverter.parseBase64Binary(data);
         byte[] bt = decrypt(buf,key.getBytes());
         return new String(bt);
     }
