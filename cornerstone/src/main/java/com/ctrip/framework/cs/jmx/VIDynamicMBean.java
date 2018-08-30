@@ -26,6 +26,7 @@ public class VIDynamicMBean implements DynamicMBean {
         this._beanClass = beanClass;
     }
     @Override
+    @SuppressWarnings("unchecked")
     public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
         _instance = ComponentManager.getStatus(_beanClass);
 
