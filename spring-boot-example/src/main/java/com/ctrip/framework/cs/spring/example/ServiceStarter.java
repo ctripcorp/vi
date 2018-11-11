@@ -1,5 +1,6 @@
 package com.ctrip.framework.cs.spring.example;
 
+import com.ctrip.framework.cs.enterprise.EnFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;

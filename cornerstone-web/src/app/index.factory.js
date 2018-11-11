@@ -46,7 +46,7 @@ function VIException(msg, type) {
 
                                     var sindex = result.lastIndexOf('@');
                                     var exp = new VIException(result.substr(6, sindex - 6), result.substr(sindex + 1));
-                                    if (exp.Type == 'com.ctrip.framework.vi.NoPermissionException') {
+                                    if (exp.Type == 'com.ctrip.framework.cs.NoPermissionException') {
                                         $confirm({
                                                 'text': 'You do not have permission for this operation or login has expired!do you wanna logout and login again?'
                                             })

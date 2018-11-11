@@ -28,13 +28,13 @@ public class AuthenticationFilter implements Filter {
         }
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String path = httpRequest.getRequestURI();
-        if(!path.startsWith(contextPath+"/vi/") && !path.equalsIgnoreCase(contextPath+"/vi")) {
+        if(!path.startsWith(contextPath+"/@in/") && !path.equalsIgnoreCase(contextPath+"/@in")) {
 
             String user = SecurityUtil.getValidUserName(httpRequest);
             String reqUrl = httpRequest.getRequestURL().toString().toLowerCase();
 
             if (user == null) {
-                String uri= contextPath+"/vi/index.html";
+                String uri= contextPath+"/@in/index.html";
                 HttpUtil.addCookie(httpResponse, SecurityUtil.JUMPKEY, reqUrl, "/", -1);
                 httpResponse.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
                 httpResponse.setHeader("Location", uri);

@@ -60,6 +60,9 @@ public class HostInfo implements Refreshable{
     @FieldInfo(name = "Number of processors",description = "cpu核数")
     protected  String numberOfProcessors;
 
+    @FieldInfo(name = "ENV",description = "服务器所在环境")
+    protected  final String env;
+
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
     private static transient boolean _isLinux;
     private static transient boolean _isTomcat;
@@ -112,6 +115,8 @@ public class HostInfo implements Refreshable{
         if(numberOfProcessors == null){
             numberOfProcessors = String.valueOf(bean.getAvailableProcessors());
         }
+
+        env = EnFactory.getEnBase().getEnvType();
 
         if(isLinux()){
             try {

@@ -22,11 +22,10 @@ public class VIServerTest {
     }
     @Test
     public void testVIServer() throws Exception {
-        /*
         int port = 1998;
         VIServer server = new VIServer(port);
         server.start();
-        URL url = new URL("http://localhost:"+port+"/vi/api/component/meta");
+        URL url = new URL("http://localhost:"+port+"/@in/api/component/meta");
         Gson gson = new Gson();
         List<CInfo> infos= new ArrayList<>();
         String content = IOUtils.readAll((InputStream)url.getContent());
@@ -40,7 +39,6 @@ public class VIServerTest {
         }catch (Exception e){
             Assert.assertTrue(e instanceof ConnectException);
         }
-        */
     }
 }
 

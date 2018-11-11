@@ -3,7 +3,7 @@
         "API_ENDPOINT": {
             "host": "http://localhost",
             "port": 8080,
-            "path": "/cornerstone-example-0/vi/api",
+            "path": "/cornerstone-example-0/@in/api",
             "needsAuth": false
         }
     },

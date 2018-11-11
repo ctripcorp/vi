@@ -27,7 +27,7 @@ public class DefaultEnHost implements EnHost {
 
     @Override
     public String getDataCenter() {
-        return null;
+        return "LOCAL";
     }
 
 }

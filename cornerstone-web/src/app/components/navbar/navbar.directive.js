@@ -159,18 +159,19 @@
                     });
 
                     var apiPath;
+                    var FIXPATH = '/@in/api';
                     if (!isFromProxy) {
                         var sindex = server.url.indexOf('/');
                         if (sindex > 0) {
                             port = server.url.substr(0, sindex);
-                            apiPath = '/' + server.url.substr(sindex + 1) + '/vi/api';
+                            apiPath = '/' + server.url.substr(sindex + 1) + FIXPATH;
                         } else {
                             port = server.url;
-                            apiPath = '/vi/api';
+                            apiPath = FIXPATH;
                         }
 
                     } else {
-                        apiPath = '/' + server.ip + ':' + server.url + '/vi/api';
+                        apiPath = '/' + server.ip + ':' + server.url + FIXPATH;
                     }
 
                     ApiService.setEndpoint({
