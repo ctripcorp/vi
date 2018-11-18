@@ -11,7 +11,7 @@ public class FilterRegistrationCondition implements Condition {
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
         try {
-            Class.forName("org.springframework.boot.context.embedded.FilterRegistrationBean");
+            Class.forName("org.springframework.boot.web.servlet.FilterRegistrationBean");
             return true;
         }catch (Throwable e){
             return false;

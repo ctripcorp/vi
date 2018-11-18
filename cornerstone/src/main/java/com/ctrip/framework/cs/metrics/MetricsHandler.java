@@ -4,6 +4,8 @@ import com.ctrip.framework.cs.Permission;
 import com.ctrip.framework.cs.ViFunctionHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -41,15 +43,15 @@ public class MetricsHandler implements ViFunctionHandler {
             String namesRaw = String.valueOf(params.get("names"));
             logger.info(namesRaw);
             HashMap<String,String> tags = new HashMap<>();
-            HashSet<String> names = new HashSet<>();
+            HashSet<String> names;
             double[] percentiles=null;
-            names = gson.fromJson(namesRaw,names.getClass());
+            names = gson.fromJson(namesRaw,new TypeToken<HashSet<String>>(){}.getType());
 
             if(names == null){
                 return null;
             }
             if(params.containsKey("tags")){
-                tags = gson.fromJson(String.valueOf(params.get("tags")),tags.getClass());
+                tags = gson.fromJson(String.valueOf(params.get("tags")),new TypeToken<HashMap<String,String>>(){}.getType());
             }
 
             if(params.containsKey("percentiles")){

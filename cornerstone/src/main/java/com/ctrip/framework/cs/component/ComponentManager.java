@@ -82,6 +82,7 @@ public final class ComponentManager {
         add(cb);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getStatus(Class<T> statusClass,String user){
         if(!container.values().contains(statusClass)) {
           add(statusClass);

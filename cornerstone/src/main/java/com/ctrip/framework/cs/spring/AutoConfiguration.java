@@ -52,7 +52,7 @@ public class AutoConfiguration {
         @Autowired
         Environment environment;
         @Bean(name = "VIFilterRegistrationBeanOld")
-        public org.springframework.boot.context.embedded.FilterRegistrationBean factory() {
+        public org.springframework.boot.web.servlet.FilterRegistrationBean factory() {
 
             if(environment != null) {
                 String port = environment.getProperty("server.port");
@@ -60,8 +60,8 @@ public class AutoConfiguration {
                     System.setProperty(SysKeys.SPRINGBOOTPORTKEY, port);
                 }
             }
-            org.springframework.boot.context.embedded.FilterRegistrationBean filter =
-                    new org.springframework.boot.context.embedded.FilterRegistrationBean();
+            org.springframework.boot.web.servlet.FilterRegistrationBean filter =
+                    new org.springframework.boot.web.servlet.FilterRegistrationBean();
                 filter.setFilter(new VIFilter());
                 filter.setName("vi-filter");
                 filter.addUrlPatterns(URLPATTERNS);
